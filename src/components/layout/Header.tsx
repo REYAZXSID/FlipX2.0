@@ -1,7 +1,8 @@
+
 "use client";
 
 import Link from 'next/link';
-import { Gamepad2, LayoutDashboard } from 'lucide-react';
+import { Gamepad2, LayoutDashboard, Instagram } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -28,6 +29,20 @@ export function Header() {
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>Dashboard</p>
+                    </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button asChild variant="outline" size="icon">
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                                <Instagram className="h-5 w-5" />
+                                <span className="sr-only">Instagram</span>
+                            </a>
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Instagram</p>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
