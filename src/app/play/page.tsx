@@ -1,31 +1,38 @@
+
 "use client";
 
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useGame } from '@/hooks/use-game';
+import { useUserData } from '@/hooks/use-user-data';
 import { GameBoard } from '@/components/game/GameBoard';
 import { GameControls } from '@/components/game/GameControls';
 import { GameStats } from '@/components/game/GameStats';
 import { GameWonDialog } from '@/components/game/GameWonDialog';
+import { GameLostDialog } from '@/components/game/GameLostDialog';
+import { PowerupToolbar } from '@/components/game/PowerupToolbar';
 import { Button } from '@/components/ui/button';
 import { useSound } from '@/hooks/use-sound';
 import { Sparkles, Loader2 } from 'lucide-react';
-import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, type Card as CardType } from '@/lib/game-constants';
+import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, CARD_BACKS } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
 import { getAICards } from '@/lib/ai-card-cache';
 
 function PlayPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound();
   const game = useGame({ playFlipSound, playMatchSound, playWinSound });
+  const userData = useUserData();
 
   const [soundEnabled, setSoundEnabled] = useState(DEFAULT_SETTINGS.sound);
   const [isLoading, setIsLoading] = useState(true);
 
   const gridSize = Number(searchParams.get('gridSize'));
   const themeName = searchParams.get('theme');
+  const gameMode = searchParams.get('gameMode');
+  const cardBack = searchParams.get('cardBack');
+  const cardBackClass = CARD_BACKS.find(cb => cb.id === cardBack)?.className || 'card-back-default';
 
   const aiCards = useMemo(() => {
     if (themeName === 'ai-magic') {
@@ -51,9 +58,8 @@ function PlayPage() {
     const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
     const isValidTheme = Object.keys(THEMES).includes(themeName || '');
 
-    if (isValidGrid && isValidTheme) {
+    if (isValidGrid && isValidTheme && gameMode && cardBack) {
        if (themeName === 'ai-magic' && !aiCards) {
-        // AI theme selected but no cards found, maybe page was refreshed.
         router.replace('/');
         return;
       }
@@ -61,7 +67,9 @@ function PlayPage() {
       game.startGame({
         gridSize,
         theme: themeName!,
-        sound: soundEnabled
+        sound: soundEnabled,
+        gameMode,
+        cardBack
       }, aiCards || undefined);
       setIsLoading(false);
     } else {
@@ -97,14 +105,13 @@ function PlayPage() {
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
       <div className="w-full max-w-7xl mx-auto px-4">
         <Header />
-
         <main className="w-full max-w-4xl mx-auto mt-4">
-          
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
                 <GameStats
                     time={game.time}
                     moves={game.moves}
                     gridSize={game.settings.gridSize}
+                    gameMode={game.settings.gameMode}
                 />
                 <GameControls
                     onRestart={() => { playButtonSound(); game.restartGame(); }}
@@ -123,9 +130,10 @@ function PlayPage() {
                 cards={game.cards}
                 flippedIndices={game.flippedIndices}
                 matchedPairs={game.matchedPairs}
-                onCardClick={game.handleCardClick}
+                onCardClick={(i) => game.handleCardClick(i)}
                 gridSize={game.settings.gridSize}
                 isHintActive={game.isHintActive}
+                cardBackClass={cardBackClass}
               />
               {game.status === 'paused' && (
                 <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center rounded-lg z-20 backdrop-blur-sm">
@@ -134,6 +142,20 @@ function PlayPage() {
                 </div>
               )}
             </div>
+            <PowerupToolbar 
+                powerups={userData.powerups}
+                onUsePowerup={(id) => {
+                    if (userData.usePowerup(id)) {
+                        playButtonSound();
+                        if (id === 'autoMatch') game.useAutoMatch();
+                        if (id === 'secondChance') game.setSecondChanceActive(true);
+                        if (id === 'xrayVision') {
+                            const firstUnflipped = game.cards.findIndex((c, i) => !game.matchedPairs.includes(c.type) && !game.flippedIndices.includes(i));
+                            if (firstUnflipped !== -1) game.handleCardClick(firstUnflipped, true);
+                        }
+                    }
+                }}
+            />
         </main>
       </div>
 
@@ -146,8 +168,14 @@ function PlayPage() {
         onNewGame={() => { playButtonSound(); router.push('/'); }}
         isNewHighScore={game.isNewHighScore}
         unlockedAchievements={game.unlockedAchievements}
+        coinsEarned={game.coinsEarned}
+        gameMode={game.settings.gameMode}
       />
-
+      <GameLostDialog
+        isOpen={game.status === 'lost'}
+        onPlayAgain={() => { playButtonSound(); game.restartGame(); }}
+        onNewGame={() => { playButtonSound(); router.push('/'); }}
+      />
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
         <a href="https://firebase.google.com/docs/studio" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
             Powered by Firebase Studio <Sparkles className="w-4 h-4 text-accent" />

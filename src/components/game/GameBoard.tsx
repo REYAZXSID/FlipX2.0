@@ -1,3 +1,4 @@
+
 "use client"
 
 import { cn } from "@/lib/utils"
@@ -11,6 +12,7 @@ type GameBoardProps = {
   onCardClick: (index: number) => void
   gridSize: number
   isHintActive: boolean
+  cardBackClass: string
 }
 
 export function GameBoard({
@@ -20,6 +22,7 @@ export function GameBoard({
   onCardClick,
   gridSize,
   isHintActive,
+  cardBackClass,
 }: GameBoardProps) {
   return (
     <div
@@ -37,6 +40,7 @@ export function GameBoard({
           onClick={() => onCardClick(index)}
           isImageType={card.image}
           hint={card.hint}
+          cardBackClass={cardBackClass}
         />
       ))}
     </div>

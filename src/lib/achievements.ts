@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Award, Zap, BrainCircuit, Bot, Crown, Rocket } from 'lucide-react';
+import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb } from 'lucide-react';
 
 export type Achievement = {
   id: string;
@@ -45,6 +45,18 @@ export const ACHIEVEMENTS: Achievement[] = [
     description: 'Play a game with a custom AI-generated theme.',
     Icon: Bot,
   },
+  {
+    id: 'time_attacker',
+    name: 'Time Attacker',
+    description: 'Win a game in Time Attack mode.',
+    Icon: Bomb,
+  },
+  {
+    id: 'shopper',
+    name: 'First Purchase',
+    description: 'Buy your first item from the shop.',
+    Icon: ShoppingCart,
+  },
 ];
 
 type CheckAchievementsArgs = {
@@ -52,10 +64,11 @@ type CheckAchievementsArgs = {
     time: number;
     gridSize: number;
     theme: string;
+    gameMode: string;
     isFirstWin: boolean;
 };
 
-export const checkAchievements = ({ moves, time, gridSize, theme, isFirstWin }: CheckAchievementsArgs): Achievement[] => {
+export const checkAchievements = ({ moves, time, gridSize, theme, gameMode, isFirstWin }: CheckAchievementsArgs): Achievement[] => {
     const unlocked: Achievement[] = [];
 
     if (isFirstWin) {
@@ -81,6 +94,21 @@ export const checkAchievements = ({ moves, time, gridSize, theme, isFirstWin }: 
     if (theme === 'ai-magic') {
         unlocked.push(ACHIEVEMENTS.find(a => a.id === 'ai_explorer')!);
     }
+    
+    if (gameMode === 'time-attack') {
+        unlocked.push(ACHIEVEMENTS.find(a => a.id === 'time_attacker')!);
+    }
 
     return unlocked;
+}
+
+// A separate check for the 'shopper' achievement
+export const checkShopAchievement = (): Achievement | null => {
+    const achievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
+    if (!achievements.includes('shopper')) {
+        const newAchievements = [...achievements, 'shopper'];
+        localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(newAchievements));
+        return ACHIEVEMENTS.find(a => a.id === 'shopper')!;
+    }
+    return null;
 }

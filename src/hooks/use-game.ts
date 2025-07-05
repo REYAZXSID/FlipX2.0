@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -17,6 +18,15 @@ type UseGameProps = {
   playWinSound: () => void;
 };
 
+const calculateTimeLimit = (gridSize: number) => {
+    switch (gridSize) {
+        case 2: return 15; // 15 seconds
+        case 4: return 90; // 1.5 minutes
+        case 6: return 240; // 4 minutes
+        default: return 90;
+    }
+}
+
 export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGameProps) => {
   const [settings, setSettings] = useState<GameSettings | null>(null);
   const [status, setStatus] = useState(GAME_STATUS.PLAYING);
@@ -29,27 +39,30 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [hintsLeft, setHintsLeft] = useState(3);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([]);
-
+  const [coinsEarned, setCoinsEarned] = useState(0);
+  const [isSecondChanceActive, setSecondChanceActive] = useState(false);
+  
   const startGame = useCallback((newSettings: GameSettings, customCards?: CardType[]) => {
     setSettings(newSettings);
+    setStatus(GAME_STATUS.PLAYING);
     if (customCards) {
       setCards(customCards);
     } else {
       setCards(createCardSet(newSettings.gridSize, newSettings.theme));
     }
-    setStatus(GAME_STATUS.PLAYING);
     setFlippedIndices([]);
     setMatchedPairs([]);
     setMoves(0);
-    setTime(0);
+    setTime(newSettings.gameMode === 'time-attack' ? calculateTimeLimit(newSettings.gridSize) : 0);
     setHintsLeft(3);
     setIsNewHighScore(false);
     setUnlockedAchievements([]);
+    setCoinsEarned(0);
+    setSecondChanceActive(false);
   }, []);
 
   const restartGame = useCallback(() => {
     if (settings) {
-       // For AI games, restarting means going back to settings as cards are not preserved
       if (settings.theme === 'ai-magic') {
           window.location.href = '/';
       } else {
@@ -76,50 +89,99 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (status === 'playing') {
+    if (status === 'playing' && settings) {
       timer = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
+        if (settings.gameMode === 'time-attack') {
+            setTime(prevTime => {
+                if (prevTime > 1) {
+                    return prevTime - 1;
+                }
+                setStatus(GAME_STATUS.LOST);
+                return 0;
+            });
+        } else {
+            setTime(prevTime => prevTime + 1);
+        }
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [status]);
+  }, [status, settings]);
 
-  const handleCardClick = useCallback((index: number) => {
+  const handleCardClick = useCallback((index: number, isXray: boolean = false) => {
     if (status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive) {
       return;
     }
     if (cards.length > 0 && matchedPairs.includes(cards[index].type)) {
       return;
     }
-    if(settings.sound) playFlipSound();
-    setFlippedIndices((prev) => [...prev, index]);
+    
+    if (settings.sound) playFlipSound();
+
+    if (isXray) {
+        setFlippedIndices([index]);
+        setTimeout(() => setFlippedIndices([]), 1000);
+        return;
+    }
+    
+    setFlippedIndices(prev => [...prev, index]);
   }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs]);
 
   useEffect(() => {
     if (flippedIndices.length === 2) {
-      setMoves((prev) => prev + 1);
+      setMoves(prev => prev + 1);
       const [firstIndex, secondIndex] = flippedIndices;
       const firstCard = cards[firstIndex];
       const secondCard = cards[secondIndex];
 
       if (firstCard.type === secondCard.type) {
         if(settings?.sound) setTimeout(() => playMatchSound(), 300);
-        setMatchedPairs((prev) => [...prev, firstCard.type]);
+        setMatchedPairs(prev => [...prev, firstCard.type]);
         setFlippedIndices([]);
+        if (isSecondChanceActive) setSecondChanceActive(false);
       } else {
-        setTimeout(() => {
-          setFlippedIndices([]);
-        }, 1000);
+        if (isSecondChanceActive) {
+            setFlippedIndices([]);
+            setSecondChanceActive(false);
+        } else {
+            setTimeout(() => setFlippedIndices([]), 1000);
+        }
       }
     }
-  }, [flippedIndices, cards, settings, playMatchSound]);
+  }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive]);
   
+  const useAutoMatch = useCallback(() => {
+    if (status !== 'playing') return;
+    const unmatchedCards = cards
+        .map((card, index) => ({...card, index}))
+        .filter(card => !matchedPairs.includes(card.type));
+    
+    if (unmatchedCards.length < 2) return;
+
+    const firstCard = unmatchedCards[0];
+    const secondCard = unmatchedCards.find(c => c.type === firstCard.type && c.index !== firstCard.index);
+
+    if (secondCard) {
+        setFlippedIndices([firstCard.index, secondCard.index]);
+        setMoves(prev => prev + 1);
+        if(settings?.sound) setTimeout(() => playMatchSound(), 300);
+        setMatchedPairs(prev => [...prev, firstCard.type]);
+        setTimeout(() => setFlippedIndices([]), 500);
+    }
+  }, [cards, matchedPairs, status, settings, playMatchSound]);
+
   useEffect(() => {
     if (cards.length > 0 && matchedPairs.length === cards.length / 2) {
       setStatus(GAME_STATUS.FINISHED);
       if(settings?.sound) setTimeout(() => playWinSound(), 500);
 
-      // Check for High Scores
+      const earned = Math.max(10, (settings!.gridSize * 10) - Math.floor(moves / 5) - Math.floor(time / 10));
+      setCoinsEarned(earned);
+
+      try {
+        const currentCoins = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.COINS) || '0');
+        localStorage.setItem(LOCAL_STORAGE_KEYS.COINS, JSON.stringify(currentCoins + earned));
+      } catch(e) { console.error("Failed to save coins", e)}
+      
       try {
         const highScores: Record<string, HighScore> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.HIGH_SCORES) || '{}');
         const currentHighScore = highScores[settings!.gridSize];
@@ -127,25 +189,23 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
           highScores[settings!.gridSize] = { moves, time };
           localStorage.setItem(LOCAL_STORAGE_KEYS.HIGH_SCORES, JSON.stringify(highScores));
           setIsNewHighScore(true);
-          window.dispatchEvent(new Event('storage')); // Notify other components
         }
       } catch (e) { console.error("Failed to save high score", e) }
 
-      // Check for Achievements
       try {
         const existingAchievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
         const isFirstWin = existingAchievements.length === 0;
 
-        const justUnlocked = checkAchievements({ moves, time, gridSize: settings!.gridSize, theme: settings!.theme, isFirstWin });
+        const justUnlocked = checkAchievements({ moves, time, gridSize: settings!.gridSize, theme: settings!.theme, gameMode: settings!.gameMode, isFirstWin });
         const newAchievements = justUnlocked.filter(ach => !existingAchievements.includes(ach.id));
 
         if (newAchievements.length > 0) {
           const allUnlocked = [...existingAchievements, ...newAchievements.map(ach => ach.id)];
           localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(allUnlocked));
           setUnlockedAchievements(newAchievements);
-          window.dispatchEvent(new Event('storage')); // Notify other components
         }
       } catch(e) { console.error("Failed to save achievements", e) }
+      window.dispatchEvent(new Event('storage'));
     }
   }, [matchedPairs, cards, settings, playWinSound, moves, time]);
 
@@ -162,11 +222,14 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     hintsLeft,
     isNewHighScore,
     unlockedAchievements,
+    coinsEarned,
     startGame,
     restartGame,
     togglePause,
     handleCardClick,
     showHint,
     canUseHint,
+    useAutoMatch,
+    setSecondChanceActive,
   };
 };

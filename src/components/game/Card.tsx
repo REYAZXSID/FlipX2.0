@@ -1,9 +1,10 @@
+
 "use client";
 
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Puzzle } from 'lucide-react';
+import { Brain } from 'lucide-react';
 
 type CardProps = {
   content: string;
@@ -12,9 +13,10 @@ type CardProps = {
   onClick: () => void;
   isImageType: boolean;
   hint?: string;
+  cardBackClass: string;
 };
 
-export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint }: CardProps) {
+export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint, cardBackClass }: CardProps) {
   const handleCardClick = () => {
     if (isFlipped || isMatched) {
       return;
@@ -31,9 +33,9 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
   return (
     <div className="card-container aspect-square" onClick={handleCardClick}>
       <div className={cardClasses}>
-        <div className="card-face card-face-front transition-colors p-2">
-          <div className="w-full h-full rounded-md bg-primary/10 flex items-center justify-center">
-            <Puzzle className="w-1/2 h-1/2 text-primary/30" />
+        <div className={cn("card-face card-face-front transition-colors p-2", cardBackClass)}>
+          <div className="w-full h-full rounded-md flex items-center justify-center">
+            <Brain className="w-1/2 h-1/2 text-primary-foreground/30" />
           </div>
         </div>
         <div className={cn(

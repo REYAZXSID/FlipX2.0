@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -101,10 +102,36 @@ body {
   .card-face-front {
     @apply bg-secondary hover:bg-muted overflow-hidden;
   }
+
   .card-face-back {
     @apply bg-card;
     transform: rotateY(180deg);
   }
+
+  .card-back-default {
+    background-color: hsl(var(--primary)/0.1);
+  }
+
+  .card-back-galaxy {
+    background-image:
+      radial-gradient(ellipse at 20% 80%, hsl(var(--primary)/0.5), transparent),
+      radial-gradient(ellipse at 80% 10%, hsl(var(--accent)/0.5), transparent);
+    background-color: hsl(var(--primary)/0.2);
+  }
+
+  .card-back-circuit {
+    background-color: hsl(var(--muted));
+    background-image: linear-gradient(hsl(var(--primary)/0.1) 1px, transparent 1px), linear-gradient(to right, hsl(var(--primary)/0.1) 1px, hsl(var(--muted)) 1px);
+    background-size: 20px 20px;
+  }
+
+  .card-back-carbon {
+    background-color: hsl(var(--foreground)/0.8);
+    background-image: linear-gradient(45deg, hsl(var(--foreground)/0.9) 25%, transparent 25%, transparent 75%, hsl(var(--foreground)/0.9) 75%, hsl(var(--foreground)/0.9)),
+                      linear-gradient(-45deg, hsl(var(--foreground)/0.9) 25%, transparent 25%, transparent 75%, hsl(var(--foreground)/0.9) 75%, hsl(var(--foreground)/0.9));
+    background-size: 10px 10px;
+  }
+
 }
 
 @keyframes bounce {

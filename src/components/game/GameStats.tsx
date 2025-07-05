@@ -1,11 +1,14 @@
+
 "use client";
 
-import { Timer, Star, Move } from "lucide-react";
+import { Timer, Star, Move, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type GameStatsProps = {
   time: number;
   moves: number;
   gridSize: number;
+  gameMode: string;
 };
 
 const formatTime = (seconds: number) => {
@@ -23,15 +26,16 @@ const calculateStars = (moves: number, gridSize: number) => {
   return 1;
 };
 
-export function GameStats({ time, moves, gridSize }: GameStatsProps) {
+export function GameStats({ time, moves, gridSize, gameMode }: GameStatsProps) {
   const stars = calculateStars(moves, gridSize);
+  const isTimeAttack = gameMode === 'time-attack';
 
   return (
     <div className="flex flex-row flex-wrap items-center justify-center sm:justify-start bg-muted/50 p-3 rounded-lg gap-4 w-full sm:w-auto">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 text-lg">
-          <Timer className="h-6 w-6 text-primary" />
-          <span className="font-bold">{formatTime(time)}</span>
+          {isTimeAttack ? <Clock className={cn("h-6 w-6", time < 10 && "text-destructive animate-ping")}/> : <Timer className="h-6 w-6 text-primary" />}
+          <span className={cn("font-bold", isTimeAttack && time < 10 && "text-destructive")}>{formatTime(time)}</span>
         </div>
         <div className="flex items-center gap-2 text-lg">
           <Move className="h-6 w-6 text-primary" />

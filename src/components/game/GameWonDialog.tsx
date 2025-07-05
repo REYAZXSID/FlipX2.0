@@ -1,5 +1,8 @@
+
 "use client";
 
+import React, { useState, useEffect } from 'react';
+import ReactConfetti from "react-confetti"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +18,8 @@ import type { Achievement } from "@/lib/achievements";
 import { UnlockedAchievements } from "./UnlockedAchievements";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Trophy } from "lucide-react";
+import { Trophy, CircleDollarSign } from "lucide-react";
+import { useWindowSize } from "react-use";
 
 type GameWonDialogProps = {
   isOpen: boolean;
@@ -26,6 +30,8 @@ type GameWonDialogProps = {
   onNewGame: () => void;
   isNewHighScore: boolean;
   unlockedAchievements: Achievement[];
+  coinsEarned: number;
+  gameMode: string;
 };
 
 export function GameWonDialog({
@@ -36,12 +42,16 @@ export function GameWonDialog({
   onPlayAgain,
   onNewGame,
   isNewHighScore,
-  unlockedAchievements
+  unlockedAchievements,
+  coinsEarned,
+  gameMode,
 }: GameWonDialogProps) {
+  const { width, height } = useWindowSize();
   if (!isOpen) return null;
 
   return (
     <AlertDialog open={isOpen}>
+       {isOpen && <ReactConfetti width={width} height={height} recycle={false} numberOfPieces={300} />}
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader className="items-center text-center">
           <div className="bg-primary/10 p-4 rounded-full">
@@ -58,9 +68,14 @@ export function GameWonDialog({
         </AlertDialogHeader>
 
         <div className="my-4 p-4 bg-muted/50 rounded-lg">
-            <GameStats time={time} moves={moves} gridSize={gridSize} />
+            <GameStats time={time} moves={moves} gridSize={gridSize} gameMode={gameMode}/>
         </div>
         
+        <div className="flex items-center justify-center gap-2 text-xl font-bold text-yellow-500">
+            <CircleDollarSign className="w-8 h-8"/>
+            <span>You earned {coinsEarned} coins!</span>
+        </div>
+
         {unlockedAchievements.length > 0 && (
           <>
             <Separator className="my-2" />
