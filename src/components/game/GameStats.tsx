@@ -27,8 +27,8 @@ export function GameStats({ time, moves, gridSize }: GameStatsProps) {
   const stars = calculateStars(moves, gridSize);
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-muted/50 p-3 rounded-lg mb-4 gap-4">
-      <div className="flex items-center gap-4 w-full justify-between sm:w-auto sm:justify-start">
+    <div className="flex flex-row flex-wrap items-center justify-center sm:justify-start bg-muted/50 p-3 rounded-lg gap-4 w-full sm:w-auto">
+      <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 text-lg">
           <Timer className="h-6 w-6 text-primary" />
           <span className="font-bold">{formatTime(time)}</span>

@@ -7,6 +7,11 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'grid-cols-2',
+    'grid-cols-4',
+    'grid-cols-6',
+  ],
   theme: {
     extend: {
       fontFamily: {

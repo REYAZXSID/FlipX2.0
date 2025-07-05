@@ -80,31 +80,33 @@ function PlayPage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
-       <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
-            <GameControls
-                onRestart={() => { playButtonSound(); game.restartGame(); }}
-                onPause={game.togglePause}
-                isPaused={game.status === 'paused'}
-                toggleSound={toggleSound}
-                isSoundEnabled={soundEnabled}
-                onShowHint={() => { playButtonSound(); game.showHint(); }}
-                hintsLeft={game.hintsLeft}
-                canUseHint={game.canUseHint()}
-            />
-            <ThemeToggle />
-        </div>
-
       <div className="w-full max-w-7xl mx-auto">
         <Header />
 
-        <main className="w-full max-w-3xl mx-auto mt-4">
+        <main className="w-full max-w-4xl mx-auto mt-4">
           
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                <GameStats
+                    time={game.time}
+                    moves={game.moves}
+                    gridSize={game.settings.gridSize}
+                />
+                <div className="flex items-center gap-2">
+                    <GameControls
+                        onRestart={() => { playButtonSound(); game.restartGame(); }}
+                        onPause={game.togglePause}
+                        isPaused={game.status === 'paused'}
+                        toggleSound={toggleSound}
+                        isSoundEnabled={soundEnabled}
+                        onShowHint={() => { playButtonSound(); game.showHint(); }}
+                        hintsLeft={game.hintsLeft}
+                        canUseHint={game.canUseHint()}
+                    />
+                    <ThemeToggle />
+                </div>
+            </div>
+
             <div className="relative">
-              <GameStats
-                time={game.time}
-                moves={game.moves}
-                gridSize={game.settings.gridSize}
-              />
               <GameBoard
                 cards={game.cards}
                 flippedIndices={game.flippedIndices}
