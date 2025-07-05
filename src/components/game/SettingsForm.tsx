@@ -27,8 +27,8 @@ const FormSchema = z.object({
 });
 
 type SettingsFormProps = {
-  onStartGame: (settings: GameSettings) => void;
-  defaultValues: GameSettings;
+  onStartGame: (settings: Omit<GameSettings, 'sound'>) => void;
+  defaultValues: Omit<GameSettings, 'sound'>;
 };
 
 export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) {
@@ -40,13 +40,9 @@ export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) 
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    onStartGame(data);
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onStartGame)} className="space-y-6">
         <FormField
           control={form.control}
           name="gridSize"

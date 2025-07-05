@@ -12,7 +12,6 @@ export type GameSettings = {
 };
 
 export const GAME_STATUS = {
-  IDLE: 'idle',
   PLAYING: 'playing',
   PAUSED: 'paused',
   FINISHED: 'finished',

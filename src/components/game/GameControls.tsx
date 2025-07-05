@@ -7,8 +7,6 @@ import {
   Play,
   Volume2,
   VolumeX,
-  Moon,
-  Sun,
   Lightbulb,
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -19,8 +17,6 @@ type GameControlsProps = {
   isPaused: boolean;
   toggleSound: () => void;
   isSoundEnabled: boolean;
-  toggleTheme: () => void;
-  theme: string | undefined;
   onShowHint: () => void;
   hintsLeft: number;
   canUseHint: boolean;
@@ -32,8 +28,6 @@ export function GameControls({
   isPaused,
   toggleSound,
   isSoundEnabled,
-  toggleTheme,
-  theme,
   onShowHint,
   hintsLeft,
   canUseHint,
@@ -87,18 +81,6 @@ export function GameControls({
           </TooltipTrigger>
           <TooltipContent>
             <p>Toggle Sound</p>
-          </TooltipContent>
-        </Tooltip>
-        
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={toggleTheme}>
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              <span className="sr-only">Toggle Theme</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Toggle Theme</p>
           </TooltipContent>
         </Tooltip>
       </div>

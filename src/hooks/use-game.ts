@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { useTheme } from 'next-themes';
 import {
   type GameSettings,
   type Card as CardType,
   createCardSet,
   GAME_STATUS,
-  DEFAULT_SETTINGS,
 } from '@/lib/game-constants';
 
 type UseGameProps = {
@@ -16,11 +14,9 @@ type UseGameProps = {
   playWinSound: () => void;
 };
 
-const LOCAL_STORAGE_KEY = 'card-matcher-settings';
-
 export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGameProps) => {
-  const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
-  const [status, setStatus] = useState(GAME_STATUS.IDLE);
+  const [settings, setSettings] = useState<GameSettings | null>(null);
+  const [status, setStatus] = useState(GAME_STATUS.PLAYING);
   const [cards, setCards] = useState<CardType[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
@@ -28,30 +24,9 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [time, setTime] = useState(0);
   const [isHintActive, setIsHintActive] = useState(false);
   const [hintsLeft, setHintsLeft] = useState(3);
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    try {
-      const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (savedSettings) {
-        setSettings(JSON.parse(savedSettings));
-      }
-    } catch (error) {
-      console.error("Could not load settings from localStorage", error);
-    }
-  }, []);
-  
-  const saveSettings = useCallback((newSettings: GameSettings) => {
-    setSettings(newSettings);
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSettings));
-    } catch (error) {
-      console.error("Could not save settings to localStorage", error);
-    }
-  }, []);
 
   const startGame = useCallback((newSettings: GameSettings) => {
-    saveSettings(newSettings);
+    setSettings(newSettings);
     setCards(createCardSet(newSettings.gridSize, newSettings.theme));
     setStatus(GAME_STATUS.PLAYING);
     setFlippedIndices([]);
@@ -59,14 +34,12 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setMoves(0);
     setTime(0);
     setHintsLeft(3);
-  }, [saveSettings]);
-
-  const resetGame = useCallback(() => {
-    setStatus(GAME_STATUS.IDLE);
   }, []);
 
   const restartGame = useCallback(() => {
-    startGame(settings);
+    if (settings) {
+      startGame(settings);
+    }
   }, [settings, startGame]);
 
   const togglePause = useCallback(() => {
@@ -74,15 +47,6 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     else if (status === 'paused') setStatus(GAME_STATUS.PLAYING);
   }, [status]);
   
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  }, [theme, setTheme]);
-
-  const toggleSound = useCallback(() => {
-    const newSettings = { ...settings, sound: !settings.sound };
-    saveSettings(newSettings);
-  }, [settings, saveSettings]);
-
   const canUseHint = useCallback(() => {
     return hintsLeft > 0 && status === 'playing';
   }, [hintsLeft, status]);
@@ -105,12 +69,12 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   }, [status]);
 
   const handleCardClick = useCallback((index: number) => {
-    if (status !== 'playing' || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive) {
+    if (status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive) {
       return;
     }
     if(settings.sound) playFlipSound();
     setFlippedIndices((prev) => [...prev, index]);
-  }, [status, flippedIndices, isHintActive, settings.sound, playFlipSound]);
+  }, [status, flippedIndices, isHintActive, settings, playFlipSound]);
 
   useEffect(() => {
     if (flippedIndices.length === 2) {
@@ -120,7 +84,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       setMoves((prev) => prev + 1);
 
       if (firstCard.type === secondCard.type) {
-        if(settings.sound) setTimeout(() => playMatchSound(), 300);
+        if(settings?.sound) setTimeout(() => playMatchSound(), 300);
         setMatchedPairs((prev) => [...prev, firstCard.type]);
         setFlippedIndices([]);
       } else {
@@ -129,14 +93,14 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         }, 1000);
       }
     }
-  }, [flippedIndices, cards, settings.sound, playMatchSound]);
+  }, [flippedIndices, cards, settings, playMatchSound]);
   
   useEffect(() => {
     if (cards.length > 0 && matchedPairs.length === cards.length / 2) {
       setStatus(GAME_STATUS.FINISHED);
-      if(settings.sound) setTimeout(() => playWinSound(), 500);
+      if(settings?.sound) setTimeout(() => playWinSound(), 500);
     }
-  }, [matchedPairs, cards, settings.sound, playWinSound]);
+  }, [matchedPairs, cards, settings, playWinSound]);
 
 
   return {
@@ -149,14 +113,10 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     time,
     isHintActive,
     hintsLeft,
-    theme,
     startGame,
     restartGame,
-    resetGame,
     togglePause,
     handleCardClick,
-    toggleTheme,
-    toggleSound,
     showHint,
     canUseHint,
   };
