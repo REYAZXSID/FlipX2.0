@@ -32,7 +32,7 @@ export function GameBoard({
         <Card
           key={index}
           content={card.content}
-          isFlipped={isHintActive || flippedIndices.includes(index)}
+          isFlipped={isHintActive || flippedIndices.includes(index) || matchedPairs.includes(card.type)}
           isMatched={matchedPairs.includes(card.type)}
           onClick={() => onCardClick(index)}
           isImageType={card.image}
