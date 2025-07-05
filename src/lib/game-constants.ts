@@ -72,7 +72,6 @@ export const LOCAL_STORAGE_KEYS = {
   SETTINGS: 'flipfun-settings',
   HIGH_SCORES: 'flipfun-high-scores',
   ACHIEVEMENTS: 'flipfun-achievements',
-  AI_CARDS: 'flipfun-ai-cards',
 };
 
 

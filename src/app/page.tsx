@@ -16,6 +16,7 @@ import { HighScores } from '@/components/game/HighScores';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { setAICards } from '@/lib/ai-card-cache';
 
 export default function Home() {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function Home() {
         
         const fullCardSet = [...generatedPairs, ...generatedPairs].sort(() => Math.random() - 0.5);
         
-        localStorage.setItem(LOCAL_STORAGE_KEYS.AI_CARDS, JSON.stringify(fullCardSet));
+        setAICards(fullCardSet);
 
       } catch (err) {
         console.error("AI card generation failed", err);

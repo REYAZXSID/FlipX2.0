@@ -12,6 +12,7 @@ import { useSound } from '@/hooks/use-sound';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, type Card as CardType } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
+import { getAICards } from '@/lib/ai-card-cache';
 
 function PlayPage() {
   const router = useRouter();
@@ -28,19 +29,9 @@ function PlayPage() {
 
   const aiCards = useMemo(() => {
     if (themeName === 'ai-magic') {
-      try {
-        const storedCards = localStorage.getItem(LOCAL_STORAGE_KEYS.AI_CARDS);
-        if (storedCards) {
-          const parsedCards: CardType[] = JSON.parse(storedCards);
-          // Ensure card count matches grid size
-          if (parsedCards.length === gridSize * gridSize) {
-             // AI cards are stored for one-time use
-             localStorage.removeItem(LOCAL_STORAGE_KEYS.AI_CARDS);
-            return parsedCards;
-          }
-        }
-      } catch (e) {
-        console.error("Failed to parse AI cards from localStorage", e);
+      const cards = getAICards();
+      if (cards && cards.length === gridSize * gridSize) {
+        return cards;
       }
     }
     return null;
