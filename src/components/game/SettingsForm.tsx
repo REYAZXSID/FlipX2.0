@@ -23,11 +23,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { THEMES, GRID_SIZES, GAME_MODES, CARD_BACKS, type GameSettings } from "@/lib/game-constants";
 import { Loader2, Lock, ArrowLeft, ArrowRight, Timer, Bomb, Square, LayoutGrid, Table2 } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
@@ -78,11 +77,12 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
     resolver: zodResolver(FormSchema),
     defaultValues: {
       gridSize: defaultValues.gridSize,
-      theme: defaultValues.theme,
+      theme: "", // Changed to force selection
       customTheme: defaultValues.customTheme,
       gameMode: defaultValues.gameMode || 'classic',
-      cardBack: defaultValues.cardBack || 'default',
+      cardBack: "", // Changed to force selection
     },
+    mode: 'onChange', // Added for better UX with validation
   });
 
   const selectedTheme = useWatch({
@@ -108,38 +108,40 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
         <div className="relative h-2 w-full bg-muted rounded-full mb-8">
             <div 
                 className="absolute top-0 left-0 h-2 bg-primary rounded-full transition-all duration-500 ease-out" 
-                style={{ width: `${((step) / (STEPS.length - 1)) * 100}%` }}
+                style={{ width: `${(step / (STEPS.length -1)) * 100}%` }}
             ></div>
         </div>
 
         <div key={step} className="min-h-[300px] animate-step-in">
+          <div className="text-center mb-6">
+              <h3 className="text-xl font-semibold">{STEPS[step].title}</h3>
+              <p className="text-muted-foreground">{STEPS[step].description}</p>
+          </div>
           {step === 0 && (
              <FormField
                 control={form.control}
                 name="gameMode"
                 render={({ field }) => (
                     <FormItem>
-                        <div className="text-center mb-6">
-                            <h3 className="text-xl font-semibold">{STEPS[0].title}</h3>
-                            <p className="text-muted-foreground">{STEPS[0].description}</p>
-                        </div>
                         <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {GAME_MODES.map(mode => (
                                 <FormItem key={mode.id}>
                                     <FormControl>
                                         <RadioGroupItem value={mode.id} id={`radio-${field.name}-${mode.id}`} className="sr-only" />
                                     </FormControl>
-                                    <Label htmlFor={`radio-${field.name}-${mode.id}`}>
+                                    <label htmlFor={`radio-${field.name}-${mode.id}`}>
                                         <Card className={cn(
                                             "cursor-pointer hover:border-primary transition-all p-6 text-center h-full",
                                             field.value === mode.id && "border-primary ring-2 ring-primary shadow-lg"
                                         )}>
-                                            <CardContent className="p-0 flex flex-col items-center justify-center gap-4">
-                                                {mode.id === 'classic' ? <Timer className="w-10 h-10 text-primary" /> : <Bomb className="w-10 h-10 text-destructive" />}
-                                                <span className="text-lg font-semibold">{mode.label}</span>
-                                            </CardContent>
+                                            <CardHeader className="p-0">
+                                              <CardTitle className="flex flex-col items-center justify-center gap-4">
+                                                  {mode.id === 'classic' ? <Timer className="w-10 h-10 text-primary" /> : <Bomb className="w-10 h-10 text-destructive" />}
+                                                  <span className="text-lg font-semibold">{mode.label}</span>
+                                              </CardTitle>
+                                            </CardHeader>
                                         </Card>
-                                    </Label>
+                                    </label>
                                 </FormItem>
                             ))}
                         </RadioGroup>
@@ -155,10 +157,6 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
                 name="gridSize"
                 render={({ field }) => (
                     <FormItem>
-                         <div className="text-center mb-6">
-                            <h3 className="text-xl font-semibold">{STEPS[1].title}</h3>
-                            <p className="text-muted-foreground">{STEPS[1].description}</p>
-                        </div>
                         <RadioGroup onValueChange={(val) => field.onChange(Number(val))} value={String(field.value)} className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {[
                                 { size: 2, label: '2x2', icon: <Square className="w-8 h-8"/> },
@@ -169,18 +167,20 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
                                     <FormControl>
                                         <RadioGroupItem value={String(item.size)} id={`radio-${field.name}-${item.size}`} className="sr-only" />
                                     </FormControl>
-                                    <Label htmlFor={`radio-${field.name}-${item.size}`}>
+                                    <label htmlFor={`radio-${field.name}-${item.size}`}>
                                         <Card className={cn(
                                             "cursor-pointer hover:border-primary transition-all p-6 text-center h-full",
                                             field.value === item.size && "border-primary ring-2 ring-primary shadow-lg"
                                         )}>
-                                            <CardContent className="p-0 flex flex-col items-center justify-center gap-4">
-                                                <div className="text-primary">{item.icon}</div>
-                                                <span className="text-lg font-semibold">{item.label}</span>
-                                                <span className="text-sm text-muted-foreground">{GRID_SIZES.find(s=>s.value===item.size)?.label.match(/\((.*)\)/)?.[1]}</span>
-                                            </CardContent>
+                                            <CardHeader className="p-0">
+                                              <CardTitle className="flex flex-col items-center justify-center gap-4">
+                                                  <div className="text-primary">{item.icon}</div>
+                                                  <span className="text-lg font-semibold">{item.label}</span>
+                                                  <span className="text-sm text-muted-foreground">{GRID_SIZES.find(s=>s.value===item.size)?.label.match(/\((.*)\)/)?.[1]}</span>
+                                              </CardTitle>
+                                            </CardHeader>
                                         </Card>
-                                    </Label>
+                                    </label>
                                 </FormItem>
                             ))}
                         </RadioGroup>
@@ -192,10 +192,6 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
 
           {step === 2 && (
             <div className="space-y-6">
-                <div className="text-center mb-6">
-                    <h3 className="text-xl font-semibold">{STEPS[2].title}</h3>
-                    <p className="text-muted-foreground">{STEPS[2].description}</p>
-                </div>
                 <FormField
                     control={form.control}
                     name="theme"
