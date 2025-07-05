@@ -4,7 +4,7 @@
 import React from 'react';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, ArrowLeft } from 'lucide-react';
+import { Sparkles, ArrowLeft, CircleDollarSign } from 'lucide-react';
 import { POWERUPS, CARD_BACKS } from '@/lib/game-constants';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -12,20 +12,24 @@ import { useUserData } from '@/hooks/use-user-data';
 import { ShopItemCard } from '@/components/shop/ShopItemCard';
 
 export default function ShopPage() {
-    const { purchaseItem, inventory } = useUserData();
+    const { coins, purchaseItem, inventory } = useUserData();
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-4xl mx-auto mt-8">
-            <div className="flex justify-start w-full mb-6">
+            <div className="flex justify-between items-center w-full mb-6">
                 <Button asChild variant="outline">
                     <Link href="/">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to Game
                     </Link>
                 </Button>
+                <div className="flex items-center gap-2 bg-muted p-2 rounded-lg font-bold">
+                    <CircleDollarSign className="w-6 h-6 text-yellow-500"/>
+                    <span className="text-lg">{coins}</span>
+                </div>
             </div>
             <Card className="shadow-xl border-2 border-primary/20">
                 <CardHeader>
