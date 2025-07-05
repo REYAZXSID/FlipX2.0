@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Gamepad2, Trophy, Home, ShoppingCart, CircleDollarSign } from 'lucide-react';
+import { Gamepad2, Ellipsis, Home, CircleDollarSign } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -14,9 +14,8 @@ export function Header() {
     const pathname = usePathname();
 
     const navItems = [
-        { href: "/", label: "Home", Icon: Home },
-        { href: "/shop", label: "Shop", Icon: ShoppingCart },
-        { href: "/achievements", label: "Achievements", Icon: Trophy },
+        { href: "/", label: "Game", Icon: Home },
+        { href: "/dashboard", label: "Dashboard", Icon: Ellipsis },
     ];
 
   return (
@@ -37,7 +36,7 @@ export function Header() {
                     {navItems.map(item => (
                          <Tooltip key={item.href}>
                             <TooltipTrigger asChild>
-                                <Button asChild variant={pathname === item.href ? "secondary" : "ghost"} size="icon">
+                                <Button asChild variant={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/') ? "secondary" : "ghost"} size="icon">
                                     <Link href={item.href}>
                                         <item.Icon className="h-5 w-5" />
                                         <span className="sr-only">{item.label}</span>

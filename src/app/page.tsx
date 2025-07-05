@@ -7,16 +7,12 @@ import { SettingsForm } from '@/components/game/SettingsForm';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSound } from '@/hooks/use-sound';
-import { Sparkles, Loader2, Trophy, ShoppingCart } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import type { GameSettings } from '@/lib/game-constants';
 import { DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
-import { generateCards, type GenerateCardsOutput } from '@/ai/flows/generate-cards-flow';
+import { generateCards } from '@/ai/flows/generate-cards-flow';
 import { useToast } from '@/hooks/use-toast';
-import { HighScores } from '@/components/game/HighScores';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { setAICards } from '@/lib/ai-card-cache';
 
 export default function Home() {
@@ -88,8 +84,8 @@ export default function Home() {
       <OnboardingDialog />
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
-        <main className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-            <Card className="shadow-xl border-2 border-primary/20 row-start-1 lg:row-auto">
+        <main className="w-full flex justify-center mt-8">
+            <Card className="shadow-xl border-2 border-primary/20 w-full max-w-lg">
               <CardHeader>
                 <CardTitle className="text-center text-3xl font-headline tracking-wide">Game Settings</CardTitle>
               </CardHeader>
@@ -101,40 +97,6 @@ export default function Home() {
                 />
               </CardContent>
             </Card>
-
-            <div className="flex flex-col gap-8">
-              <HighScores />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                 <Card className="shadow-lg border-border/80">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-2xl font-headline tracking-wide">
-                        <Trophy className="w-8 h-8 text-yellow-500" />
-                        Achievements
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground mb-4">Track your progress and unlock cool badges!</p>
-                        <Link href="/achievements" passHref>
-                            <Button className="w-full" variant="outline">View Achievements</Button>
-                        </Link>
-                    </CardContent>
-                 </Card>
-                 <Card className="shadow-lg border-border/80">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-2xl font-headline tracking-wide">
-                        <ShoppingCart className="w-8 h-8 text-green-500" />
-                        Shop
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-muted-foreground mb-4">Buy power-ups and customize your game!</p>
-                        <Link href="/shop" passHref>
-                            <Button className="w-full" variant="outline">Go to Shop</Button>
-                        </Link>
-                    </CardContent>
-                 </Card>
-              </div>
-            </div>
         </main>
       </div>
 
