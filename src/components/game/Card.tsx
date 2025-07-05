@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { BrainCircuit } from 'lucide-react';
 
 type CardProps = {
   content: string;
@@ -24,7 +25,7 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
   const cardClasses = cn(
     'card rounded-lg',
     { 'is-flipped': isFlipped || isMatched },
-    isMatched ? 'opacity-70' : 'cursor-pointer'
+    isMatched ? 'cursor-not-allowed' : 'cursor-pointer'
   );
 
   return (
@@ -32,10 +33,13 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
       <div className={cardClasses}>
         <div className="card-face card-face-front transition-colors p-2">
           <div className="w-full h-full rounded-md bg-primary/10 flex items-center justify-center">
-            <div className="w-1/2 h-1/2 rounded-full bg-primary/20" />
+            <BrainCircuit className="w-1/2 h-1/2 text-primary/30" />
           </div>
         </div>
-        <div className="card-face card-face-back border-2 border-primary shadow-lg">
+        <div className={cn(
+            "card-face card-face-back border-2 shadow-lg transition-all",
+            isMatched ? "border-accent ring-2 ring-offset-2 ring-offset-background ring-accent" : "border-primary"
+        )}>
           {isImageType ? (
             <Image
               src={content}
