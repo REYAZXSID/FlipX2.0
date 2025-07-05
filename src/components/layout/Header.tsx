@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Gamepad2, Ellipsis } from 'lucide-react';
+import { Gamepad2, LayoutDashboard } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -21,7 +21,7 @@ export function Header() {
                     <TooltipTrigger asChild>
                         <Button asChild variant="ghost" size="icon">
                             <Link href="/dashboard">
-                                <Ellipsis className="h-5 w-5" />
+                                <LayoutDashboard className="h-5 w-5" />
                                 <span className="sr-only">Dashboard</span>
                             </Link>
                         </Button>
