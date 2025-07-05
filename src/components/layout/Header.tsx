@@ -19,7 +19,7 @@ export function Header() {
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button asChild variant="ghost" size="icon">
+                        <Button asChild variant="outline" size="icon">
                             <Link href="/dashboard">
                                 <LayoutDashboard className="h-5 w-5" />
                                 <span className="sr-only">Dashboard</span>
