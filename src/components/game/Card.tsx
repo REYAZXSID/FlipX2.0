@@ -15,15 +15,16 @@ type CardProps = {
 
 export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint }: CardProps) {
   const handleCardClick = () => {
-    if (!isFlipped && !isMatched) {
-      onClick();
+    if (isFlipped || isMatched) {
+      return;
     }
+    onClick();
   };
 
   const cardClasses = cn(
-    'card cursor-pointer rounded-lg',
+    'card rounded-lg',
     { 'is-flipped': isFlipped || isMatched },
-    isMatched ? 'opacity-70' : ''
+    isMatched ? 'opacity-70' : 'cursor-pointer'
   );
 
   return (

@@ -72,16 +72,20 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     if (status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive) {
       return;
     }
+    // Prevent clicking on already matched cards
+    if (cards.length > 0 && matchedPairs.includes(cards[index].type)) {
+      return;
+    }
     if(settings.sound) playFlipSound();
     setFlippedIndices((prev) => [...prev, index]);
-  }, [status, flippedIndices, isHintActive, settings, playFlipSound]);
+  }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs]);
 
   useEffect(() => {
     if (flippedIndices.length === 2) {
+      setMoves((prev) => prev + 1);
       const [firstIndex, secondIndex] = flippedIndices;
       const firstCard = cards[firstIndex];
       const secondCard = cards[secondIndex];
-      setMoves((prev) => prev + 1);
 
       if (firstCard.type === secondCard.type) {
         if(settings?.sound) setTimeout(() => playMatchSound(), 300);
