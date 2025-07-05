@@ -2,16 +2,15 @@
 "use client";
 
 import React from 'react';
-import { Header } from '@/components/layout/Header';
-import { Sparkles, ArrowLeft, CircleDollarSign } from 'lucide-react';
-import { POWERUPS, CARD_BACKS } from '@/lib/game-constants';
 import Link from 'next/link';
+import { Header } from '@/components/layout/Header';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Sparkles, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
-import { ShopItemCard } from '@/components/shop/ShopItemCard';
 
 export default function ShopPage() {
-    const { coins, purchaseItem, inventory } = useUserData();
+    const { coins } = useUserData();
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
@@ -36,32 +35,39 @@ export default function ShopPage() {
                 </div>
             </div>
 
-            <div className="space-y-12">
-                <section>
-                    <h2 className="text-3xl font-bold font-headline mb-6 text-center">Power-Ups</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {POWERUPS.map((powerup) => (
-                            <ShopItemCard 
-                                key={powerup.id}
-                                item={powerup}
-                                onPurchase={() => purchaseItem(powerup)}
-                            />
-                        ))}
-                    </div>
-                </section>
-                <section>
-                    <h2 className="text-3xl font-bold font-headline mb-6 text-center">Card Backs</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {CARD_BACKS.map((cardBack) => (
-                            <ShopItemCard 
-                                key={cardBack.id}
-                                item={cardBack}
-                                onPurchase={() => purchaseItem(cardBack)}
-                                isOwned={inventory.includes(cardBack.id)}
-                            />
-                        ))}
-                    </div>
-                </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Link href="/shop/power-ups" className="group">
+                    <Card className="h-full flex flex-col justify-between text-center transition-all duration-300 transform hover:scale-105 hover:border-primary/80 hover:shadow-2xl">
+                        <CardHeader className="items-center p-6">
+                            <div className="flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-primary/10 text-primary transition-transform group-hover:scale-110 group-hover:rotate-[-5deg]">
+                                <Zap className="w-12 h-12" />
+                            </div>
+                            <CardTitle className="text-3xl font-headline">Power-Ups</CardTitle>
+                            <CardDescription className="mt-2">Boost your game with powerful single-use items.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-0">
+                            <Button variant="outline" className="w-full">
+                                Browse Power-Ups <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/shop/card-backs" className="group">
+                     <Card className="h-full flex flex-col justify-between text-center transition-all duration-300 transform hover:scale-105 hover:border-primary/80 hover:shadow-2xl">
+                        <CardHeader className="items-center p-6">
+                            <div className="flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-primary/10 text-primary transition-transform group-hover:scale-110 group-hover:rotate-[5deg]">
+                                <Layers className="w-12 h-12" />
+                            </div>
+                            <CardTitle className="text-3xl font-headline">Card Backs</CardTitle>
+                            <CardDescription className="mt-2">Customize your game with unique card designs.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-0">
+                            <Button variant="outline" className="w-full">
+                                Explore Designs <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Link>
             </div>
         </main>
       </div>
