@@ -1,4 +1,3 @@
-
 "use client";
 
 import { POWERUPS } from "@/lib/game-constants";
@@ -14,7 +13,7 @@ export function PowerupToolbar({ powerups, onUsePowerup }: PowerupToolbarProps) 
     return (
         <TooltipProvider>
             <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-30">
-                <div className="flex items-center gap-2 flex-wrap justify-center bg-background/80 backdrop-blur-sm p-2 rounded-lg shadow-lg border">
+                <div className="flex items-center gap-2 justify-center bg-background/80 backdrop-blur-sm p-2 rounded-full shadow-lg border">
                     {POWERUPS.map(powerup => {
                         const count = powerups[powerup.id] || 0;
                         return (
@@ -25,11 +24,11 @@ export function PowerupToolbar({ powerups, onUsePowerup }: PowerupToolbarProps) 
                                         size="icon"
                                         onClick={() => onUsePowerup(powerup.id)}
                                         disabled={count === 0}
-                                        className="relative w-14 h-14"
+                                        className="relative w-12 h-12"
                                     >
                                         <powerup.Icon className="h-6 w-6" />
                                         <span className="sr-only">{powerup.name}</span>
-                                        {count > 0 && <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">{count}</span>}
+                                        {count > 0 && <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">{count}</span>}
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent side="top">
