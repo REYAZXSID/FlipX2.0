@@ -24,12 +24,8 @@ export function GameBoard({
   return (
     <div
       className={cn(
-        "grid gap-2 sm:gap-4 p-4 bg-muted/50 rounded-lg shadow-inner",
-        `grid-cols-2`,
-        {
-          "grid-cols-4": gridSize === 4,
-          "grid-cols-6": gridSize === 6,
-        }
+        "grid gap-2 sm:gap-3 p-2 sm:p-4 bg-muted/50 rounded-lg shadow-inner",
+        `grid-cols-${gridSize}`
       )}
     >
       {cards.map((card, index) => (
@@ -40,6 +36,7 @@ export function GameBoard({
           isMatched={matchedPairs.includes(card.type)}
           onClick={() => onCardClick(index)}
           isImageType={card.image}
+          hint={card.hint}
         />
       ))}
     </div>

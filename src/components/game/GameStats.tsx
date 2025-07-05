@@ -27,22 +27,22 @@ export function GameStats({ time, moves, gridSize }: GameStatsProps) {
   const stars = calculateStars(moves, gridSize);
 
   return (
-    <div className="flex justify-between items-center bg-muted/50 p-2 rounded-lg mb-4">
-      <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-muted/50 p-3 rounded-lg mb-4 gap-4">
+      <div className="flex items-center gap-4 w-full justify-between sm:w-auto sm:justify-start">
         <div className="flex items-center gap-2 text-lg">
-          <Timer className="h-5 w-5 text-primary" />
-          <span>{formatTime(time)}</span>
+          <Timer className="h-6 w-6 text-primary" />
+          <span className="font-bold">{formatTime(time)}</span>
         </div>
         <div className="flex items-center gap-2 text-lg">
-          <Move className="h-5 w-5 text-primary" />
-          <span>{moves} Moves</span>
+          <Move className="h-6 w-6 text-primary" />
+          <span className="font-bold">{moves} Moves</span>
         </div>
       </div>
       <div className="flex items-center">
         {[...Array(3)].map((_, i) => (
           <Star
             key={i}
-            className={`h-6 w-6 ${i < stars ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"}`}
+            className={`h-7 w-7 transition-colors duration-300 ${i < stars ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"}`}
           />
         ))}
       </div>

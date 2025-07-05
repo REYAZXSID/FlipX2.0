@@ -40,11 +40,11 @@ export function GameControls({
 }: GameControlsProps) {
   return (
     <TooltipProvider>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap justify-center">
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={onShowHint} disabled={!canUseHint}>
-              <Lightbulb className="h-4 w-4" />
+            <Button variant="outline" size="icon" onClick={onShowHint} disabled={!canUseHint} className="relative">
+              <Lightbulb className="h-5 w-5" />
               <span className="sr-only">Hint</span>
               {hintsLeft > 0 && <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">{hintsLeft}</span>}
             </Button>
@@ -57,7 +57,7 @@ export function GameControls({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" size="icon" onClick={onRestart}>
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="h-5 w-5" />
               <span className="sr-only">Restart Game</span>
             </Button>
           </TooltipTrigger>
@@ -69,7 +69,7 @@ export function GameControls({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" size="icon" onClick={onPause}>
-              {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              {isPaused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
               <span className="sr-only">{isPaused ? "Resume" : "Pause"} Game</span>
             </Button>
           </TooltipTrigger>
@@ -81,7 +81,7 @@ export function GameControls({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" size="icon" onClick={toggleSound}>
-              {isSoundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              {isSoundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
               <span className="sr-only">Toggle Sound</span>
             </Button>
           </TooltipTrigger>
@@ -93,7 +93,7 @@ export function GameControls({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="outline" size="icon" onClick={toggleTheme}>
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               <span className="sr-only">Toggle Theme</span>
             </Button>
           </TooltipTrigger>

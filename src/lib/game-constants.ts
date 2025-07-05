@@ -2,6 +2,7 @@ export type Card = {
   type: string;
   content: string;
   image: boolean;
+  hint?: string;
 };
 
 export type GameSettings = {
@@ -35,6 +36,12 @@ export const THEMES = {
     label: 'Animals',
     items: ['🐘', '🦒', '🦓', '🦏', ' Hippo', '🐅', '🐆', '🐊', '🐍', '🐢', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦀', '🐡'],
     image: false,
+  },
+  space: {
+    name: 'space',
+    label: 'Space (AI Images)',
+    items: ['planet', 'rocket', 'astronaut', 'galaxy', 'stars', 'comet', 'ufo', 'moon', 'sun', 'alien', 'telescope', 'satellite', 'nebula', 'black hole', 'constellation', 'meteor', 'spaceship', 'earth from space'],
+    image: true,
   },
   flags: {
     name: 'flags',
@@ -72,10 +79,18 @@ export function createCardSet(gridSize: number, themeName: string): Card[] {
 
   const selectedItems = shuffleArray(theme.items).slice(0, numPairs);
   
-  const cardPairs: Card[] = selectedItems.flatMap(item => [
-    { type: item, content: item, image: theme.image },
-    { type: item, content: item, image: theme.image },
-  ]);
+  const cardPairs: Card[] = selectedItems.flatMap(item => {
+    if (theme.image) {
+      return [
+        { type: item, content: 'https://placehold.co/200x200.png', image: true, hint: item.replace(' ', '_') },
+        { type: item, content: 'https://placehold.co/200x200.png', image: true, hint: item.replace(' ', '_') },
+      ];
+    }
+    return [
+      { type: item, content: item, image: false },
+      { type: item, content: item, image: false },
+    ];
+  });
 
   return shuffleArray(cardPairs);
 }

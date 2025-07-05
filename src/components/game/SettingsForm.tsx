@@ -52,16 +52,16 @@ export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) 
           name="gridSize"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Grid Size</FormLabel>
+              <FormLabel className="text-base">Grid Size</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={String(field.value)}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="py-6 text-base">
                     <SelectValue placeholder="Select a grid size" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {GRID_SIZES.map((size) => (
-                    <SelectItem key={size.value} value={String(size.value)}>
+                    <SelectItem key={size.value} value={String(size.value)} className="py-2">
                       {size.label}
                     </SelectItem>
                   ))}
@@ -76,16 +76,16 @@ export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) 
           name="theme"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Theme</FormLabel>
+              <FormLabel className="text-base">Theme</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="py-6 text-base">
                     <SelectValue placeholder="Select a theme" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {Object.values(THEMES).map((theme) => (
-                    <SelectItem key={theme.name} value={theme.name}>
+                    <SelectItem key={theme.name} value={theme.name} className="py-2">
                       {theme.label}
                     </SelectItem>
                   ))}
@@ -95,7 +95,7 @@ export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) 
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Start Game</Button>
+        <Button type="submit" size="lg" className="w-full text-lg font-bold">Start Game</Button>
       </form>
     </Form>
   );
