@@ -119,8 +119,10 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
                 name="gameMode"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel className="text-xl text-center block mb-2">{STEPS[0].title}</FormLabel>
-                        <p className="text-muted-foreground text-center mb-6">{STEPS[0].description}</p>
+                        <div className="text-center mb-6">
+                            <h3 className="text-xl font-semibold">{STEPS[0].title}</h3>
+                            <p className="text-muted-foreground">{STEPS[0].description}</p>
+                        </div>
                         <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {GAME_MODES.map(mode => (
                                 <FormItem key={mode.id}>
@@ -153,8 +155,10 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
                 name="gridSize"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel className="text-xl text-center block mb-2">{STEPS[1].title}</FormLabel>
-                        <p className="text-muted-foreground text-center mb-6">{STEPS[1].description}</p>
+                         <div className="text-center mb-6">
+                            <h3 className="text-xl font-semibold">{STEPS[1].title}</h3>
+                            <p className="text-muted-foreground">{STEPS[1].description}</p>
+                        </div>
                         <RadioGroup onValueChange={(val) => field.onChange(Number(val))} value={String(field.value)} className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {[
                                 { size: 2, label: '2x2', icon: <Square className="w-8 h-8"/> },
@@ -188,8 +192,10 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
 
           {step === 2 && (
             <div className="space-y-6">
-                 <FormLabel className="text-xl text-center block mb-2">{STEPS[2].title}</FormLabel>
-                <p className="text-muted-foreground text-center mb-6">{STEPS[2].description}</p>
+                <div className="text-center mb-6">
+                    <h3 className="text-xl font-semibold">{STEPS[2].title}</h3>
+                    <p className="text-muted-foreground">{STEPS[2].description}</p>
+                </div>
                 <FormField
                     control={form.control}
                     name="theme"
