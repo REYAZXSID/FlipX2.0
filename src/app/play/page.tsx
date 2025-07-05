@@ -56,7 +56,7 @@ function PlayPage() {
     }
     
     const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
-    const isValidTheme = Object.keys(THEMES).includes(themeName || '');
+    const isValidTheme = themeName ? Object.keys(THEMES).includes(themeName) : false;
 
     if (isValidGrid && isValidTheme && gameMode && cardBack) {
        if (themeName === 'ai-magic' && !aiCards) {

@@ -8,7 +8,6 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useUserData } from '@/hooks/use-user-data';
-import { cn } from '@/lib/utils';
 
 export function Header() {
     const { coins } = useUserData();

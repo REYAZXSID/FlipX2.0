@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb } from 'lucide-react';
+import { LOCAL_STORAGE_KEYS } from "./game-constants";
 
 export type Achievement = {
   id: string;
@@ -104,11 +105,15 @@ export const checkAchievements = ({ moves, time, gridSize, theme, gameMode, isFi
 
 // A separate check for the 'shopper' achievement
 export const checkShopAchievement = (): Achievement | null => {
-    const achievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
-    if (!achievements.includes('shopper')) {
-        const newAchievements = [...achievements, 'shopper'];
-        localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(newAchievements));
-        return ACHIEVEMENTS.find(a => a.id === 'shopper')!;
+    try {
+        const achievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
+        if (!achievements.includes('shopper')) {
+            const newAchievements = [...achievements, 'shopper'];
+            localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(newAchievements));
+            return ACHIEVEMENTS.find(a => a.id === 'shopper')!;
+        }
+    } catch (e) {
+        console.error("Failed to check or save shop achievement", e);
     }
     return null;
 }

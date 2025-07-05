@@ -19,6 +19,14 @@ export default function ShopPage() {
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-4xl mx-auto mt-8">
+            <div className="flex justify-start w-full mb-6">
+                <Button asChild variant="outline">
+                    <Link href="/">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to Game
+                    </Link>
+                </Button>
+            </div>
             <Card className="shadow-xl border-2 border-primary/20">
                 <CardHeader>
                     <CardTitle className="text-center text-4xl font-headline tracking-wide">Shop</CardTitle>

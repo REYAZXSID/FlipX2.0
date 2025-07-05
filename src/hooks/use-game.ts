@@ -170,11 +170,15 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   }, [cards, matchedPairs, status, settings, playMatchSound]);
 
   useEffect(() => {
-    if (cards.length > 0 && matchedPairs.length === cards.length / 2) {
+    if (settings && cards.length > 0 && matchedPairs.length === cards.length / 2) {
       setStatus(GAME_STATUS.FINISHED);
       if(settings?.sound) setTimeout(() => playWinSound(), 500);
 
-      const earned = Math.max(10, (settings!.gridSize * 10) - Math.floor(moves / 5) - Math.floor(time / 10));
+      // Calculate coins earned
+      const baseCoins = settings.gridSize * 10;
+      const movePenalty = Math.floor(moves / 5);
+      const timePenalty = settings.gameMode === 'classic' ? Math.floor(time / 10) : 0;
+      const earned = Math.max(10, baseCoins - movePenalty - timePenalty);
       setCoinsEarned(earned);
 
       try {
@@ -184,9 +188,9 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       
       try {
         const highScores: Record<string, HighScore> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.HIGH_SCORES) || '{}');
-        const currentHighScore = highScores[settings!.gridSize];
+        const currentHighScore = highScores[settings.gridSize];
         if (!currentHighScore || moves < currentHighScore.moves || (moves === currentHighScore.moves && time < currentHighScore.time)) {
-          highScores[settings!.gridSize] = { moves, time };
+          highScores[settings.gridSize] = { moves, time };
           localStorage.setItem(LOCAL_STORAGE_KEYS.HIGH_SCORES, JSON.stringify(highScores));
           setIsNewHighScore(true);
         }
@@ -196,7 +200,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         const existingAchievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
         const isFirstWin = existingAchievements.length === 0;
 
-        const justUnlocked = checkAchievements({ moves, time, gridSize: settings!.gridSize, theme: settings!.theme, gameMode: settings!.gameMode, isFirstWin });
+        const justUnlocked = checkAchievements({ moves, time, gridSize: settings.gridSize, theme: settings.theme, gameMode: settings.gameMode, isFirstWin });
         const newAchievements = justUnlocked.filter(ach => !existingAchievements.includes(ach.id));
 
         if (newAchievements.length > 0) {
@@ -205,6 +209,8 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
           setUnlockedAchievements(newAchievements);
         }
       } catch(e) { console.error("Failed to save achievements", e) }
+      
+      // Notify other components that storage has changed
       window.dispatchEvent(new Event('storage'));
     }
   }, [matchedPairs, cards, settings, playWinSound, moves, time]);

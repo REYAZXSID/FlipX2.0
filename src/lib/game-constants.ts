@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Zap, Shuffle, Eye, HeartPulse } from "lucide-react";
+import { Zap, HeartPulse, Eye } from "lucide-react";
 
 export type Card = {
   type: string;
@@ -24,7 +24,7 @@ export type HighScore = {
 
 export type PowerUp = {
   id: 'autoMatch' | 'secondChance' | 'xrayVision';
-  name: string;
+  name:string;
   description: string;
   Icon: LucideIcon;
   cost: number;
