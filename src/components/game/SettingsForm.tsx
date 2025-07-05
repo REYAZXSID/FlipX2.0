@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -19,25 +19,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { THEMES, GRID_SIZES, type GameSettings } from "@/lib/game-constants";
+import { Loader2 } from "lucide-react";
 
 const FormSchema = z.object({
   gridSize: z.coerce.number().min(2).max(6),
   theme: z.string().min(1, "Please select a theme."),
+  customTheme: z.string().optional(),
+}).refine(data => {
+    if (data.theme === 'ai-magic') {
+        return !!data.customTheme && data.customTheme.length > 2;
+    }
+    return true;
+}, {
+    message: "Please enter a theme with at least 3 characters.",
+    path: ["customTheme"],
 });
 
 type SettingsFormProps = {
   onStartGame: (settings: Omit<GameSettings, 'sound'>) => void;
   defaultValues: Omit<GameSettings, 'sound'>;
+  isGenerating: boolean;
 };
 
-export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) {
+export function SettingsForm({ onStartGame, defaultValues, isGenerating }: SettingsFormProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       gridSize: defaultValues.gridSize,
       theme: defaultValues.theme,
+      customTheme: defaultValues.customTheme,
     },
+  });
+
+  const selectedTheme = useWatch({
+    control: form.control,
+    name: "theme"
   });
 
   return (
@@ -91,7 +109,30 @@ export function SettingsForm({ onStartGame, defaultValues }: SettingsFormProps) 
             </FormItem>
           )}
         />
-        <Button type="submit" size="lg" className="w-full text-lg font-bold">Start Game</Button>
+
+        {selectedTheme === 'ai-magic' && (
+          <FormField
+            control={form.control}
+            name="customTheme"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base">Custom AI Theme</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="e.g. 'Cute Dinosaurs' or 'Vintage Cars'" 
+                    {...field}
+                    className="py-6 text-base"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        <Button type="submit" size="lg" className="w-full text-lg font-bold" disabled={isGenerating}>
+            {isGenerating && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
+            {isGenerating ? 'Generating...' : 'Start Game'}
+        </Button>
       </form>
     </Form>
   );

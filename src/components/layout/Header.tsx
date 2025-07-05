@@ -1,6 +1,8 @@
 import Link from 'next/link';
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, Trophy } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function Header() {
   return (
@@ -11,7 +13,24 @@ export function Header() {
           FlipFun
         </h1>
       </Link>
-      <ThemeToggle />
+      <div className="flex items-center gap-2">
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button asChild variant="outline" size="icon">
+                        <Link href="/achievements">
+                            <Trophy className="h-5 w-5" />
+                            <span className="sr-only">Achievements</span>
+                        </Link>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Achievements</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

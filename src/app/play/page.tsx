@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useGame } from '@/hooks/use-game';
 import { GameBoard } from '@/components/game/GameBoard';
@@ -10,10 +10,8 @@ import { GameWonDialog } from '@/components/game/GameWonDialog';
 import { Button } from '@/components/ui/button';
 import { useSound } from '@/hooks/use-sound';
 import { Sparkles, Loader2 } from 'lucide-react';
-import { DEFAULT_SETTINGS, THEMES, GRID_SIZES } from '@/lib/game-constants';
+import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, type Card as CardType } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
-
-const LOCAL_STORAGE_KEY = 'card-matcher-settings';
 
 function PlayPage() {
   const router = useRouter();
@@ -25,41 +23,68 @@ function PlayPage() {
   const [soundEnabled, setSoundEnabled] = useState(DEFAULT_SETTINGS.sound);
   const [isLoading, setIsLoading] = useState(true);
 
+  const gridSize = Number(searchParams.get('gridSize'));
+  const themeName = searchParams.get('theme');
+
+  const aiCards = useMemo(() => {
+    if (themeName === 'ai-magic') {
+      try {
+        const storedCards = localStorage.getItem(LOCAL_STORAGE_KEYS.AI_CARDS);
+        if (storedCards) {
+          const parsedCards: CardType[] = JSON.parse(storedCards);
+          // Ensure card count matches grid size
+          if (parsedCards.length === gridSize * gridSize) {
+             // AI cards are stored for one-time use
+             localStorage.removeItem(LOCAL_STORAGE_KEYS.AI_CARDS);
+            return parsedCards;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse AI cards from localStorage", e);
+      }
+    }
+    return null;
+  }, [themeName, gridSize]);
+
+
   useEffect(() => {
     try {
-        const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS);
         if (savedSettings) {
             setSoundEnabled(JSON.parse(savedSettings).sound);
         }
     } catch (error) {
         console.error("Could not load sound settings", error);
     }
-
-    const gridSize = Number(searchParams.get('gridSize'));
-    const themeName = searchParams.get('theme');
     
     const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
     const isValidTheme = Object.keys(THEMES).includes(themeName || '');
 
     if (isValidGrid && isValidTheme) {
+       if (themeName === 'ai-magic' && !aiCards) {
+        // AI theme selected but no cards found, maybe page was refreshed.
+        router.replace('/');
+        return;
+      }
+
       game.startGame({
         gridSize,
         theme: themeName!,
         sound: soundEnabled
-      });
+      }, aiCards || undefined);
       setIsLoading(false);
     } else {
       router.replace('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [aiCards]);
 
   const toggleSound = () => {
     const newSoundEnabled = !soundEnabled;
     setSoundEnabled(newSoundEnabled);
     try {
-      const savedSettings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({...savedSettings, sound: newSoundEnabled }));
+      const savedSettings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS) || '{}');
+      localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify({...savedSettings, sound: newSoundEnabled }));
       if (game.settings) {
         game.settings.sound = newSoundEnabled;
       }
@@ -128,6 +153,8 @@ function PlayPage() {
         gridSize={game.settings.gridSize}
         onPlayAgain={() => { playButtonSound(); game.restartGame(); }}
         onNewGame={() => { playButtonSound(); router.push('/'); }}
+        isNewHighScore={game.isNewHighScore}
+        unlockedAchievements={game.unlockedAchievements}
       />
 
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">

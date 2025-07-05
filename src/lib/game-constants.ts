@@ -9,7 +9,13 @@ export type GameSettings = {
   gridSize: number;
   theme: string;
   sound: boolean;
+  customTheme?: string;
 };
+
+export type HighScore = {
+  moves: number;
+  time: number;
+}
 
 export const GAME_STATUS = {
   PLAYING: 'playing',
@@ -24,16 +30,16 @@ export const GRID_SIZES = [
 ];
 
 export const THEMES = {
+  'ai-magic': {
+    name: 'ai-magic',
+    label: '✨ AI Magic',
+    items: [],
+    image: true,
+  },
   emojis: {
     name: 'emojis',
     label: 'Emojis',
     items: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦'],
-    image: false,
-  },
-  animals: {
-    name: 'animals',
-    label: 'Animals',
-    items: ['🐘', '🦒', '🦓', '🦏', ' Hippo', '🐅', '🐆', '🐊', '🐍', '🐢', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦀', '🐡'],
     image: false,
   },
   space: {
@@ -56,10 +62,17 @@ export const THEMES = {
   }
 };
 
-export const DEFAULT_SETTINGS: GameSettings = {
+export const DEFAULT_SETTINGS: Omit<GameSettings, 'sound'> = {
   gridSize: 4,
   theme: 'emojis',
-  sound: true,
+  customTheme: ''
+};
+
+export const LOCAL_STORAGE_KEYS = {
+  SETTINGS: 'flipfun-settings',
+  HIGH_SCORES: 'flipfun-high-scores',
+  ACHIEVEMENTS: 'flipfun-achievements',
+  AI_CARDS: 'flipfun-ai-cards',
 };
 
 
@@ -76,13 +89,17 @@ export function createCardSet(gridSize: number, themeName: string): Card[] {
   const numPairs = (gridSize * gridSize) / 2;
   const theme = THEMES[themeName as keyof typeof THEMES] || THEMES.emojis;
 
+  if (theme.name === 'ai-magic') {
+    return []; // AI cards are generated separately
+  }
+
   const selectedItems = shuffleArray(theme.items).slice(0, numPairs);
   
   const cardPairs: Card[] = selectedItems.flatMap(item => {
     if (theme.image) {
       return [
-        { type: item, content: 'https://placehold.co/200x200.png', image: true, hint: item.replace(' ', '_') },
-        { type: item, content: 'https://placehold.co/200x200.png', image: true, hint: item.replace(' ', '_') },
+        { type: item, content: `https://placehold.co/200x200.png`, image: true, hint: item.replace(/\s+/g, ' ') },
+        { type: item, content: `https://placehold.co/200x200.png`, image: true, hint: item.replace(/\s+/g, ' ') },
       ];
     }
     return [
