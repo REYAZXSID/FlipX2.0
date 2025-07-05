@@ -1,14 +1,16 @@
+
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, ArrowLeft } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from '@/lib/game-constants';
-import { ACHIEVEMENTS, type Achievement } from '@/lib/achievements';
+import { ACHIEVEMENTS } from '@/lib/achievements';
 import { AchievementCard } from '@/components/game/AchievementCard';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 
 export default function AchievementsPage() {
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
@@ -32,38 +34,44 @@ export default function AchievementsPage() {
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
-        <main className="w-full max-w-4xl mx-auto mt-8">
+        <main className="w-full max-w-5xl mx-auto mt-8">
             <div className="flex justify-start w-full mb-6">
                 <Button asChild variant="outline">
-                    <Link href="/">
+                    <Link href="/dashboard">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Game
+                        Back to Dashboard
                     </Link>
                 </Button>
             </div>
-            <Card className="shadow-xl border-2 border-primary/20">
-                <CardHeader>
-                    <CardTitle className="text-center text-4xl font-headline tracking-wide">Achievements</CardTitle>
-                    <p className="text-center text-muted-foreground">
+            
+            <div className="text-center mb-10">
+                <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-wide text-primary">Achievements</h1>
+                <p className="text-muted-foreground mt-2">Celebrate your milestones and unlocked badges.</p>
+            </div>
+
+            <Card className="shadow-lg border-border/80 mb-8">
+                <CardContent className="p-6">
+                    <div className="flex justify-between items-center mb-2 text-sm text-muted-foreground">
+                        <span>Progress</span>
+                        <span>{unlockedCount} / {totalCount}</span>
+                    </div>
+                    <Progress value={progress} className="h-2.5" />
+                     <p className="text-center text-muted-foreground text-sm mt-3">
                         You've unlocked {unlockedCount} of {totalCount} achievements.
                     </p>
-                    <div className="w-full bg-muted rounded-full h-2.5 mt-2">
-                        <div className="bg-primary h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {ACHIEVEMENTS.map((achievement, index) => (
-                            <AchievementCard 
-                                key={achievement.id}
-                                achievement={achievement}
-                                isUnlocked={unlockedAchievements.includes(achievement.id)}
-                                style={{ animationDelay: `${index * 50}ms`}}
-                            />
-                        ))}
-                    </div>
                 </CardContent>
             </Card>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {ACHIEVEMENTS.map((achievement, index) => (
+                    <AchievementCard 
+                        key={achievement.id}
+                        achievement={achievement}
+                        isUnlocked={unlockedAchievements.includes(achievement.id)}
+                        style={{ animationDelay: `${index * 50}ms`}}
+                    />
+                ))}
+            </div>
         </main>
       </div>
 

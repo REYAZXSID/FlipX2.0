@@ -21,32 +21,32 @@ export function ShopItemCard({ item, onPurchase, isOwned = false }: ShopItemCard
     
     return (
         <Card className={cn(
-            "flex flex-col text-center transition-all duration-300 transform hover:scale-105",
-            isOwned ? "border-green-500/50" : "border-border"
+            "flex flex-col text-center transition-all duration-300 transform hover:scale-105 group",
+            isOwned ? "border-green-500/50 bg-green-500/5" : "border-border hover:border-primary/50"
         )}>
-            <CardHeader className="items-center pb-2">
+            <CardHeader className="items-center p-6">
                 {Icon ? (
-                    <div className="flex items-center justify-center w-16 h-16 rounded-full mb-2 bg-primary/10 text-primary">
-                        <Icon className="w-8 h-8" />
+                    <div className="flex items-center justify-center w-20 h-20 rounded-full mb-4 bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                        <Icon className="w-10 h-10" />
                     </div>
                 ) : (
-                    <div className="flex items-center justify-center w-24 h-36 rounded-lg mb-2 p-2 card-face-front">
+                    <div className="flex items-center justify-center w-28 h-40 rounded-lg mb-4 p-2 card-face-front transition-transform group-hover:scale-105">
                         <div className={cn("w-full h-full rounded-md", cardBackClass)}></div>
                     </div>
                 )}
-                <CardTitle>{name}</CardTitle>
-                <CardDescription className="text-sm h-10">{description}</CardDescription>
+                <CardTitle className="text-xl">{name}</CardTitle>
+                <CardDescription className="text-sm h-10 mt-1">{description}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow"></CardContent>
-            <CardFooter>
-                <Button className="w-full" onClick={onPurchase} disabled={isOwned}>
+            <CardFooter className="p-4">
+                <Button className="w-full font-bold" onClick={onPurchase} disabled={isOwned}>
                     {isOwned ? (
                         <>
-                            <Check className="mr-2" /> Owned
+                            <Check className="mr-2 h-5 w-5" /> Owned
                         </>
                     ) : (
                         <>
-                            <CircleDollarSign className="mr-2" /> {cost}
+                            <CircleDollarSign className="mr-2 h-5 w-5" /> {cost}
                         </>
                     )}
                 </Button>

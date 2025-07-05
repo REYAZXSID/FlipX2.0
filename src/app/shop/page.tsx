@@ -3,7 +3,6 @@
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, ArrowLeft, CircleDollarSign } from 'lucide-react';
 import { POWERUPS, CARD_BACKS } from '@/lib/game-constants';
 import Link from 'next/link';
@@ -18,54 +17,52 @@ export default function ShopPage() {
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
-        <main className="w-full max-w-4xl mx-auto mt-8">
-            <div className="flex justify-between items-center w-full mb-6">
+        <main className="w-full max-w-5xl mx-auto mt-8">
+            <div className="flex justify-start w-full mb-6">
                 <Button asChild variant="outline">
-                    <Link href="/">
+                    <Link href="/dashboard">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Game
+                        Back to Dashboard
                     </Link>
                 </Button>
-                <div className="flex items-center gap-2 bg-muted p-2 rounded-lg font-bold">
-                    <CircleDollarSign className="w-6 h-6 text-yellow-500"/>
-                    <span className="text-lg">{coins}</span>
+            </div>
+            
+             <div className="text-center mb-10">
+                <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-wide text-primary">FlipFun Shop</h1>
+                <p className="text-muted-foreground mt-2">Use your FlipCoins to buy power-ups and cool card backs!</p>
+                <div className="mt-6 inline-flex items-center justify-center gap-3 text-2xl font-bold bg-amber-400/10 text-amber-500 p-4 rounded-lg border border-amber-500/20">
+                    <CircleDollarSign className="w-8 h-8"/>
+                    <span>{coins} FlipCoins</span>
                 </div>
             </div>
-            <Card className="shadow-xl border-2 border-primary/20">
-                <CardHeader>
-                    <CardTitle className="text-center text-4xl font-headline tracking-wide">Shop</CardTitle>
-                    <p className="text-center text-muted-foreground">
-                        Use your FlipCoins to buy power-ups and cool card backs!
-                    </p>
-                </CardHeader>
-                <CardContent className="space-y-8">
-                    <div>
-                        <h3 className="text-2xl font-bold font-headline mb-4 text-center">Power-Ups</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {POWERUPS.map((powerup) => (
-                                <ShopItemCard 
-                                    key={powerup.id}
-                                    item={powerup}
-                                    onPurchase={() => purchaseItem(powerup)}
-                                />
-                            ))}
-                        </div>
+
+            <div className="space-y-12">
+                <section>
+                    <h2 className="text-3xl font-bold font-headline mb-6 text-center">Power-Ups</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {POWERUPS.map((powerup) => (
+                            <ShopItemCard 
+                                key={powerup.id}
+                                item={powerup}
+                                onPurchase={() => purchaseItem(powerup)}
+                            />
+                        ))}
                     </div>
-                     <div>
-                        <h3 className="text-2xl font-bold font-headline mb-4 text-center">Card Backs</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {CARD_BACKS.map((cardBack) => (
-                                <ShopItemCard 
-                                    key={cardBack.id}
-                                    item={cardBack}
-                                    onPurchase={() => purchaseItem(cardBack)}
-                                    isOwned={inventory.includes(cardBack.id)}
-                                />
-                            ))}
-                        </div>
+                </section>
+                <section>
+                    <h2 className="text-3xl font-bold font-headline mb-6 text-center">Card Backs</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {CARD_BACKS.map((cardBack) => (
+                            <ShopItemCard 
+                                key={cardBack.id}
+                                item={cardBack}
+                                onPurchase={() => purchaseItem(cardBack)}
+                                isOwned={inventory.includes(cardBack.id)}
+                            />
+                        ))}
                     </div>
-                </CardContent>
-            </Card>
+                </section>
+            </div>
         </main>
       </div>
 
