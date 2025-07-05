@@ -10,7 +10,6 @@ import { Sparkles } from 'lucide-react';
 import type { GameSettings } from '@/lib/game-constants';
 import { DEFAULT_SETTINGS } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 const LOCAL_STORAGE_KEY = 'card-matcher-settings';
 
@@ -51,10 +50,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-2 sm:p-4">
       <OnboardingDialog />
-      <div className="absolute top-4 right-4">
-        <ThemeToggle /> 
-      </div>
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center">
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-md mx-auto mt-8">
             <UICard className="w-full shadow-xl border-2 border-primary/20">

@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Card Matcher',
+  title: 'FlipFun',
   description: 'A fun card matching game.',
 };
 

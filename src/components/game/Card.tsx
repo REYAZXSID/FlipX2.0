@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { BrainCircuit } from 'lucide-react';
+import { Puzzle } from 'lucide-react';
 
 type CardProps = {
   content: string;
@@ -33,7 +33,7 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
       <div className={cardClasses}>
         <div className="card-face card-face-front transition-colors p-2">
           <div className="w-full h-full rounded-md bg-primary/10 flex items-center justify-center">
-            <BrainCircuit className="w-1/2 h-1/2 text-primary/30" />
+            <Puzzle className="w-1/2 h-1/2 text-primary/30" />
           </div>
         </div>
         <div className={cn(

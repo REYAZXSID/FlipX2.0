@@ -12,7 +12,6 @@ import { useSound } from '@/hooks/use-sound';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { DEFAULT_SETTINGS, THEMES, GRID_SIZES } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 const LOCAL_STORAGE_KEY = 'card-matcher-settings';
 
@@ -80,7 +79,7 @@ function PlayPage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-7xl mx-auto px-4">
         <Header />
 
         <main className="w-full max-w-4xl mx-auto mt-4">
@@ -91,19 +90,16 @@ function PlayPage() {
                     moves={game.moves}
                     gridSize={game.settings.gridSize}
                 />
-                <div className="flex items-center gap-2">
-                    <GameControls
-                        onRestart={() => { playButtonSound(); game.restartGame(); }}
-                        onPause={game.togglePause}
-                        isPaused={game.status === 'paused'}
-                        toggleSound={toggleSound}
-                        isSoundEnabled={soundEnabled}
-                        onShowHint={() => { playButtonSound(); game.showHint(); }}
-                        hintsLeft={game.hintsLeft}
-                        canUseHint={game.canUseHint()}
-                    />
-                    <ThemeToggle />
-                </div>
+                <GameControls
+                    onRestart={() => { playButtonSound(); game.restartGame(); }}
+                    onPause={game.togglePause}
+                    isPaused={game.status === 'paused'}
+                    toggleSound={toggleSound}
+                    isSoundEnabled={soundEnabled}
+                    onShowHint={() => { playButtonSound(); game.showHint(); }}
+                    hintsLeft={game.hintsLeft}
+                    canUseHint={game.canUseHint()}
+                />
             </div>
 
             <div className="relative">
