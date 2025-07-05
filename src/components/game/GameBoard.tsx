@@ -1,0 +1,47 @@
+"use client"
+
+import { cn } from "@/lib/utils"
+import type { Card as CardType } from "@/lib/game-constants"
+import { Card } from "./Card"
+
+type GameBoardProps = {
+  cards: CardType[]
+  flippedIndices: number[]
+  matchedPairs: string[]
+  onCardClick: (index: number) => void
+  gridSize: number
+  isHintActive: boolean
+}
+
+export function GameBoard({
+  cards,
+  flippedIndices,
+  matchedPairs,
+  onCardClick,
+  gridSize,
+  isHintActive,
+}: GameBoardProps) {
+  return (
+    <div
+      className={cn(
+        "grid gap-2 sm:gap-4 p-4 bg-muted/50 rounded-lg shadow-inner",
+        `grid-cols-2`,
+        {
+          "grid-cols-4": gridSize === 4,
+          "grid-cols-6": gridSize === 6,
+        }
+      )}
+    >
+      {cards.map((card, index) => (
+        <Card
+          key={index}
+          content={card.content}
+          isFlipped={isHintActive || flippedIndices.includes(index)}
+          isMatched={matchedPairs.includes(card.type)}
+          onClick={() => onCardClick(index)}
+          isImageType={card.image}
+        />
+      ))}
+    </div>
+  )
+}
