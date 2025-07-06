@@ -103,17 +103,15 @@ export const checkAchievements = ({ moves, time, gridSize, theme, gameMode, isFi
     return unlocked;
 }
 
-// A separate check for the 'shopper' achievement
+// A separate check for the 'shopper' achievement. This is now a pure function.
 export const checkShopAchievement = (): Achievement | null => {
     try {
         const achievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
         if (!achievements.includes('shopper')) {
-            const newAchievements = [...achievements, 'shopper'];
-            localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(newAchievements));
             return ACHIEVEMENTS.find(a => a.id === 'shopper')!;
         }
     } catch (e) {
-        console.error("Failed to check or save shop achievement", e);
+        console.error("Failed to check shop achievement", e);
     }
     return null;
 }

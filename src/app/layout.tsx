@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
+import { UserDataProvider } from '@/context/UserDataContext';
 
 export const metadata: Metadata = {
   title: 'FlipFun',
@@ -30,8 +31,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <UserDataProvider>
+            {children}
+            <Toaster />
+          </UserDataProvider>
         </ThemeProvider>
       </body>
     </html>
