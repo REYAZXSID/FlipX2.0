@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -43,26 +44,29 @@ export function HighScores() {
             High Scores
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+      <CardContent className="pt-2">
+        <div className="space-y-2">
           {GRID_SIZES.map(size => {
             const score = highScores[size.value];
             return (
-              <div key={size.value} className="flex justify-between items-center bg-muted/50 p-3 rounded-md">
-                <p className="font-semibold">{size.label}</p>
+              <div key={size.value} className="flex justify-between items-baseline bg-muted/30 p-4 rounded-lg transition-colors hover:bg-muted/60">
+                <div>
+                    <p className="font-bold text-lg">{size.label.split(' ')[0]}</p>
+                    <p className="text-xs text-muted-foreground">{size.label.split(' ').slice(1).join(' ')}</p>
+                </div>
                 {score ? (
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1.5">
-                      <Move className="w-4 h-4 text-primary"/>
-                      <span>{score.moves}</span>
+                  <div className="flex items-center gap-4 text-sm font-mono">
+                    <div className="flex items-center gap-1.5" title="Moves">
+                      <Move className="w-4 h-4 text-primary/80"/>
+                      <span className="font-semibold">{score.moves}</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <Timer className="w-4 h-4 text-primary"/>
-                      <span>{formatTime(score.time)}</span>
+                    <div className="flex items-center gap-1.5" title="Time">
+                      <Timer className="w-4 h-4 text-primary/80"/>
+                      <span className="font-semibold">{formatTime(score.time)}</span>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">Not Played Yet</p>
+                  <p className="text-sm text-muted-foreground">--:--</p>
                 )}
               </div>
             );

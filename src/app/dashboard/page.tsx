@@ -101,7 +101,7 @@ export default function DashboardPage() {
                     Track your milestones and unlock special badges for your accomplishments.
                   </p>
                   <Link href="/achievements" passHref>
-                    <Button className="w-full" variant="outline">View All Achievements</Button>
+                    <Button className="w-full" variant="outline">View All Achievements <ArrowRight className="ml-2 h-4 w-4"/></Button>
                   </Link>
                 </CardContent>
               </Card>
