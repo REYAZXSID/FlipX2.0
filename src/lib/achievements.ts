@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, LandMine } from 'lucide-react';
+import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, ShieldAlert } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from "./game-constants";
 
 export type Achievement = {
@@ -65,7 +65,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: 'mine_sweeper',
     name: 'Mine Sweeper',
     description: 'Win a game in Minefield mode.',
-    Icon: LandMine,
+    Icon: ShieldAlert,
     reward: 50,
   },
   {

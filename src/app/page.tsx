@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Timer, Bomb, LandMine } from 'lucide-react';
+import { Code, Timer, Bomb, ShieldAlert } from 'lucide-react';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { SelectionCard } from '@/components/game/SelectionCard';
 
@@ -41,7 +41,7 @@ export default function Home() {
               onClick={() => handleSelectMode('time-attack')}
             />
             <SelectionCard
-              Icon={LandMine}
+              Icon={ShieldAlert}
               title="Minefield"
               description="Some pairs are mines. Find the match before it's too late!"
               onClick={() => handleSelectMode('minefield')}
