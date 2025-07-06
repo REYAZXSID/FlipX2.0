@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -97,7 +98,7 @@ export default function DashboardPage() {
                 <CardContent className="p-6">
                    <div className="flex items-center justify-center gap-2 text-xl font-bold mb-4 bg-amber-400/10 text-amber-500 p-3 rounded-lg">
                       <CircleDollarSign className="w-6 h-6"/>
-                      <span>{coins} FlipCoins</span>
+                      <span>{coins}</span>
                   </div>
                   <p className="text-muted-foreground mb-4 text-sm">
                     Spend your coins on powerful boosts and unique card styles.

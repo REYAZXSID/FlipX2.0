@@ -25,9 +25,9 @@ export default function CardBacksShopPage() {
                         Back to Shop
                     </Link>
                 </Button>
-                <div className="inline-flex items-center justify-center gap-3 text-lg font-bold bg-amber-400/10 text-amber-500 p-3 rounded-lg border border-amber-500/20">
+                <div className="inline-flex items-center justify-center gap-2 text-lg font-bold bg-amber-400/10 text-amber-500 p-3 rounded-lg border border-amber-500/20">
                     <CircleDollarSign className="w-6 h-6"/>
-                    <span>{coins} FlipCoins</span>
+                    <span>{coins}</span>
                 </div>
             </div>
             
