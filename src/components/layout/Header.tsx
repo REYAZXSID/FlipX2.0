@@ -11,7 +11,7 @@ export function Header() {
   return (
     <header className="flex w-full items-center justify-between py-4 sm:py-6">
         <Link href="/" className="flex items-center gap-3 text-primary transition-transform hover:scale-105">
-            <Gem className="w-10 h-10 sm:w-12 sm:h-12 animate-pulse-subtle" />
+            <Gem className="w-10 h-10 sm:w-12 sm:h-12 animate-pulse-subtle flex-shrink-0" />
             <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-wider drop-shadow-lg">
             FlipFun
             </h1>

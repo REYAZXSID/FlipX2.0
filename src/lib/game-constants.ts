@@ -109,12 +109,6 @@ export const THEMES = {
     items: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦'],
     image: false,
   },
-  space: {
-    name: 'space',
-    label: 'Space (AI Images)',
-    items: ['planet', 'rocket', 'astronaut', 'galaxy', 'stars', 'comet', 'ufo', 'moon', 'sun', 'alien', 'telescope', 'satellite', 'nebula', 'black hole', 'constellation', 'meteor', 'spaceship', 'earth from space'],
-    image: true,
-  },
   flags: {
     name: 'flags',
     label: 'Country Flags',

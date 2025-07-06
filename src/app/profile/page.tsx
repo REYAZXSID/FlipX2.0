@@ -182,7 +182,7 @@ export default function ProfilePage() {
                                             cursor={false}
                                             content={<ChartTooltipContent indicator="line" hideLabel />}
                                         />
-                                        <Bar dataKey="plays" layout="vertical" radius={5} fill="var(--color-plays)" />
+                                        <Bar dataKey="plays" layout="vertical" radius={5} fill="var(--color-plays)" barSize={30} />
                                     </BarChart>
                                 </ChartContainer>
                             ) : (
