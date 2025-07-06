@@ -294,3 +294,15 @@
 .animate-pulse-subtle {
   animation: pulse-subtle 3s ease-in-out infinite;
 }
+
+@keyframes bomb-pulse {
+  0% { box-shadow: 0 0 0 0 hsl(var(--destructive) / 0.7); }
+  70% { box-shadow: 0 0 0 10px hsl(var(--destructive) / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--destructive) / 0); }
+}
+
+.animate-bomb-pulse {
+  animation: bomb-pulse 1.5s infinite;
+}
+
+    

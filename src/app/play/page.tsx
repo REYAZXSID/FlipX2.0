@@ -61,6 +61,7 @@ function PlayPage() {
       bombTimer,
       isPeeking,
       isScrambling,
+      lostReason,
   } = useGame({ playFlipSound, playMatchSound, playWinSound });
 
   const cardBackData = React.useMemo(() => {
@@ -230,6 +231,7 @@ function PlayPage() {
         isOpen={status === 'lost'}
         onPlayAgain={() => { playButtonSound(); restartGame(); }}
         onNewGame={() => { playButtonSound(); router.push('/'); }}
+        reason={lostReason}
       />
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
         <p className="inline-flex items-center gap-2">
@@ -264,3 +266,5 @@ export default function PlayPageWrapper() {
     </Suspense>
   )
 }
+
+    

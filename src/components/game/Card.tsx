@@ -57,7 +57,7 @@ export function Card({ content, isFlipped, isMatched, isMismatched, onClick, isI
             isMatched 
                 ? "border-accent ring-2 ring-offset-2 ring-offset-background ring-accent shadow-xl shadow-accent/20" 
                 : "border-primary",
-            isFlipped && !isMatched && isBomb && "border-destructive animate-pulse"
+            isFlipped && !isMatched && isBomb && "border-destructive animate-bomb-pulse"
         )}>
           {isImageType ? (
             <Image
@@ -76,3 +76,5 @@ export function Card({ content, isFlipped, isMatched, isMismatched, onClick, isI
     </div>
   );
 }
+
+    

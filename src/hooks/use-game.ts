@@ -19,6 +19,8 @@ type UseGameProps = {
   playWinSound: () => void;
 };
 
+type LostReason = 'time-up' | 'bomb' | 'mismatch';
+
 const calculateTimeLimit = (gridSize: number) => {
     switch (gridSize) {
         case 2: return 15; // 15 seconds
@@ -58,6 +60,8 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [isPeeking, setIsPeeking] = useState(false);
   const [isScrambling, setIsScrambling] = useState(false);
   const [scrambleTriggerMove, setScrambleTriggerMove] = useState(0);
+  const [lostReason, setLostReason] = useState<LostReason | null>(null);
+
 
   const { logGameWin } = useUserData();
   
@@ -82,6 +86,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setBombTimer(null);
     setIsPeeking(false);
     setIsScrambling(false);
+    setLostReason(null);
 
     if (newSettings.gameMode === 'peekaboo') {
       setIsPeeking(true);
@@ -130,6 +135,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
                 if (prevTime > 1) {
                     return prevTime - 1;
                 }
+                setLostReason('time-up');
                 setStatus(GAME_STATUS.LOST);
                 return 0;
             });
@@ -209,12 +215,13 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         if (isSecondChanceActive) setSecondChanceActive(false);
       } else {
         setMismatchedIndices(flippedIndices);
-        if (settings?.gameMode === 'sudden-death') {
-          setTimeout(() => setStatus(GAME_STATUS.LOST), 1000);
-        } else if (isSecondChanceActive) {
+        if (isSecondChanceActive) {
             setFlippedIndices([]);
             setMismatchedIndices([]);
             setSecondChanceActive(false);
+        } else if (settings?.gameMode === 'sudden-death') {
+            setLostReason('mismatch');
+            setTimeout(() => setStatus(GAME_STATUS.LOST), 1000);
         } else {
             setTimeout(() => {
               setFlippedIndices([]);
@@ -237,6 +244,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         setBombTimer(t => (t ? t - 1 : null));
       }, 1000);
     } else if (bombTimer === 0) {
+      setLostReason('bomb');
       setStatus(GAME_STATUS.LOST);
     }
     return () => clearInterval(interval);
@@ -326,6 +334,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     bombTimer,
     isPeeking,
     isScrambling,
+    lostReason,
     startGame,
     restartGame,
     togglePause,
@@ -337,3 +346,5 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setSettings,
   };
 };
+
+    
