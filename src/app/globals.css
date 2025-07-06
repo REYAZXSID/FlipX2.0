@@ -69,8 +69,8 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(circle at 10% 20%, hsl(var(--primary)/0.1), transparent 30%),
-                radial-gradient(circle at 90% 80%, hsl(var(--accent)/0.1), transparent 30%);
+    background: radial-gradient(ellipse at top left, hsl(var(--primary)/0.1), transparent 60%),
+                radial-gradient(ellipse at bottom right, hsl(var(--accent)/0.1), transparent 60%);
     z-index: -1;
     pointer-events: none;
     transition: background 0.5s ease-in-out;
@@ -155,7 +155,7 @@ body {
     border-radius: var(--radius);
   }
   .card-face-front {
-    @apply bg-secondary hover:bg-muted overflow-hidden;
+    @apply bg-card hover:bg-muted overflow-hidden;
   }
 
   .card-face-back {
@@ -164,7 +164,14 @@ body {
   }
 
   .card-back-default {
-    background-color: hsl(var(--primary)/0.1);
+    background-color: hsl(var(--muted));
+    background-image:
+      linear-gradient(45deg, hsl(var(--border)) 25%, transparent 25%),
+      linear-gradient(-45deg, hsl(var(--border)) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, hsl(var(--border)) 75%),
+      linear-gradient(-45deg, transparent 75%, hsl(var(--border)) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
   }
 
   .card-back-galaxy {

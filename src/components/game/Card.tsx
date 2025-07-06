@@ -4,7 +4,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Brain } from 'lucide-react';
+import { Puzzle } from 'lucide-react';
 
 type CardProps = {
   content: string;
@@ -46,7 +46,7 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
                 sizes="(max-width: 768px) 20vw, 10vw" 
               />
             ) : (
-              <Brain className="w-1/2 h-1/2 text-primary-foreground/50" />
+              <Puzzle className="w-1/2 h-1/2 text-muted-foreground/60" />
             )}
           </div>
         </div>
