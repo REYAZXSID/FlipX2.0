@@ -10,7 +10,7 @@ import { Header } from '@/components/layout/Header';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { THEMES, CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS, type CustomCardBack } from "@/lib/game-constants";
@@ -51,7 +51,7 @@ function ThemeSelectionPage() {
 
     const form = useForm<FormValues>({
         resolver: zodResolver(FormSchema),
-        defaultValues: {
+        defaultValues: { // Static default values to prevent hydration mismatch
             theme: DEFAULT_SETTINGS.theme,
             cardBack: DEFAULT_SETTINGS.cardBack,
             soundTheme: DEFAULT_SETTINGS.soundTheme,
@@ -60,16 +60,16 @@ function ThemeSelectionPage() {
     });
     
     useEffect(() => {
+        // Load settings from localStorage only on the client
         const saved = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
-        if (saved) {
-            form.reset({
-                theme: saved.theme,
-                cardBack: saved.cardBack,
-                soundTheme: saved.soundTheme,
-                customTheme: saved.customTheme || ''
-            });
-        }
+        form.reset({
+            theme: saved.theme,
+            cardBack: saved.cardBack,
+            soundTheme: saved.soundTheme,
+            customTheme: saved.customTheme || ''
+        });
     }, [form]);
+
 
     const selectedTheme = useWatch({ control: form.control, name: "theme" });
 
@@ -211,32 +211,38 @@ function ThemeSelectionPage() {
                                             </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectLabel>
-                                                    <div className="flex items-center gap-2"><Palette className="w-4 h-4" /> Standard</div>
-                                                </SelectLabel>
-                                                {CARD_BACKS.map((back) => {
-                                                    const isOwned = inventory.includes(back.id);
-                                                    return (
-                                                        <SelectItem key={back.id} value={back.id} disabled={!isOwned}>
-                                                            <div className="flex items-center justify-between w-full">
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={cn("w-10 h-7 rounded-sm flex-shrink-0 border", back.className)}></div>
-                                                                <span>{back.name}</span>
+                                                <SelectGroup>
+                                                    <SelectLabel>
+                                                        <div className="flex items-center gap-2"><Palette className="w-4 h-4" /> Standard</div>
+                                                    </SelectLabel>
+                                                    {CARD_BACKS.map((back) => {
+                                                        const isOwned = inventory.includes(back.id);
+                                                        return (
+                                                            <SelectItem key={back.id} value={back.id} disabled={!isOwned}>
+                                                                <div className="flex items-center justify-between w-full">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={cn("w-10 h-7 rounded-sm flex-shrink-0 border", back.className)}></div>
+                                                                    <span>{back.name}</span>
+                                                                </div>
+                                                                {!isOwned && <Lock className="w-4 h-4 text-muted-foreground ml-2" />}
                                                             </div>
-                                                            {!isOwned && <Lock className="w-4 h-4 text-muted-foreground ml-2" />}
-                                                        </div>
-                                                        </SelectItem>
-                                                    )
-                                                })}
-                                                {customCardBacks.length > 0 && <SelectLabel><div className="flex items-center gap-2"><Code className="w-4 h-4" /> AI Generated</div></SelectLabel>}
-                                                {customCardBacks.map((back: CustomCardBack) => (
-                                                    <SelectItem key={back.id} value={back.id}>
-                                                        <div className="flex items-center gap-3">
-                                                          <img src={back.content} alt={back.name} className="w-10 h-7 rounded-sm border object-cover" />
-                                                          <span className="truncate">{back.name}</span>
-                                                        </div>
-                                                    </SelectItem>
-                                                ))}
+                                                            </SelectItem>
+                                                        )
+                                                    })}
+                                                </SelectGroup>
+                                                {customCardBacks.length > 0 && 
+                                                    <SelectGroup>
+                                                        <SelectLabel><div className="flex items-center gap-2"><Code className="w-4 h-4" /> AI Generated</div></SelectLabel>
+                                                        {customCardBacks.map((back: CustomCardBack) => (
+                                                            <SelectItem key={back.id} value={back.id}>
+                                                                <div className="flex items-center gap-3">
+                                                                <img src={back.content} alt={back.name} className="w-10 h-7 rounded-sm border object-cover" />
+                                                                <span className="truncate">{back.name}</span>
+                                                                </div>
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                }
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
