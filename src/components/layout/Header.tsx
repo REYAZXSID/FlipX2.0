@@ -1,18 +1,18 @@
-
 "use client";
 
 import Link from 'next/link';
-import { Gamepad2, LayoutDashboard, Instagram } from 'lucide-react';
+import { LayoutDashboard, Instagram } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ProfileButton } from './ProfileButton';
+import { AnimatedGameIcon } from './AnimatedGameIcon';
 
 export function Header() {
   return (
     <header className="flex w-full items-center justify-between py-4 sm:py-6">
         <Link href="/" className="flex items-center gap-3 text-primary transition-transform hover:scale-105">
-            <Gamepad2 className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce-slow flex-shrink-0" />
+            <AnimatedGameIcon />
             <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wider drop-shadow-lg">
             FlipFun
             </h1>
