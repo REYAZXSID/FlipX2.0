@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from "lucide-react";
 import { Zap, HeartPulse, Eye } from "lucide-react";
 
@@ -117,6 +118,7 @@ export const LOCAL_STORAGE_KEYS = {
   COINS: 'flipfun-coins',
   POWERUPS: 'flipfun-powerups',
   INVENTORY: 'flipfun-inventory',
+  MISSIONS: 'flipfun-missions',
 };
 
 

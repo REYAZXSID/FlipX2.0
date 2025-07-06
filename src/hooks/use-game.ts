@@ -11,6 +11,7 @@ import {
   type HighScore,
 } from '@/lib/game-constants';
 import { checkAchievements, type Achievement } from '@/lib/achievements';
+import { useUserData } from './use-user-data';
 
 type UseGameProps = {
   playFlipSound: () => void;
@@ -41,6 +42,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([]);
   const [coinsEarned, setCoinsEarned] = useState(0);
   const [isSecondChanceActive, setSecondChanceActive] = useState(false);
+  const { logGameWin } = useUserData();
   
   const startGame = useCallback((newSettings: GameSettings, customCards?: CardType[]) => {
     setSettings(newSettings);
@@ -186,6 +188,9 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         localStorage.setItem(LOCAL_STORAGE_KEYS.COINS, JSON.stringify(currentCoins + earned));
       } catch(e) { console.error("Failed to save coins", e)}
       
+      // Log game win for missions
+      logGameWin({ coinsEarned: earned });
+      
       try {
         const highScores: Record<string, HighScore> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.HIGH_SCORES) || '{}');
         const currentHighScore = highScores[settings.gridSize];
@@ -213,7 +218,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       // Notify other components that storage has changed
       window.dispatchEvent(new Event('storage'));
     }
-  }, [matchedPairs, cards, settings, playWinSound, moves, time]);
+  }, [matchedPairs, cards, settings, playWinSound, moves, time, logGameWin]);
 
 
   return {

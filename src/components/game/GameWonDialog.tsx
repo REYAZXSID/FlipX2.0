@@ -42,13 +42,11 @@ export function GameWonDialog({
   isOpen,
   moves,
   time,
-  gridSize,
   onPlayAgain,
   onNewGame,
   isNewHighScore,
   unlockedAchievements,
   coinsEarned,
-  gameMode,
 }: GameWonDialogProps) {
   const { width, height } = useWindowSize();
   if (!isOpen) return null;
@@ -59,7 +57,7 @@ export function GameWonDialog({
       <DialogContent className="max-w-md">
         <DialogHeader className="items-center text-center -mt-12">
           <div className="bg-primary/10 p-4 rounded-full border-4 border-background mb-4">
-            <Trophy className="w-16 h-16 text-primary animate-bounce" />
+            <Trophy className="w-16 h-16 text-primary animate-bounce-slow" />
           </div>
           <DialogTitle className="text-4xl font-headline text-primary tracking-wide">
             You Won!

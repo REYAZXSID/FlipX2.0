@@ -4,9 +4,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Trophy, ShoppingCart, Code, CircleDollarSign } from 'lucide-react';
+import { ArrowLeft, Trophy, ShoppingCart, Code, CircleDollarSign, ListChecks, ArrowRight } from 'lucide-react';
 import { HighScores } from '@/components/game/HighScores';
 import { useUserData } from '@/hooks/use-user-data';
 import { ACHIEVEMENTS } from '@/lib/achievements';
@@ -61,8 +61,24 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-8">
               <HighScores />
+              <Card className="group shadow-lg border-border/80 hover:border-primary/50 transition-all transform hover:-translate-y-1 overflow-hidden">
+                <CardHeader className="p-6 bg-muted/50">
+                    <CardTitle className="flex items-center gap-4 text-2xl font-headline tracking-wide">
+                        <ListChecks className="w-10 h-10 text-blue-500 transition-transform group-hover:scale-125 group-hover:rotate-[-5deg]" />
+                        <span>Daily Missions</span>
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                    <p className="text-muted-foreground mb-4 text-sm">
+                        Complete daily challenges to earn extra coins and test your skills.
+                    </p>
+                    <Link href="/missions" passHref>
+                        <Button className="w-full">View Missions</Button>
+                    </Link>
+                </CardContent>
+              </Card>
             </div>
             
             <div className="flex flex-col gap-8">
