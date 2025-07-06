@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useEffect, useState, Suspense, useMemo } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useGame } from '@/hooks/use-game';
 import { useUserData } from '@/hooks/use-user-data';
@@ -25,14 +25,9 @@ function PlayPage() {
   
   const userData = useUserData();
   const [isLoading, setIsLoading] = useState(true);
-
-  const gridSize = useMemo(() => Number(searchParams.get('gridSize')), [searchParams]);
-  const themeName = useMemo(() => searchParams.get('theme'), [searchParams]);
-  const gameMode = useMemo(() => searchParams.get('gameMode'), [searchParams]);
-  const cardBackId = useMemo(() => searchParams.get('cardBack'), [searchParams]);
-  const soundTheme = useMemo(() => searchParams.get('soundTheme'), [searchParams]);
-
-  const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound(soundTheme || 'default');
+  
+  const soundThemeParam = searchParams.get('soundTheme');
+  const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound(soundThemeParam || 'default');
   
   const {
       startGame,
@@ -62,22 +57,29 @@ function PlayPage() {
       isScrambling,
   } = useGame({ playFlipSound, playMatchSound, playWinSound });
 
-  const cardBackData = useMemo(() => {
+  const cardBackData = React.useMemo(() => {
+    if (!settings?.cardBack) return null;
     const allBacks = [...CARD_BACKS, ...userData.customCardBacks];
-    return allBacks.find(cb => cb.id === cardBackId);
-  }, [cardBackId, userData.customCardBacks]);
+    return allBacks.find(cb => cb.id === settings.cardBack);
+  }, [settings?.cardBack, userData.customCardBacks]);
 
   const cardBackClass = cardBackData?.className ?? 'card-back-default';
   const customCardBackContent = (cardBackData && 'content' in cardBackData) ? cardBackData.content : undefined;
   const themeBackgroundClass = cardBackData?.themeBackgroundClass ?? 'theme-bg-default';
 
   useEffect(() => {
+    const gridSize = Number(searchParams.get('gridSize'));
+    const themeName = searchParams.get('theme');
+    const gameMode = searchParams.get('gameMode');
+    const cardBack = searchParams.get('cardBack');
+    const soundTheme = searchParams.get('soundTheme');
+
     const savedSettings = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
 
     const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
     const isValidTheme = themeName ? Object.keys(THEMES).includes(themeName) : false;
 
-    if (!isValidGrid || !isValidTheme || !gameMode || !cardBackId || !soundTheme) {
+    if (!gridSize || !isValidGrid || !isValidTheme || !gameMode || !cardBack || !soundTheme) {
       router.replace('/');
       return;
     }
@@ -96,14 +98,14 @@ function PlayPage() {
         gridSize,
         theme: themeName,
         gameMode,
-        cardBack: cardBackId,
-        soundTheme,
+        cardBack: cardBack,
+        soundTheme: soundTheme,
         sound: savedSettings.sound
     }, initialCards);
     setIsLoading(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   const toggleSound = () => {
     const newSoundEnabled = !settings?.sound;
