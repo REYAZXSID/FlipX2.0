@@ -36,7 +36,7 @@ export default function PowerUpsShopPage() {
                 <p className="text-muted-foreground mt-2">Get an edge with these handy boosts!</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {POWERUPS.map((powerup) => (
                     <ShopItemCard 
                         key={powerup.id}

@@ -17,22 +17,22 @@ export default function ShopPage() {
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">
-            <div className="flex justify-start w-full mb-6">
+            <div className="flex justify-between items-center w-full mb-6">
                 <Button asChild variant="outline">
                     <Link href="/dashboard">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to Dashboard
                     </Link>
                 </Button>
+                <div className="inline-flex items-center justify-center gap-3 text-lg font-bold bg-amber-400/10 text-amber-500 p-3 rounded-lg border border-amber-500/20">
+                    <CircleDollarSign className="w-6 h-6"/>
+                    <span>{coins} FlipCoins</span>
+                </div>
             </div>
             
              <div className="text-center mb-10">
                 <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-wide text-primary">FlipFun Shop</h1>
                 <p className="text-muted-foreground mt-2">Use your FlipCoins to buy power-ups and cool card backs!</p>
-                <div className="mt-6 inline-flex items-center justify-center gap-3 text-2xl font-bold bg-amber-400/10 text-amber-500 p-4 rounded-lg border border-amber-500/20">
-                    <CircleDollarSign className="w-8 h-8"/>
-                    <span>{coins} FlipCoins</span>
-                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
