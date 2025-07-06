@@ -28,6 +28,8 @@ const calculateTimeLimit = (gridSize: number) => {
     }
 }
 
+const BOMB_TIMER_SECONDS = 5;
+
 export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGameProps) => {
   const [settings, setSettings] = useState<GameSettings | null>(null);
   const [status, setStatus] = useState(GAME_STATUS.PLAYING);
@@ -42,6 +44,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([]);
   const [coinsEarned, setCoinsEarned] = useState(0);
   const [isSecondChanceActive, setSecondChanceActive] = useState(false);
+  const [bombTimer, setBombTimer] = useState<number | null>(null);
   const { logGameWin } = useUserData();
   
   const startGame = useCallback((newSettings: GameSettings, customCards?: CardType[]) => {
@@ -50,7 +53,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     if (customCards) {
       setCards(customCards);
     } else {
-      setCards(createCardSet(newSettings.gridSize, newSettings.theme));
+      setCards(createCardSet(newSettings.gridSize, newSettings.theme, newSettings.gameMode));
     }
     setFlippedIndices([]);
     setMatchedPairs([]);
@@ -61,6 +64,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setUnlockedAchievements([]);
     setCoinsEarned(0);
     setSecondChanceActive(false);
+    setBombTimer(null);
   }, []);
 
   const restartGame = useCallback(() => {
@@ -119,6 +123,11 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     
     if (settings.sound) playFlipSound();
 
+    const card = cards[index];
+    if (settings.gameMode === 'minefield' && card.isBomb && flippedIndices.length === 0 && bombTimer === null) {
+      setBombTimer(BOMB_TIMER_SECONDS);
+    }
+
     if (isXray) {
         setFlippedIndices([index]);
         setTimeout(() => setFlippedIndices([]), 1000);
@@ -126,7 +135,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     }
     
     setFlippedIndices(prev => [...prev, index]);
-  }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs]);
+  }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs, bombTimer]);
 
   useEffect(() => {
     if (flippedIndices.length === 2) {
@@ -137,6 +146,9 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
 
       if (firstCard.type === secondCard.type) {
         if(settings?.sound) setTimeout(() => playMatchSound(), 300);
+        if (firstCard.isBomb) {
+          setBombTimer(null); // Defused!
+        }
         setMatchedPairs(prev => [...prev, firstCard.type]);
         setFlippedIndices([]);
         if (isSecondChanceActive) setSecondChanceActive(false);
@@ -150,6 +162,18 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       }
     }
   }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (bombTimer !== null && bombTimer > 0 && status === 'playing') {
+      interval = setInterval(() => {
+        setBombTimer(t => (t ? t - 1 : null));
+      }, 1000);
+    } else if (bombTimer === 0) {
+      setStatus(GAME_STATUS.LOST);
+    }
+    return () => clearInterval(interval);
+  }, [bombTimer, status]);
   
   const useAutoMatch = useCallback(() => {
     if (status !== 'playing') return;
@@ -235,6 +259,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     isNewHighScore,
     unlockedAchievements,
     coinsEarned,
+    bombTimer,
     startGame,
     restartGame,
     togglePause,

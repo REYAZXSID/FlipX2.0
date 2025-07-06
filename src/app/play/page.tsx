@@ -13,7 +13,7 @@ import { GameLostDialog } from '@/components/game/GameLostDialog';
 import { PowerupToolbar } from '@/components/game/PowerupToolbar';
 import { Button } from '@/components/ui/button';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Loader2 } from 'lucide-react';
+import { Code, Loader2, Bomb } from 'lucide-react';
 import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, CARD_BACKS } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
 import { getAICards } from '@/lib/ai-card-cache';
@@ -136,6 +136,14 @@ function PlayPage() {
                 cardBackClass={cardBackClass}
                 customCardBackContent={customCardBackContent}
               />
+              {game.bombTimer !== null && (
+                <div className="absolute top-4 right-4 bg-destructive/90 text-destructive-foreground p-4 rounded-lg shadow-lg z-20 flex items-center gap-4 animate-pulse">
+                    <Bomb className="w-8 h-8"/>
+                    <div className="text-center">
+                        <div className="text-4xl font-bold font-headline">{game.bombTimer}</div>
+                    </div>
+                </div>
+              )}
               {game.status === 'paused' && (
                 <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center rounded-lg z-20 backdrop-blur-sm">
                     <h2 className="text-5xl font-bold font-headline mb-6 text-primary">Paused</h2>

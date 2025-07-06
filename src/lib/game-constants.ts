@@ -8,6 +8,7 @@ export type Card = {
   content: string;
   image: boolean;
   hint?: string;
+  isBomb?: boolean;
 };
 
 export type GameSettings = {
@@ -70,6 +71,7 @@ export const GAME_STATUS = {
 export const GAME_MODES = [
     { id: 'classic', label: 'Classic' },
     { id: 'time-attack', label: 'Time Attack' },
+    { id: 'minefield', label: 'Minefield' },
 ]
 
 export const GRID_SIZES = [
@@ -160,7 +162,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
-export function createCardSet(gridSize: number, themeName: string): Card[] {
+export function createCardSet(gridSize: number, themeName: string, gameMode: string): Card[] {
   const numPairs = (gridSize * gridSize) / 2;
   const theme = THEMES[themeName as keyof typeof THEMES] || THEMES.emojis;
 
@@ -170,7 +172,7 @@ export function createCardSet(gridSize: number, themeName: string): Card[] {
 
   const selectedItems = shuffleArray(theme.items).slice(0, numPairs);
   
-  const cardPairs: Card[] = selectedItems.flatMap(item => {
+  let cardPairs: Card[] = selectedItems.flatMap(item => {
     if (theme.image) {
       return [
         { type: item, content: `https://placehold.co/200x200.png`, image: true, hint: item.replace(/\s+/g, ' ') },
@@ -182,6 +184,18 @@ export function createCardSet(gridSize: number, themeName: string): Card[] {
       { type: item, content: item, image: false },
     ];
   });
+
+  if (gameMode === 'minefield' && cardPairs.length > 0) {
+    const bombCount = gridSize <= 2 ? 0 : (gridSize === 4 ? 1 : 2);
+    if (bombCount > 0) {
+      const typesToBomb = shuffleArray(selectedItems).slice(0, bombCount);
+      cardPairs.forEach(card => {
+        if (typesToBomb.includes(card.type)) {
+          card.isBomb = true;
+        }
+      });
+    }
+  }
 
   return shuffleArray(cardPairs);
 }

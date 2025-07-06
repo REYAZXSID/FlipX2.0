@@ -15,9 +15,10 @@ type CardProps = {
   hint?: string;
   cardBackClass: string;
   customCardBackContent?: string;
+  isBomb?: boolean;
 };
 
-export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint, cardBackClass, customCardBackContent }: CardProps) {
+export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint, cardBackClass, customCardBackContent, isBomb }: CardProps) {
   const handleCardClick = () => {
     if (isFlipped || isMatched) {
       return;
@@ -54,7 +55,8 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
             "card-face card-face-back border-2 shadow-lg transition-all",
             isMatched 
                 ? "border-accent ring-2 ring-offset-2 ring-offset-background ring-accent shadow-xl shadow-accent/20" 
-                : "border-primary"
+                : "border-primary",
+            isFlipped && !isMatched && isBomb && "border-destructive animate-pulse"
         )}>
           {isImageType ? (
             <Image

@@ -44,6 +44,7 @@ export function GameBoard({
               hint={card.hint}
               cardBackClass={cardBackClass}
               customCardBackContent={customCardBackContent}
+              isBomb={card.isBomb}
             />
         </div>
       ))}

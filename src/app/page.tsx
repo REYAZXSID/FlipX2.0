@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Timer, Bomb } from 'lucide-react';
+import { Code, Timer, Bomb, LandMine } from 'lucide-react';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { SelectionCard } from '@/components/game/SelectionCard';
 
@@ -27,7 +27,7 @@ export default function Home() {
         <main className="w-full flex flex-col items-center mt-8">
           <StepHeader title="Choose a Game Mode" step={1} totalSteps={3} />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 w-full max-w-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 w-full max-w-4xl">
             <SelectionCard
               Icon={Timer}
               title="Classic"
@@ -39,6 +39,12 @@ export default function Home() {
               title="Time Attack"
               description="Race against the clock to match all the pairs."
               onClick={() => handleSelectMode('time-attack')}
+            />
+            <SelectionCard
+              Icon={LandMine}
+              title="Minefield"
+              description="Some pairs are mines. Find the match before it's too late!"
+              onClick={() => handleSelectMode('minefield')}
             />
           </div>
         </main>

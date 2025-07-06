@@ -1,5 +1,6 @@
+
 import type { LucideIcon } from "lucide-react";
-import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb } from 'lucide-react';
+import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, LandMine } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from "./game-constants";
 
 export type Achievement = {
@@ -61,6 +62,13 @@ export const ACHIEVEMENTS: Achievement[] = [
     reward: 40,
   },
   {
+    id: 'mine_sweeper',
+    name: 'Mine Sweeper',
+    description: 'Win a game in Minefield mode.',
+    Icon: LandMine,
+    reward: 50,
+  },
+  {
     id: 'shopper',
     name: 'First Purchase',
     description: 'Buy your first item from the shop.',
@@ -107,6 +115,10 @@ export const checkAchievements = ({ moves, time, gridSize, theme, gameMode, isFi
     
     if (gameMode === 'time-attack') {
         unlocked.push(ACHIEVEMENTS.find(a => a.id === 'time_attacker')!);
+    }
+
+    if (gameMode === 'minefield') {
+      unlocked.push(ACHIEVEMENTS.find(a => a.id === 'mine_sweeper')!);
     }
 
     return unlocked;
