@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow for generating card sets for the memory game.
@@ -62,7 +63,15 @@ const generateCardsFlow = ai.defineFlow(
       ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: `A vibrant, fun, sticker-style icon of ${concept}, on a clean white background, for a memory card game.`,
-        config: { responseModalities: ['TEXT', 'IMAGE'] },
+        config: {
+          responseModalities: ['TEXT', 'IMAGE'],
+          safetySettings: [
+            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          ],
+        },
       }).then(response => ({
           type: concept,
           content: response.media.url,
