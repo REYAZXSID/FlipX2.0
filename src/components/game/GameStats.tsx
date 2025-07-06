@@ -31,14 +31,14 @@ export function GameStats({ time, moves, gridSize, gameMode }: GameStatsProps) {
   const isTimeAttack = gameMode === 'time-attack';
 
   return (
-    <div className="flex flex-row flex-wrap items-center justify-center sm:justify-start bg-muted/50 p-3 rounded-lg gap-4 w-full sm:w-auto">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-lg">
-          {isTimeAttack ? <Clock className={cn("h-6 w-6", time < 10 && "text-destructive animate-ping")}/> : <Timer className="h-6 w-6 text-primary" />}
+    <div className="flex flex-row flex-wrap items-center justify-center sm:justify-start bg-muted/50 p-2 sm:p-3 rounded-lg gap-2 sm:gap-4 w-full sm:w-auto">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 text-base sm:text-lg">
+          {isTimeAttack ? <Clock className={cn("h-5 w-5 sm:h-6 sm:w-6", time < 10 && "text-destructive animate-ping")}/> : <Timer className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />}
           <span className={cn("font-bold", isTimeAttack && time < 10 && "text-destructive")}>{formatTime(time)}</span>
         </div>
-        <div className="flex items-center gap-2 text-lg">
-          <Move className="h-6 w-6 text-primary" />
+        <div className="flex items-center gap-2 text-base sm:text-lg">
+          <Move className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
           <span className="font-bold">{moves} Moves</span>
         </div>
       </div>
@@ -46,7 +46,7 @@ export function GameStats({ time, moves, gridSize, gameMode }: GameStatsProps) {
         {[...Array(3)].map((_, i) => (
           <Star
             key={i}
-            className={`h-7 w-7 transition-colors duration-300 ${i < stars ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"}`}
+            className={`h-6 w-6 sm:h-7 sm:w-7 transition-colors duration-300 ${i < stars ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/50"}`}
           />
         ))}
       </div>

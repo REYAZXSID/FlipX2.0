@@ -54,7 +54,7 @@ export function GameWonDialog({
       <DialogContent className="max-w-md p-0">
         <DialogHeader className="items-center text-center p-6 bg-muted/50">
            <Trophy className="w-16 h-16 text-yellow-500 animate-bounce-slow" />
-          <DialogTitle className="text-4xl font-headline text-primary tracking-wide">
+          <DialogTitle className="text-3xl sm:text-4xl font-headline text-primary tracking-wide">
             You Won!
           </DialogTitle>
           {isNewHighScore && (

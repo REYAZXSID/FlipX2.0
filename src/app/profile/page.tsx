@@ -72,7 +72,7 @@ export default function ProfilePage() {
             </div>
             
              <div className="text-center mb-10">
-                <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-wide text-primary">Player Profile</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">Player Profile</h1>
                 <p className="text-muted-foreground mt-2">Your journey and stats in FlipFun.</p>
             </div>
 
@@ -167,7 +167,7 @@ export default function ProfilePage() {
                         <CardContent className="pl-2">
                             {themeData.length > 0 ? (
                                 <ChartContainer config={chartConfig} className="h-[250px] w-full">
-                                    <BarChart accessibilityLayer data={themeData} layout="vertical" margin={{ left: 10, right: 30 }}>
+                                    <BarChart accessibilityLayer data={themeData} layout="vertical" margin={{ left: 10, right: 10 }}>
                                         <YAxis
                                             dataKey="theme"
                                             type="category"

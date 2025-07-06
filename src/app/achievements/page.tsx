@@ -46,7 +46,7 @@ export default function AchievementsPage() {
             </div>
             
             <div className="text-center mb-10">
-                <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-wide text-primary">Achievements</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">Achievements</h1>
                 <p className="text-muted-foreground mt-2">Celebrate your milestones and unlocked badges.</p>
             </div>
 

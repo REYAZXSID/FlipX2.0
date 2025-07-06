@@ -34,7 +34,7 @@ export function GameLostDialog({
           <div className="bg-destructive/10 p-4 rounded-full">
             <Clock className="w-12 h-12 text-destructive" />
           </div>
-          <AlertDialogTitle className="text-4xl font-headline text-destructive tracking-wide">
+          <AlertDialogTitle className="text-3xl sm:text-4xl font-headline text-destructive tracking-wide">
             Time's Up!
           </AlertDialogTitle>
            <AlertDialogDescription className="text-lg pt-1">

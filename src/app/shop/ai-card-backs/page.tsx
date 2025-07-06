@@ -82,7 +82,7 @@ export default function AICardBacksShopPage() {
             </div>
             
              <div className="text-center mb-10">
-                <h1 className="text-4xl sm:text-5xl font-bold font-headline tracking-wide text-primary">AI Card Back Generator</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">AI Card Back Generator</h1>
                 <p className="text-muted-foreground mt-2">Create your own unique card back designs using AI!</p>
             </div>
 
