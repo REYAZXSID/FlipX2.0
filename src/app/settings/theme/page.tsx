@@ -51,16 +51,25 @@ function ThemeSelectionPage() {
 
     const form = useForm<FormValues>({
         resolver: zodResolver(FormSchema),
-        defaultValues: () => {
-             const saved = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
-             return {
+        defaultValues: {
+            theme: DEFAULT_SETTINGS.theme,
+            cardBack: DEFAULT_SETTINGS.cardBack,
+            soundTheme: DEFAULT_SETTINGS.soundTheme,
+            customTheme: ''
+        },
+    });
+    
+    useEffect(() => {
+        const saved = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+        if (saved) {
+            form.reset({
                 theme: saved.theme,
                 cardBack: saved.cardBack,
                 soundTheme: saved.soundTheme,
-                customTheme: ''
-             }
-        },
-    });
+                customTheme: saved.customTheme || ''
+            });
+        }
+    }, [form]);
 
     const selectedTheme = useWatch({ control: form.control, name: "theme" });
 
@@ -306,5 +315,3 @@ export default function ThemeSelectionPageWrapper() {
         </Suspense>
     )
 }
-
-    
