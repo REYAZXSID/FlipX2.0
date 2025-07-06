@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   type GameSettings,
   type Card as CardType,
@@ -61,6 +61,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [isScrambling, setIsScrambling] = useState(false);
   const [scrambleTriggerMove, setScrambleTriggerMove] = useState(0);
   const [lostReason, setLostReason] = useState<LostReason | null>(null);
+  const isProcessingFlip = useRef(false);
 
 
   const { logGameWin } = useUserData();
@@ -171,7 +172,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setFlippedIndices(prev => [...prev, index]);
   }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs, bombTimer, isPeeking, isScrambling]);
 
-  const scrambleCards = useCallback(() => {
+  const scrambleCards = useCallback((currentMoves: number) => {
     setIsScrambling(true);
 
     setTimeout(() => {
@@ -188,14 +189,15 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         });
 
         setCards(newCards);
-        setScrambleTriggerMove(moves + Math.floor(Math.random() * 5) + 8); // Set next scramble
+        setScrambleTriggerMove(currentMoves + Math.floor(Math.random() * 5) + 8); // Set next scramble
         setIsScrambling(false);
     }, 1000); // Animation duration
-  }, [cards, matchedPairs, moves]);
+  }, [cards, matchedPairs]);
 
 
   useEffect(() => {
-    if (flippedIndices.length === 2) {
+    if (flippedIndices.length === 2 && !isProcessingFlip.current) {
+      isProcessingFlip.current = true;
       const nextMoves = moves + 1;
       setMoves(nextMoves);
       
@@ -213,26 +215,30 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         setMatchedPairs(prev => [...prev, firstCard.type]);
         setFlippedIndices([]);
         if (isSecondChanceActive) setSecondChanceActive(false);
+        isProcessingFlip.current = false;
       } else {
         setMismatchedIndices(flippedIndices);
         if (isSecondChanceActive) {
             setFlippedIndices([]);
             setMismatchedIndices([]);
             setSecondChanceActive(false);
+            isProcessingFlip.current = false;
         } else if (settings?.gameMode === 'sudden-death') {
             setLostReason('mismatch');
             setTimeout(() => setStatus(GAME_STATUS.LOST), 1000);
+            isProcessingFlip.current = false;
         } else {
             setTimeout(() => {
               setFlippedIndices([]);
               setMismatchedIndices([]);
+              isProcessingFlip.current = false;
             }, 1000);
         }
       }
 
       const isLastPair = matchedPairs.length === (cards.length / 2) - 1 && isMatch;
       if (settings?.gameMode === 'scramble' && nextMoves === scrambleTriggerMove && !isLastPair) {
-        setTimeout(scrambleCards, 1200);
+        setTimeout(() => scrambleCards(nextMoves), 1200);
       }
     }
   }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive, moves, scrambleTriggerMove, matchedPairs.length, scrambleCards]);
@@ -346,5 +352,3 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setSettings,
   };
 };
-
-    
