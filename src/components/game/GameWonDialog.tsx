@@ -4,15 +4,13 @@
 import React from 'react';
 import ReactConfetti from "react-confetti"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { GameStats } from "./GameStats";
 import type { Achievement } from "@/lib/achievements";
 import { UnlockedAchievements } from "./UnlockedAchievements";
@@ -50,22 +48,22 @@ export function GameWonDialog({
   if (!isOpen) return null;
 
   return (
-    <AlertDialog open={isOpen}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onNewGame()}>
        {isOpen && <ReactConfetti width={width} height={height} recycle={false} numberOfPieces={300} />}
-      <AlertDialogContent className="max-w-md">
-        <AlertDialogHeader className="items-center text-center">
+      <DialogContent className="max-w-md">
+        <DialogHeader className="items-center text-center">
           <div className="bg-primary/10 p-4 rounded-full">
             <Trophy className="w-12 h-12 text-primary animate-bounce" />
           </div>
-          <AlertDialogTitle className="text-4xl font-headline text-primary tracking-wide">
+          <DialogTitle className="text-4xl font-headline text-primary tracking-wide">
             You Won!
-          </AlertDialogTitle>
+          </DialogTitle>
           {isNewHighScore && (
-            <AlertDialogDescription className="text-lg font-semibold text-accent pt-1">
+            <DialogDescription className="text-lg font-semibold text-accent pt-1">
                 🏆 New High Score! 🏆
-            </AlertDialogDescription>
+            </DialogDescription>
           )}
-        </AlertDialogHeader>
+        </DialogHeader>
 
         <div className="my-4 p-4 bg-muted/50 rounded-lg">
             <GameStats time={time} moves={moves} gridSize={gridSize} gameMode={gameMode}/>
@@ -83,15 +81,11 @@ export function GameWonDialog({
           </>
         )}
         
-        <AlertDialogFooter className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
-          <AlertDialogCancel asChild>
-            <Button onClick={onNewGame} variant="outline" size="lg">New Game</Button>
-          </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Button onClick={onPlayAgain} size="lg">Play Again</Button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        <DialogFooter className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+          <Button onClick={onNewGame} variant="outline" size="lg">New Game</Button>
+          <Button onClick={onPlayAgain} size="lg">Play Again</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
