@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hourglass } from 'lucide-react';
 import { startOfTomorrow, differenceInSeconds } from 'date-fns';
 
@@ -14,25 +14,25 @@ const formatTime = (totalSeconds: number): string => {
 };
 
 export function MissionCountdown() {
-    const [now, setNow] = useState(new Date());
+    const [timeLeft, setTimeLeft] = useState<string | null>(null);
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setNow(new Date());
-        }, 1000);
+        const updateCountdown = () => {
+            const tomorrow = startOfTomorrow();
+            const remainingSeconds = differenceInSeconds(tomorrow, new Date());
+            setTimeLeft(formatTime(remainingSeconds));
+        };
+
+        updateCountdown();
+        const intervalId = setInterval(updateCountdown, 1000);
+
         return () => clearInterval(intervalId);
     }, []);
-
-    const timeLeft = useMemo(() => {
-        const tomorrow = startOfTomorrow();
-        const remainingSeconds = differenceInSeconds(tomorrow, now);
-        return formatTime(remainingSeconds);
-    }, [now]);
 
     return (
         <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mt-4 p-2 bg-muted/50 rounded-md">
             <Hourglass className="w-4 h-4" />
-            <span>New missions in: <strong>{timeLeft}</strong></span>
+            <span>New missions in: <strong>{timeLeft ?? '00:00:00'}</strong></span>
         </div>
     );
 }
