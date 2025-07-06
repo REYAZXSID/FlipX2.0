@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2, ShoppingCart, Upload } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import { Footer } from '@/components/layout/Footer';
 
@@ -98,6 +98,22 @@ export default function ShopPage() {
                         <CardContent className="p-6 pt-0">
                             <Button variant="outline" className="w-full">
                                 Create Your Own <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/shop/custom-card-backs" className="group">
+                    <Card className="h-full flex flex-col justify-between text-center transition-all duration-300 transform hover:scale-105 hover:border-primary/80 hover:shadow-2xl">
+                        <CardHeader className="items-center p-6">
+                            <div className="flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-primary/10 text-primary transition-transform group-hover:scale-110 group-hover:rotate-[5deg]">
+                                <Upload className="w-12 h-12" />
+                            </div>
+                            <CardTitle className="text-3xl font-headline">Upload Your Own</CardTitle>
+                            <CardDescription className="mt-2">Add a custom card back from an image URL.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-0">
+                            <Button variant="outline" className="w-full">
+                                Add Design <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </CardContent>
                     </Card>
