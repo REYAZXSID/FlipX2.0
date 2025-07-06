@@ -73,15 +73,15 @@ function PlayPage() {
   const themeBackgroundClass = cardBackData?.themeBackgroundClass ?? 'theme-bg-default';
 
   useEffect(() => {
-    const gridSize = Number(gridSizeParam);
+    const gridSize = gridSizeParam ? Number(gridSizeParam) : null;
     const themeName = themeNameParam;
     const gameMode = gameModeParam;
     const cardBack = cardBackParam;
     const soundTheme = soundThemeParam;
-
+  
     const savedSettings = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
 
-    const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
+    const isValidGrid = gridSize ? GRID_SIZES.some(s => s.value === gridSize) : false;
     const isValidTheme = themeName ? Object.keys(THEMES).includes(themeName) : false;
 
     if (!gridSize || !isValidGrid || !isValidTheme || !gameMode || !cardBack || !soundTheme) {
@@ -110,7 +110,7 @@ function PlayPage() {
     setIsLoading(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gridSizeParam, themeNameParam, gameModeParam, cardBackParam, soundThemeParam, router, startGame]);
+  }, [gridSizeParam, themeNameParam, gameModeParam, cardBackParam, soundThemeParam]);
 
   const toggleSound = () => {
     const newSoundEnabled = !settings?.sound;
@@ -135,22 +135,12 @@ function PlayPage() {
       <div className="w-full max-w-7xl mx-auto px-4">
         <Header />
         <main className="w-full max-w-4xl mx-auto mt-4">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
                 <GameStats
                     time={time}
                     moves={moves}
                     gridSize={settings.gridSize}
                     gameMode={settings.gameMode}
-                />
-                <GameControls
-                    onRestart={() => { playButtonSound(); restartGame(); }}
-                    onPause={togglePause}
-                    isPaused={status === 'paused'}
-                    toggleSound={toggleSound}
-                    isSoundEnabled={settings.sound}
-                    onShowHint={() => { playButtonSound(); showHint(); }}
-                    hintsLeft={hintsLeft}
-                    canUseHint={canUseHint()}
                 />
             </div>
 
@@ -189,6 +179,20 @@ function PlayPage() {
                 </div>
               )}
             </div>
+
+            <div className="mt-4 flex justify-center">
+                <GameControls
+                    onRestart={() => { playButtonSound(); restartGame(); }}
+                    onPause={togglePause}
+                    isPaused={status === 'paused'}
+                    toggleSound={toggleSound}
+                    isSoundEnabled={settings.sound}
+                    onShowHint={() => { playButtonSound(); showHint(); }}
+                    hintsLeft={hintsLeft}
+                    canUseHint={canUseHint()}
+                />
+            </div>
+            
             <PowerupToolbar 
                 powerups={userData.powerups}
                 onUsePowerup={(id) => {
