@@ -31,7 +31,7 @@ export function StepHeader({ title, step, totalSteps }: StepHeaderProps) {
                 <span className="sr-only">Back</span>
             </Button>
         )}
-        <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">
+        <h1 className="w-full text-center text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">
           {title}
         </h1>
       </div>
