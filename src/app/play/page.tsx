@@ -138,10 +138,11 @@ function PlayPage() {
 
   return (
     <div className={cn("flex flex-col items-center min-h-screen bg-background p-2 sm:p-4", themeBackgroundClass)}>
-      <div className="w-full max-w-7xl mx-auto px-4">
+      <div className="w-full max-w-7xl mx-auto px-4 flex flex-col flex-grow">
         <Header />
-        <main className="w-full max-w-4xl mx-auto mt-4">
-            <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-4">
+        <main className="w-full max-w-4xl mx-auto mt-4 flex flex-col flex-grow">
+          <div className="flex-grow">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-2 sm:gap-4 mb-4">
                 <GameStats
                     time={time}
                     moves={moves}
@@ -198,23 +199,26 @@ function PlayPage() {
                     canUseHint={canUseHint()}
                 />
             </div>
+          </div>
             
-            <PowerupToolbar 
-                powerups={userData.powerups}
-                onUsePowerup={(id) => {
-                    if (userData.usePowerup(id)) {
-                        playButtonSound();
-                        if (id === 'autoMatch') useAutoMatch();
-                        if (id === 'secondChance') setSecondChanceActive(true);
-                        if (id === 'xrayVision') {
-                            const firstUnflipped = cards.findIndex((c, i) => !matchedPairs.includes(c.type) && !flippedIndices.includes(i));
-                            if (firstUnflipped !== -1) handleCardClick(firstUnflipped, true);
-                        }
-                    }
-                }}
-            />
+          <Footer />
         </main>
       </div>
+
+      <PowerupToolbar 
+          powerups={userData.powerups}
+          onUsePowerup={(id) => {
+              if (userData.usePowerup(id)) {
+                  playButtonSound();
+                  if (id === 'autoMatch') useAutoMatch();
+                  if (id === 'secondChance') setSecondChanceActive(true);
+                  if (id === 'xrayVision') {
+                      const firstUnflipped = cards.findIndex((c, i) => !matchedPairs.includes(c.type) && !flippedIndices.includes(i));
+                      if (firstUnflipped !== -1) handleCardClick(firstUnflipped, true);
+                  }
+              }
+          }}
+      />
 
       <GameWonDialog
         isOpen={status === 'finished'}
@@ -234,7 +238,6 @@ function PlayPage() {
         onNewGame={() => { playButtonSound(); router.push('/'); }}
         reason={lostReason}
       />
-      <Footer />
     </div>
   );
 }
