@@ -231,6 +231,20 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             });
         } else if (item.type === 'sound-theme') {
             setSoundThemeInventory(prev => [...prev, item.id]);
+            setMissionState(prev => {
+                const newState: MissionState = JSON.parse(JSON.stringify(prev));
+                const updateProgress = (id: string, amount: number) => {
+                    const missionDef = MISSION_POOL.find(m => m.id === id);
+                    if (!missionDef || !dailyMissionIds.includes(id)) return;
+                    const mission = newState[id] || { progress: 0, isClaimed: false };
+                    if (!mission.isClaimed) {
+                        mission.progress = Math.min((mission.progress || 0) + amount, missionDef.goal);
+                        newState[id] = mission;
+                    }
+                };
+                updateProgress('buy_sound_theme', 1);
+                return newState;
+            });
         } else if (item.type === 'ai-premium') {
             setCustomCardBacks(prev => [...prev, item]);
         } else { // standard card back
@@ -255,7 +269,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         
         toast({ title: 'Purchase Successful!', description: `You bought ${item.name}.` });
         return true;
-    }, [coins, toast, inventory, soundThemeInventory, dailyMissionIds]);
+    }, [coins, toast, inventory, soundThemeInventory, customCardBacks, dailyMissionIds]);
 
     const usePowerup = useCallback((id: PowerUp['id']) => {
         if (powerups[id] > 0) {
