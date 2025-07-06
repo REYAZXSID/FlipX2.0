@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useGame } from '@/hooks/use-game';
 import { useUserData } from '@/hooks/use-user-data';
@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 function PlayPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const hasInitialized = useRef(false);
   
   const userData = useUserData();
   const [isLoading, setIsLoading] = useState(true);
@@ -73,6 +74,8 @@ function PlayPage() {
   const themeBackgroundClass = cardBackData?.themeBackgroundClass ?? 'theme-bg-default';
 
   useEffect(() => {
+    if (hasInitialized.current) return;
+
     const gridSize = gridSizeParam ? Number(gridSizeParam) : null;
     const themeName = themeNameParam;
     const gameMode = gameModeParam;
@@ -108,9 +111,10 @@ function PlayPage() {
         sound: savedSettings.sound
     }, initialCards);
     setIsLoading(false);
+    hasInitialized.current = true;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gridSizeParam, themeNameParam, gameModeParam, cardBackParam, soundThemeParam]);
+  }, [gridSizeParam, themeNameParam, gameModeParam, cardBackParam, soundThemeParam, router, startGame]);
 
   const toggleSound = () => {
     const newSoundEnabled = !settings?.sound;
