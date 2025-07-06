@@ -147,6 +147,7 @@ export const LOCAL_STORAGE_KEYS = {
   MISSIONS: 'flipfun-missions-v2',
   DAILY_MISSION_IDS: 'flipfun-daily-mission-ids-v2',
   MISSIONS_RESET_DATE: 'flipfun-missions-reset-date-v2',
+  PLAYER_NAME: 'flipfun-player-name-v2',
 };
 
 

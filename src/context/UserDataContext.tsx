@@ -11,6 +11,7 @@ import { MISSION_POOL, type Mission, type MissionState, type MissionDefinition }
 
 export interface UserDataContextType {
     coins: number;
+    username: string;
     powerups: Record<string, number>;
     inventory: string[];
     customCardBacks: CustomCardBack[];
@@ -21,6 +22,7 @@ export interface UserDataContextType {
     usePowerup: (id: PowerUp['id']) => boolean;
     logGameWin: (args: { coinsEarned: number; gridSize: number; moves: number; gameMode: string; theme: string; }) => void;
     claimMissionReward: (missionId: string) => void;
+    setUsername: (name: string) => void;
 }
 
 export const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
@@ -39,6 +41,7 @@ const getInitialData = <T,>(key: string, defaultValue: T): T => {
 };
 
 const defaultCoins = 200;
+const defaultUsername = 'Player';
 const defaultPowerups: Record<string, number> = { autoMatch: 1, secondChance: 0, xrayVision: 2 };
 const defaultInventory: string[] = ['default'];
 const defaultCustomCardBacks: CustomCardBack[] = [];
@@ -49,6 +52,7 @@ const defaultMissions: MissionState = {};
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     const { toast } = useToast();
     const [coins, setCoins] = useState<number>(defaultCoins);
+    const [username, setUsername] = useState<string>(defaultUsername);
     const [powerups, setPowerups] = useState<Record<string, number>>(defaultPowerups);
     const [inventory, setInventory] = useState<string[]>(defaultInventory);
     const [customCardBacks, setCustomCardBacks] = useState<CustomCardBack[]>(defaultCustomCardBacks);
@@ -79,6 +83,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         
         setDailyMissionIds(missionIds);
         setCoins(getInitialData(LOCAL_STORAGE_KEYS.COINS, defaultCoins));
+        setUsername(getInitialData(LOCAL_STORAGE_KEYS.PLAYER_NAME, defaultUsername));
         setPowerups(getInitialData(LOCAL_STORAGE_KEYS.POWERUPS, defaultPowerups));
         setInventory(getInitialData(LOCAL_STORAGE_KEYS.INVENTORY, defaultInventory));
         setCustomCardBacks(getInitialData(LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS, defaultCustomCardBacks));
@@ -89,6 +94,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.COINS, JSON.stringify(coins)); }, [coins, isLoaded]);
+    useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.PLAYER_NAME, JSON.stringify(username)); }, [username, isLoaded]);
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.POWERUPS, JSON.stringify(powerups)); }, [powerups, isLoaded]);
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.INVENTORY, JSON.stringify(inventory)); }, [inventory, isLoaded]);
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS, JSON.stringify(customCardBacks)); }, [customCardBacks, isLoaded]);
@@ -100,6 +106,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const handleStorageChange = (event: StorageEvent) => {
            if (event.key === LOCAL_STORAGE_KEYS.COINS) setCoins(getInitialData(LOCAL_STORAGE_KEYS.COINS, defaultCoins));
+           if (event.key === LOCAL_STORAGE_KEYS.PLAYER_NAME) setUsername(getInitialData(LOCAL_STORAGE_KEYS.PLAYER_NAME, defaultUsername));
            if (event.key === LOCAL_STORAGE_KEYS.POWERUPS) setPowerups(getInitialData(LOCAL_STORAGE_KEYS.POWERUPS, defaultPowerups));
            if (event.key === LOCAL_STORAGE_KEYS.INVENTORY) setInventory(getInitialData(LOCAL_STORAGE_KEYS.INVENTORY, defaultInventory));
             if (event.key === LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS) setCustomCardBacks(getInitialData(LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS, defaultCustomCardBacks));
@@ -273,7 +280,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         return false;
     }, [powerups, dailyMissionIds]);
 
-    const value = { coins, powerups, inventory, customCardBacks, soundThemeInventory, stats, missions, purchaseItem, usePowerup, logGameWin, claimMissionReward };
+    const value = { coins, username, setUsername, powerups, inventory, customCardBacks, soundThemeInventory, stats, missions, purchaseItem, usePowerup, logGameWin, claimMissionReward };
 
     return <UserDataContext.Provider value={value}>{children}</UserDataContext.Provider>;
 };
