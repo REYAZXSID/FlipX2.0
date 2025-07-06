@@ -281,3 +281,16 @@
 .animate-shake {
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
 }
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
