@@ -105,6 +105,8 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     
     const logGameWin = useCallback((args: { coinsEarned: number, gridSize: number, moves: number, gameMode: string, theme: string }) => {
         const { coinsEarned, gridSize, moves, gameMode, theme } = args;
+        setCoins(prev => prev + coinsEarned);
+        
         setMissionState(prev => {
             const newState: MissionState = JSON.parse(JSON.stringify(prev));
 
@@ -196,7 +198,10 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
                 if (!existingAchievements.includes(newAchievement.id)) {
                     const allUnlocked = [...existingAchievements, newAchievement.id];
                     localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(allUnlocked));
-                    toast({ title: 'Achievement Unlocked!', description: `${newAchievement.name}: ${newAchievement.description}` });
+                    
+                    setCoins(prev => prev + newAchievement.reward);
+                    toast({ title: 'Achievement Unlocked!', description: `${newAchievement.name}: ${newAchievement.description} You earned ${newAchievement.reward} coins!` });
+
                     window.dispatchEvent(new Event('storage'));
                 }
             } catch (e) { console.error("Failed to save shop achievement", e); }

@@ -7,6 +7,7 @@ export type Achievement = {
   name: string;
   description: string;
   Icon: LucideIcon;
+  reward: number;
 };
 
 export const ACHIEVEMENTS: Achievement[] = [
@@ -15,48 +16,56 @@ export const ACHIEVEMENTS: Achievement[] = [
     name: 'First Victory',
     description: 'Win your first game on any difficulty.',
     Icon: Award,
+    reward: 25,
   },
   {
     id: 'perfect_4x4',
     name: 'Perfect Match',
     description: 'Win a 4x4 game with the minimum number of moves (8).',
     Icon: Crown,
+    reward: 50,
   },
   {
     id: 'speed_demon_4x4',
     name: 'Speed Demon',
     description: 'Win a 4x4 game in under 30 seconds.',
     Icon: Zap,
+    reward: 50,
   },
   {
     id: 'marathon_6x6',
     name: 'Memory Marathon',
     description: 'Complete a challenging 6x6 game.',
     Icon: BrainCircuit,
+    reward: 75,
   },
   {
     id: 'perfect_6x6',
     name: 'Grandmaster',
     description: 'Win a 6x6 game with the minimum number of moves (18).',
     Icon: Rocket,
+    reward: 150,
   },
   {
     id: 'ai_explorer',
     name: 'AI Explorer',
     description: 'Play a game with a custom AI-generated theme.',
     Icon: Bot,
+    reward: 30,
   },
   {
     id: 'time_attacker',
     name: 'Time Attacker',
     description: 'Win a game in Time Attack mode.',
     Icon: Bomb,
+    reward: 40,
   },
   {
     id: 'shopper',
     name: 'First Purchase',
     description: 'Buy your first item from the shop.',
     Icon: ShoppingCart,
+    reward: 10,
   },
 ];
 

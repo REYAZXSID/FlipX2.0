@@ -176,21 +176,36 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       setStatus(GAME_STATUS.FINISHED);
       if(settings?.sound) setTimeout(() => playWinSound(), 500);
 
-      // Calculate coins earned
+      // --- Achievement & Coin Logic ---
+      let achievementCoins = 0;
+      try {
+        const existingAchievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
+        const isFirstWin = existingAchievements.length === 0;
+
+        const justUnlocked = checkAchievements({ moves, time, gridSize: settings.gridSize, theme: settings.theme, gameMode: settings.gameMode, isFirstWin });
+        const newAchievements = justUnlocked.filter(ach => !existingAchievements.includes(ach.id));
+
+        if (newAchievements.length > 0) {
+          achievementCoins = newAchievements.reduce((sum, ach) => sum + ach.reward, 0);
+          const allUnlocked = [...existingAchievements, ...newAchievements.map(ach => ach.id)];
+          localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(allUnlocked));
+          setUnlockedAchievements(newAchievements);
+        }
+      } catch(e) { console.error("Failed to process achievements", e) }
+
+      // --- Coin Calculation ---
       const baseCoins = settings.gridSize * 10;
       const movePenalty = Math.floor(moves / 5);
       const timePenalty = settings.gameMode === 'classic' ? Math.floor(time / 10) : 0;
-      const earned = Math.max(10, baseCoins - movePenalty - timePenalty);
-      setCoinsEarned(earned);
+      const gameWinCoins = Math.max(10, baseCoins - movePenalty - timePenalty);
+      
+      const totalEarned = gameWinCoins + achievementCoins;
+      setCoinsEarned(totalEarned);
 
-      try {
-        const currentCoins = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.COINS) || '0');
-        localStorage.setItem(LOCAL_STORAGE_KEYS.COINS, JSON.stringify(currentCoins + earned));
-      } catch(e) { console.error("Failed to save coins", e)}
+      // Log game win to update missions and central coin balance
+      logGameWin({ coinsEarned: totalEarned, gridSize: settings.gridSize, moves, gameMode: settings.gameMode, theme: settings.theme });
       
-      // Log game win for missions
-      logGameWin({ coinsEarned: earned, gridSize: settings.gridSize, moves, gameMode: settings.gameMode, theme: settings.theme });
-      
+      // --- High Score Logic ---
       try {
         const highScores: Record<string, HighScore> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.HIGH_SCORES) || '{}');
         const currentHighScore = highScores[settings.gridSize];
@@ -201,20 +216,6 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         }
       } catch (e) { console.error("Failed to save high score", e) }
 
-      try {
-        const existingAchievements: string[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS) || '[]');
-        const isFirstWin = existingAchievements.length === 0;
-
-        const justUnlocked = checkAchievements({ moves, time, gridSize: settings.gridSize, theme: settings.theme, gameMode: settings.gameMode, isFirstWin });
-        const newAchievements = justUnlocked.filter(ach => !existingAchievements.includes(ach.id));
-
-        if (newAchievements.length > 0) {
-          const allUnlocked = [...existingAchievements, ...newAchievements.map(ach => ach.id)];
-          localStorage.setItem(LOCAL_STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(allUnlocked));
-          setUnlockedAchievements(newAchievements);
-        }
-      } catch(e) { console.error("Failed to save achievements", e) }
-      
       // Notify other components that storage has changed
       window.dispatchEvent(new Event('storage'));
     }
