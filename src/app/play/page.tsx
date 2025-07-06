@@ -26,7 +26,12 @@ function PlayPage() {
   const userData = useUserData();
   const [isLoading, setIsLoading] = useState(true);
   
+  const gridSizeParam = searchParams.get('gridSize');
+  const themeNameParam = searchParams.get('theme');
+  const gameModeParam = searchParams.get('gameMode');
+  const cardBackParam = searchParams.get('cardBack');
   const soundThemeParam = searchParams.get('soundTheme');
+  
   const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound(soundThemeParam || 'default');
   
   const {
@@ -68,11 +73,11 @@ function PlayPage() {
   const themeBackgroundClass = cardBackData?.themeBackgroundClass ?? 'theme-bg-default';
 
   useEffect(() => {
-    const gridSize = Number(searchParams.get('gridSize'));
-    const themeName = searchParams.get('theme');
-    const gameMode = searchParams.get('gameMode');
-    const cardBack = searchParams.get('cardBack');
-    const soundTheme = searchParams.get('soundTheme');
+    const gridSize = Number(gridSizeParam);
+    const themeName = themeNameParam;
+    const gameMode = gameModeParam;
+    const cardBack = cardBackParam;
+    const soundTheme = soundThemeParam;
 
     const savedSettings = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
 
@@ -105,7 +110,7 @@ function PlayPage() {
     setIsLoading(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [gridSizeParam, themeNameParam, gameModeParam, cardBackParam, soundThemeParam, router, startGame]);
 
   const toggleSound = () => {
     const newSoundEnabled = !settings?.sound;
