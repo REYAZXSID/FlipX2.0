@@ -77,6 +77,7 @@ function PlayPage() {
 
   useEffect(() => {
     if (hasInitialized.current) return;
+    hasInitialized.current = true; // Prevent re-initialization
 
     const gridSize = gridSizeParam ? Number(gridSizeParam) : null;
     const themeName = themeNameParam;
@@ -113,10 +114,9 @@ function PlayPage() {
         sound: savedSettings.sound
     }, initialCards);
     setIsLoading(false);
-    hasInitialized.current = true;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gridSizeParam, themeNameParam, gameModeParam, cardBackParam, soundThemeParam, router, startGame]);
+  }, []);
 
   const toggleSound = () => {
     const newSoundEnabled = !settings?.sound;
@@ -186,39 +186,39 @@ function PlayPage() {
                 </div>
               )}
             </div>
-
-            <div className="mt-4 flex justify-center">
-                <GameControls
-                    onRestart={() => { playButtonSound(); restartGame(); }}
-                    onPause={togglePause}
-                    isPaused={status === 'paused'}
-                    toggleSound={toggleSound}
-                    isSoundEnabled={settings.sound}
-                    onShowHint={() => { playButtonSound(); showHint(); }}
-                    hintsLeft={hintsLeft}
-                    canUseHint={canUseHint()}
-                />
-            </div>
           </div>
             
-          <Footer />
+          <div className="flex flex-col items-center gap-4 mt-auto pt-4">
+            <GameControls
+                onRestart={() => { playButtonSound(); restartGame(); }}
+                onPause={togglePause}
+                isPaused={status === 'paused'}
+                toggleSound={toggleSound}
+                isSoundEnabled={settings.sound}
+                onShowHint={() => { playButtonSound(); showHint(); }}
+                hintsLeft={hintsLeft}
+                canUseHint={canUseHint()}
+            />
+
+            <PowerupToolbar 
+                powerups={userData.powerups}
+                onUsePowerup={(id) => {
+                    if (userData.usePowerup(id)) {
+                        playButtonSound();
+                        if (id === 'autoMatch') useAutoMatch();
+                        if (id === 'secondChance') setSecondChanceActive(true);
+                        if (id === 'xrayVision') {
+                            const firstUnflipped = cards.findIndex((c, i) => !matchedPairs.includes(c.type) && !flippedIndices.includes(i));
+                            if (firstUnflipped !== -1) handleCardClick(firstUnflipped, true);
+                        }
+                    }
+                }}
+            />
+
+            <Footer />
+          </div>
         </main>
       </div>
-
-      <PowerupToolbar 
-          powerups={userData.powerups}
-          onUsePowerup={(id) => {
-              if (userData.usePowerup(id)) {
-                  playButtonSound();
-                  if (id === 'autoMatch') useAutoMatch();
-                  if (id === 'secondChance') setSecondChanceActive(true);
-                  if (id === 'xrayVision') {
-                      const firstUnflipped = cards.findIndex((c, i) => !matchedPairs.includes(c.type) && !flippedIndices.includes(i));
-                      if (firstUnflipped !== -1) handleCardClick(firstUnflipped, true);
-                  }
-              }
-          }}
-      />
 
       <GameWonDialog
         isOpen={status === 'finished'}
