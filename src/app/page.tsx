@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
       <OnboardingDialog />
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center flex-grow px-4">
         <Header />
         <main className="w-full flex flex-col items-center mt-8">
           <StepHeader title="Choose a Game Mode" step={1} totalSteps={5} />

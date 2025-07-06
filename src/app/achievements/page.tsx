@@ -34,7 +34,7 @@ export default function AchievementsPage() {
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4 relative overflow-hidden">
       <Trophy className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] text-primary opacity-5 -z-10" />
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center flex-grow px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">
             <div className="flex justify-start w-full mb-6">

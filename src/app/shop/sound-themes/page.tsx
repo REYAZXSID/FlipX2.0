@@ -16,7 +16,7 @@ export default function SoundThemesShopPage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
+      <div className="w-full max-w-7xl mx-auto flex flex-col items-center flex-grow px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">
             <div className="flex justify-between items-center w-full mb-6">

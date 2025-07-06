@@ -30,7 +30,7 @@ function GridSelectionPage() {
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
-            <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
+            <div className="w-full max-w-7xl mx-auto flex flex-col items-center flex-grow px-4">
                 <Header />
                 <main className="w-full flex flex-col items-center mt-8">
                     <StepHeader title="Select Grid" step={2} totalSteps={5} />
