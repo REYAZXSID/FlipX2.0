@@ -58,6 +58,7 @@ function CardBackSelectionPage() {
     }
 
     const allCardBacks = [...CARD_BACKS, ...customCardBacks];
+    const availableCardBacks = allCardBacks.filter(back => 'content' in back || inventory.includes(back.id));
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
@@ -67,15 +68,14 @@ function CardBackSelectionPage() {
                     <StepHeader title="Select Card Back" step={4} totalSteps={5} />
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 w-full max-w-4xl">
-                        {allCardBacks.map((back) => {
-                            const isOwned = 'content' in back ? true : inventory.includes(back.id);
+                        {availableCardBacks.map((back) => {
                             return (
                                <SettingSelectionCard
                                     key={back.id}
                                     title={back.name}
-                                    onClick={() => isOwned && setSelectedCardBack(back.id)}
+                                    onClick={() => setSelectedCardBack(back.id)}
                                     isSelected={selectedCardBack === back.id}
-                                    isOwned={isOwned}
+                                    isOwned={true}
                                 >
                                     <div className={cn("w-3/4 h-full rounded-md relative shadow-lg", back.className)}>
                                       {'content' in back && <Image src={back.content} alt={back.name} fill className="object-cover rounded-md" />}
