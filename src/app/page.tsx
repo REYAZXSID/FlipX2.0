@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Timer, Bomb, ShieldAlert } from 'lucide-react';
+import { Code, Timer, Bomb, ShieldAlert, Skull } from 'lucide-react';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { SelectionCard } from '@/components/game/SelectionCard';
 
@@ -27,7 +27,7 @@ export default function Home() {
         <main className="w-full flex flex-col items-center mt-8">
           <StepHeader title="Choose a Game Mode" step={1} totalSteps={5} />
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 w-full max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 w-full max-w-4xl">
             <SelectionCard
               Icon={Timer}
               title="Classic"
@@ -45,6 +45,12 @@ export default function Home() {
               title="Minefield"
               description="Some pairs are mines. Find the match before it's too late!"
               onClick={() => handleSelectMode('minefield')}
+            />
+             <SelectionCard
+              Icon={Skull}
+              title="Sudden Death"
+              description="One wrong move and the game is over. Ultimate focus!"
+              onClick={() => handleSelectMode('sudden-death')}
             />
           </div>
         </main>

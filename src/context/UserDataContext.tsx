@@ -175,6 +175,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             
             if (gameMode === 'time-attack') updateProgress('win_time_attack', 1);
             if (gameMode === 'classic') updateProgress('win_classic_game', 1);
+            if (gameMode === 'sudden-death') updateProgress('win_sudden_death', 1);
             if (theme === 'ai-magic') updateProgress('play_ai_game', 1);
             
             return newState;

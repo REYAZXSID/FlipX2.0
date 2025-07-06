@@ -72,6 +72,7 @@ export const GAME_MODES = [
     { id: 'classic', label: 'Classic' },
     { id: 'time-attack', label: 'Time Attack' },
     { id: 'minefield', label: 'Minefield' },
+    { id: 'sudden-death', label: 'Sudden Death' },
 ]
 
 export const GRID_SIZES = [

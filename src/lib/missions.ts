@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown, Rocket, ShoppingCart, Sparkles, Music } from "lucide-react";
+import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown, Rocket, ShoppingCart, Sparkles, Music, Skull } from "lucide-react";
 
 export type MissionDifficulty = 'Easy' | 'Medium' | 'Hard';
 
@@ -183,6 +183,15 @@ export const MISSION_POOL: MissionDefinition[] = [
         reward: 20,
         goal: 1,
         Icon: Music,
+    },
+    {
+        id: 'win_sudden_death',
+        title: 'Living on the Edge',
+        description: 'Win a game in Sudden Death mode.',
+        difficulty: 'Hard',
+        reward: 60,
+        goal: 1,
+        Icon: Skull,
     }
 ];
 

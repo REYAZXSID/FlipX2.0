@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, ShieldAlert } from 'lucide-react';
+import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, ShieldAlert, Skull } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from "./game-constants";
 
 export type Achievement = {
@@ -75,6 +75,13 @@ export const ACHIEVEMENTS: Achievement[] = [
     Icon: ShoppingCart,
     reward: 10,
   },
+  {
+    id: 'sudden_death_survivor',
+    name: 'Survivor',
+    description: 'Win a game in Sudden Death mode.',
+    Icon: Skull,
+    reward: 60,
+  },
 ];
 
 type CheckAchievementsArgs = {
@@ -119,6 +126,10 @@ export const checkAchievements = ({ moves, time, gridSize, theme, gameMode, isFi
 
     if (gameMode === 'minefield') {
       unlocked.push(ACHIEVEMENTS.find(a => a.id === 'mine_sweeper')!);
+    }
+
+    if (gameMode === 'sudden-death') {
+      unlocked.push(ACHIEVEMENTS.find(a => a.id === 'sudden_death_survivor')!);
     }
 
     return unlocked;

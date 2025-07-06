@@ -153,7 +153,12 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         setFlippedIndices([]);
         if (isSecondChanceActive) setSecondChanceActive(false);
       } else {
-        if (isSecondChanceActive) {
+        if (settings?.gameMode === 'sudden-death') {
+          setTimeout(() => {
+              setStatus(GAME_STATUS.LOST);
+              setFlippedIndices([]);
+          }, 1000);
+        } else if (isSecondChanceActive) {
             setFlippedIndices([]);
             setSecondChanceActive(false);
         } else {
