@@ -33,7 +33,7 @@ function GridSelectionPage() {
             <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
                 <Header />
                 <main className="w-full flex flex-col items-center mt-8">
-                    <StepHeader title="Select Grid Size" step={2} totalSteps={5} />
+                    <StepHeader title="Select Grid" step={2} totalSteps={5} />
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 w-full max-w-3xl">
                         <SelectionCard

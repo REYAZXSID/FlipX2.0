@@ -65,7 +65,7 @@ function CardBackSelectionPage() {
             <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
                 <Header />
                 <main className="w-full flex flex-col items-center mt-8">
-                    <StepHeader title="Select Card Back" step={4} totalSteps={5} />
+                    <StepHeader title="Select Card" step={4} totalSteps={5} />
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 w-full max-w-4xl">
                         {availableCardBacks.map((back) => {
