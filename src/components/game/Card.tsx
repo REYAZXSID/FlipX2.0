@@ -37,20 +37,20 @@ export function Card({ content, isFlipped, isMatched, isMismatched, onClick, isI
   return (
     <div className={cn("card-container aspect-square", isMismatched && 'animate-shake')} onClick={handleCardClick}>
       <div className={cardClasses}>
-        <div className={cn("card-face card-face-front transition-colors p-2", cardBackClass)}>
-          <div className="w-full h-full rounded-md flex items-center justify-center">
-            {customCardBackContent ? (
+        <div className={cn("card-face card-face-front transition-colors", cardBackClass)}>
+           {customCardBackContent ? (
               <Image 
                 src={customCardBackContent} 
                 alt="Custom card back" 
                 fill 
-                className="object-cover rounded-md" 
+                className="object-cover rounded-lg"
                 sizes="(max-width: 768px) 20vw, 10vw" 
               />
             ) : (
-              <Puzzle className="w-1/2 h-1/2 text-muted-foreground/60" />
+              <div className="w-full h-full rounded-md flex items-center justify-center p-2">
+                <Puzzle className="w-1/2 h-1/2 text-muted-foreground/60" />
+              </div>
             )}
-          </div>
         </div>
         <div className={cn(
             "card-face card-face-back border-2 shadow-lg transition-all",
@@ -76,5 +76,3 @@ export function Card({ content, isFlipped, isMatched, isMismatched, onClick, isI
     </div>
   );
 }
-
-    

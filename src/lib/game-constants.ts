@@ -42,6 +42,7 @@ export type CardBack = {
   themeBackgroundClass?: string;
   cost: number;
   type: 'free' | 'premium';
+  content?: string;
 }
 
 export type CustomCardBack = {
@@ -91,9 +92,9 @@ export const POWERUPS: PowerUp[] = [
 
 export const CARD_BACKS: CardBack[] = [
   { id: 'default', name: 'Default', className: 'card-back-default', themeBackgroundClass: 'theme-bg-default', cost: 0, type: 'free' },
-  { id: 'galaxy', name: 'Galaxy', className: 'card-back-galaxy', themeBackgroundClass: 'theme-bg-galaxy', cost: 100, type: 'premium' },
-  { id: 'circuit', name: 'Circuit', className: 'card-back-circuit', themeBackgroundClass: 'theme-bg-circuit', cost: 150, type: 'premium' },
-  { id: 'carbon', name: 'Carbon Fiber', className: 'card-back-carbon', themeBackgroundClass: 'theme-bg-carbon', cost: 200, type: 'premium' },
+  { id: 'galaxy', name: 'Galaxy', className: 'card-back-galaxy', themeBackgroundClass: 'theme-bg-galaxy', cost: 100, type: 'premium', content: 'https://files.catbox.moe/7dum00.jpg' },
+  { id: 'circuit', name: 'Circuit', className: 'card-back-circuit', themeBackgroundClass: 'theme-bg-circuit', cost: 150, type: 'premium', content: 'https://files.catbox.moe/7dum00.jpg' },
+  { id: 'carbon', name: 'Carbon Fiber', className: 'card-back-carbon', themeBackgroundClass: 'theme-bg-carbon', cost: 200, type: 'premium', content: 'https://files.catbox.moe/7dum00.jpg' },
 ]
 
 export const THEMES = {
