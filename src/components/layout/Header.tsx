@@ -11,8 +11,8 @@ export function Header() {
   return (
     <header className="flex w-full items-center justify-between py-4 sm:py-6">
         <Link href="/" className="flex items-center gap-3 text-primary transition-transform hover:scale-105">
-            <BrainCircuit className="w-10 h-10 sm:w-12 sm:h-12" />
-            <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-wider">
+            <BrainCircuit className="w-10 h-10 sm:w-12 sm:h-12 animate-bounce-slow" />
+            <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-wider drop-shadow-lg">
             FlipFun
             </h1>
         </Link>

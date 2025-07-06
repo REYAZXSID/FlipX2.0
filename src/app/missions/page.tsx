@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Code, ArrowLeft, CircleDollarSign } from 'lucide-react';
+import { Code, ArrowLeft, CircleDollarSign, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUserData } from '@/hooks/use-user-data';
@@ -13,7 +13,8 @@ export default function MissionsPage() {
     const { missions, claimMissionReward, coins } = useUserData();
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
+    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4 relative overflow-hidden">
+      <ListChecks className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] text-primary opacity-5 -z-10" />
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">

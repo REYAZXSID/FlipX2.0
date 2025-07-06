@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Code, ArrowLeft, Gamepad2, Trophy, Coins, Repeat, BarChart2, Edit, Check, X as XIcon, BadgeCheck } from 'lucide-react';
+import { Code, ArrowLeft, Gamepad2, Trophy, Coins, Repeat, BarChart2, Edit, Check, X as XIcon, BadgeCheck, User } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import {
   ChartConfig,
@@ -57,7 +57,8 @@ export default function ProfilePage() {
     }, [username]);
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
+    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4 relative overflow-hidden">
+      <User className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] text-primary opacity-5 -z-10" />
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">
@@ -86,7 +87,6 @@ export default function ProfilePage() {
                             {!isEditing ? (
                                 <div className="flex items-center gap-2">
                                     <CardTitle className="text-3xl font-headline">{username}</CardTitle>
-                                    <BadgeCheck className="h-7 w-7 text-blue-500" />
                                     <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
                                         <Edit className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
                                     </Button>

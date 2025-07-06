@@ -6,14 +6,15 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Code, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2 } from 'lucide-react';
+import { Code, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2, ShoppingCart } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 
 export default function ShopPage() {
     const { coins } = useUserData();
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
+    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4 relative overflow-hidden">
+        <ShoppingCart className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] text-primary opacity-5 -z-10" />
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">

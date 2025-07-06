@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent } from '@/components/ui/card';
-import { Code, ArrowLeft } from 'lucide-react';
+import { Code, ArrowLeft, Trophy } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from '@/lib/game-constants';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 import { AchievementCard } from '@/components/game/AchievementCard';
@@ -31,7 +31,8 @@ export default function AchievementsPage() {
   const progress = totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
+    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4 relative overflow-hidden">
+      <Trophy className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] text-primary opacity-5 -z-10" />
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full max-w-5xl mx-auto mt-8">
