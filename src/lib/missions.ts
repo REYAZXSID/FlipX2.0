@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown, Rocket, ShoppingCart, Sparkles } from "lucide-react";
+import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown, Rocket, ShoppingCart, Sparkles, Music } from "lucide-react";
 
 export type MissionDifficulty = 'Easy' | 'Medium' | 'Hard';
 
@@ -175,6 +175,15 @@ export const MISSION_POOL: MissionDefinition[] = [
         goal: 1,
         Icon: Sparkles,
     },
+    {
+        id: 'buy_sound_theme',
+        title: 'Audiophile',
+        description: 'Purchase a new sound theme from the shop.',
+        difficulty: 'Easy',
+        reward: 20,
+        goal: 1,
+        Icon: Music,
+    }
 ];
 
 export type MissionState = {

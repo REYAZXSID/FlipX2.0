@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Code, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight } from 'lucide-react';
+import { Code, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2 } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 
 export default function ShopPage() {
@@ -64,6 +64,38 @@ export default function ShopPage() {
                         <CardContent className="p-6 pt-0">
                             <Button variant="outline" className="w-full">
                                 Explore Designs <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/shop/sound-themes" className="group">
+                     <Card className="h-full flex flex-col justify-between text-center transition-all duration-300 transform hover:scale-105 hover:border-primary/80 hover:shadow-2xl">
+                        <CardHeader className="items-center p-6">
+                            <div className="flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-primary/10 text-primary transition-transform group-hover:scale-110 group-hover:rotate-[-5deg]">
+                                <Music className="w-12 h-12" />
+                            </div>
+                            <CardTitle className="text-3xl font-headline">Sound Themes</CardTitle>
+                            <CardDescription className="mt-2">Change the game's audio with new sound packs.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-0">
+                            <Button variant="outline" className="w-full">
+                                Browse Sounds <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/shop/ai-card-backs" className="group">
+                     <Card className="h-full flex flex-col justify-between text-center transition-all duration-300 transform hover:scale-105 hover:border-primary/80 hover:shadow-2xl">
+                        <CardHeader className="items-center p-6">
+                            <div className="flex items-center justify-center w-24 h-24 rounded-full mb-4 bg-primary/10 text-primary transition-transform group-hover:scale-110 group-hover:rotate-[5deg]">
+                                <Wand2 className="w-12 h-12" />
+                            </div>
+                            <CardTitle className="text-3xl font-headline">AI Card Backs</CardTitle>
+                            <CardDescription className="mt-2">Generate your own card designs with AI!</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-0">
+                            <Button variant="outline" className="w-full">
+                                Create Your Own <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </CardContent>
                     </Card>

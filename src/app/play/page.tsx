@@ -17,22 +17,32 @@ import { Code, Loader2 } from 'lucide-react';
 import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, CARD_BACKS } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
 import { getAICards } from '@/lib/ai-card-cache';
+import { cn } from '@/lib/utils';
 
 function PlayPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound();
-  const game = useGame({ playFlipSound, playMatchSound, playWinSound });
+  
   const userData = useUserData();
-
-  const [soundEnabled, setSoundEnabled] = useState(DEFAULT_SETTINGS.sound);
   const [isLoading, setIsLoading] = useState(true);
 
   const gridSize = Number(searchParams.get('gridSize'));
   const themeName = searchParams.get('theme');
   const gameMode = searchParams.get('gameMode');
   const cardBack = searchParams.get('cardBack');
-  const cardBackClass = CARD_BACKS.find(cb => cb.id === cardBack)?.className || 'card-back-default';
+  const soundTheme = searchParams.get('soundTheme');
+
+  const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound(soundTheme || 'default');
+  const game = useGame({ playFlipSound, playMatchSound, playWinSound });
+
+  const cardBackData = useMemo(() => {
+    const allBacks = [...CARD_BACKS, ...userData.customCardBacks];
+    return allBacks.find(cb => cb.id === cardBack);
+  }, [cardBack, userData.customCardBacks]);
+
+  const cardBackClass = cardBackData?.className ?? 'card-back-default';
+  const themeBackgroundClass = cardBackData?.themeBackgroundClass ?? 'theme-bg-default';
+
 
   const aiCards = useMemo(() => {
     if (themeName === 'ai-magic') {
@@ -46,19 +56,12 @@ function PlayPage() {
 
 
   useEffect(() => {
-    try {
-        const savedSettings = localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS);
-        if (savedSettings) {
-            setSoundEnabled(JSON.parse(savedSettings).sound);
-        }
-    } catch (error) {
-        console.error("Could not load sound settings", error);
-    }
-    
+    const savedSettings = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+
     const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
     const isValidTheme = themeName ? Object.keys(THEMES).includes(themeName) : false;
 
-    if (isValidGrid && isValidTheme && gameMode && cardBack) {
+    if (isValidGrid && isValidTheme && gameMode && cardBack && soundTheme) {
        if (themeName === 'ai-magic' && !aiCards) {
         router.replace('/');
         return;
@@ -67,9 +70,10 @@ function PlayPage() {
       game.startGame({
         gridSize,
         theme: themeName!,
-        sound: soundEnabled,
         gameMode,
-        cardBack
+        cardBack,
+        soundTheme,
+        sound: savedSettings.sound
       }, aiCards || undefined);
       setIsLoading(false);
     } else {
@@ -79,16 +83,11 @@ function PlayPage() {
   }, [aiCards]);
 
   const toggleSound = () => {
-    const newSoundEnabled = !soundEnabled;
-    setSoundEnabled(newSoundEnabled);
-    try {
-      const savedSettings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.SETTINGS) || '{}');
-      localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify({...savedSettings, sound: newSoundEnabled }));
-      if (game.settings) {
-        game.settings.sound = newSoundEnabled;
-      }
-    } catch (error) {
-        console.error("Could not save sound settings", error);
+    const newSoundEnabled = !game.settings?.sound;
+    const savedSettings = getInitialData(LOCAL_STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.SETTINGS, JSON.stringify({...savedSettings, sound: newSoundEnabled }));
+    if (game.settings) {
+      game.setSettings(prev => prev ? ({...prev, sound: newSoundEnabled}) : null);
     }
   };
 
@@ -102,7 +101,7 @@ function PlayPage() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
+    <div className={cn("flex flex-col items-center min-h-screen bg-background p-2 sm:p-4", themeBackgroundClass)}>
       <div className="w-full max-w-7xl mx-auto px-4">
         <Header />
         <main className="w-full max-w-4xl mx-auto mt-4">
@@ -118,7 +117,7 @@ function PlayPage() {
                     onPause={game.togglePause}
                     isPaused={game.status === 'paused'}
                     toggleSound={toggleSound}
-                    isSoundEnabled={soundEnabled}
+                    isSoundEnabled={game.settings.sound}
                     onShowHint={() => { playButtonSound(); game.showHint(); }}
                     hintsLeft={game.hintsLeft}
                     canUseHint={game.canUseHint()}
@@ -134,6 +133,7 @@ function PlayPage() {
                 gridSize={game.settings.gridSize}
                 isHintActive={game.isHintActive}
                 cardBackClass={cardBackClass}
+                customCardBacks={userData.customCardBacks}
               />
               {game.status === 'paused' && (
                 <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center rounded-lg z-20 backdrop-blur-sm">
@@ -184,6 +184,19 @@ function PlayPage() {
     </div>
   );
 }
+
+const getInitialData = <T,>(key: string, defaultValue: T): T => {
+    if (typeof window === 'undefined') {
+        return defaultValue;
+    }
+    try {
+        const item = window.localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+        console.error(`Error reading from localStorage key “${key}”:`, error);
+        return defaultValue;
+    }
+};
 
 export default function PlayPageWrapper() {
   return (

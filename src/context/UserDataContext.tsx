@@ -2,7 +2,8 @@
 'use client';
 
 import React, { createContext, useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
-import { LOCAL_STORAGE_KEYS, type PowerUp, type CardBack } from '@/lib/game-constants';
+import { LOCAL_STORAGE_KEYS, type PowerUp, type CardBack, type GameStats, type CustomCardBack } from '@/lib/game-constants';
+import type { SoundTheme } from '@/lib/sound-themes';
 import { checkShopAchievement, type Achievement } from '@/lib/achievements';
 import { useToast } from '@/hooks/use-toast';
 import { MISSION_POOL, type Mission, type MissionState, type MissionDefinition } from '@/lib/missions';
@@ -12,8 +13,11 @@ export interface UserDataContextType {
     coins: number;
     powerups: Record<string, number>;
     inventory: string[];
+    customCardBacks: CustomCardBack[];
+    soundThemeInventory: string[];
+    stats: GameStats;
     missions: Mission[];
-    purchaseItem: (item: PowerUp | CardBack) => boolean;
+    purchaseItem: (item: PowerUp | CardBack | SoundTheme | CustomCardBack) => boolean;
     usePowerup: (id: PowerUp['id']) => boolean;
     logGameWin: (args: { coinsEarned: number; gridSize: number; moves: number; gameMode: string; theme: string; }) => void;
     claimMissionReward: (missionId: string) => void;
@@ -37,6 +41,9 @@ const getInitialData = <T,>(key: string, defaultValue: T): T => {
 const defaultCoins = 200;
 const defaultPowerups: Record<string, number> = { autoMatch: 1, secondChance: 0, xrayVision: 2 };
 const defaultInventory: string[] = ['default'];
+const defaultCustomCardBacks: CustomCardBack[] = [];
+const defaultSoundThemeInventory: string[] = ['default'];
+const defaultStats: GameStats = { gamesPlayed: 0, wins: 0, totalMoves: 0, totalTime: 0, themePlays: {} };
 const defaultMissions: MissionState = {};
 
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
@@ -44,6 +51,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     const [coins, setCoins] = useState<number>(defaultCoins);
     const [powerups, setPowerups] = useState<Record<string, number>>(defaultPowerups);
     const [inventory, setInventory] = useState<string[]>(defaultInventory);
+    const [customCardBacks, setCustomCardBacks] = useState<CustomCardBack[]>(defaultCustomCardBacks);
+    const [soundThemeInventory, setSoundThemeInventory] = useState<string[]>(defaultSoundThemeInventory);
+    const [stats, setStats] = useState<GameStats>(defaultStats);
     const [missionState, setMissionState] = useState<MissionState>(defaultMissions);
     const [dailyMissionIds, setDailyMissionIds] = useState<string[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -71,6 +81,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         setCoins(getInitialData(LOCAL_STORAGE_KEYS.COINS, defaultCoins));
         setPowerups(getInitialData(LOCAL_STORAGE_KEYS.POWERUPS, defaultPowerups));
         setInventory(getInitialData(LOCAL_STORAGE_KEYS.INVENTORY, defaultInventory));
+        setCustomCardBacks(getInitialData(LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS, defaultCustomCardBacks));
+        setSoundThemeInventory(getInitialData(LOCAL_STORAGE_KEYS.SOUND_THEME_INVENTORY, defaultSoundThemeInventory));
+        setStats(getInitialData(LOCAL_STORAGE_KEYS.STATS, defaultStats));
         setMissionState(getInitialData(LOCAL_STORAGE_KEYS.MISSIONS, defaultMissions));
         setIsLoaded(true);
     }, []);
@@ -78,6 +91,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.COINS, JSON.stringify(coins)); }, [coins, isLoaded]);
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.POWERUPS, JSON.stringify(powerups)); }, [powerups, isLoaded]);
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.INVENTORY, JSON.stringify(inventory)); }, [inventory, isLoaded]);
+    useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS, JSON.stringify(customCardBacks)); }, [customCardBacks, isLoaded]);
+    useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.SOUND_THEME_INVENTORY, JSON.stringify(soundThemeInventory)); }, [soundThemeInventory, isLoaded]);
+    useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.STATS, JSON.stringify(stats)); }, [stats, isLoaded]);
     useEffect(() => { if (isLoaded) localStorage.setItem(LOCAL_STORAGE_KEYS.MISSIONS, JSON.stringify(missionState)); }, [missionState, isLoaded]);
 
 
@@ -86,6 +102,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
            if (event.key === LOCAL_STORAGE_KEYS.COINS) setCoins(getInitialData(LOCAL_STORAGE_KEYS.COINS, defaultCoins));
            if (event.key === LOCAL_STORAGE_KEYS.POWERUPS) setPowerups(getInitialData(LOCAL_STORAGE_KEYS.POWERUPS, defaultPowerups));
            if (event.key === LOCAL_STORAGE_KEYS.INVENTORY) setInventory(getInitialData(LOCAL_STORAGE_KEYS.INVENTORY, defaultInventory));
+            if (event.key === LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS) setCustomCardBacks(getInitialData(LOCAL_STORAGE_KEYS.CUSTOM_CARD_BACKS, defaultCustomCardBacks));
+            if (event.key === LOCAL_STORAGE_KEYS.SOUND_THEME_INVENTORY) setSoundThemeInventory(getInitialData(LOCAL_STORAGE_KEYS.SOUND_THEME_INVENTORY, defaultSoundThemeInventory));
+            if (event.key === LOCAL_STORAGE_KEYS.STATS) setStats(getInitialData(LOCAL_STORAGE_KEYS.STATS, defaultStats));
            if (event.key === LOCAL_STORAGE_KEYS.MISSIONS) setMissionState(getInitialData(LOCAL_STORAGE_KEYS.MISSIONS, defaultMissions));
         };
         window.addEventListener('storage', handleStorageChange);
@@ -107,6 +126,17 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         const { coinsEarned, gridSize, moves, gameMode, theme } = args;
         setCoins(prev => prev + coinsEarned);
         
+        setStats(prev => ({
+            ...prev,
+            gamesPlayed: prev.gamesPlayed + 1,
+            wins: prev.wins + 1,
+            totalMoves: prev.totalMoves + moves,
+            themePlays: {
+                ...prev.themePlays,
+                [theme]: (prev.themePlays[theme] || 0) + 1,
+            }
+        }));
+
         setMissionState(prev => {
             const newState: MissionState = JSON.parse(JSON.stringify(prev));
 
@@ -159,19 +189,21 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [missionState, toast]);
 
-    const purchaseItem = useCallback((item: PowerUp | CardBack) => {
+    const purchaseItem = useCallback((item: PowerUp | CardBack | SoundTheme | CustomCardBack) => {
         if (coins < item.cost) {
             toast({ variant: 'destructive', title: 'Not enough coins!', description: `You need ${item.cost - coins} more coins.` });
             return false;
         }
-        if ('className' in item && inventory.includes(item.id)) {
-            toast({ title: 'Already Owned', description: `You already own the ${item.name} card back.` });
+
+        const isOwned = inventory.includes(item.id) || soundThemeInventory.includes(item.id);
+        if (item.type !== 'powerup' && item.type !== 'ai-premium' && isOwned) {
+            toast({ title: 'Already Owned', description: `You already own the ${item.name}.` });
             return false;
         }
 
         setCoins(prev => prev - item.cost);
 
-        if ('description' in item) {
+        if (item.type === 'powerup') {
             setPowerups(prev => ({ ...prev, [item.id]: (prev[item.id] || 0) + 1 }));
              setMissionState(prev => {
                 const newState: MissionState = JSON.parse(JSON.stringify(prev));
@@ -187,7 +219,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
                 updateProgress('buy_1_powerup', 1);
                 return newState;
             });
-        } else {
+        } else if (item.type === 'sound-theme') {
+            setSoundThemeInventory(prev => [...prev, item.id]);
+        } else if (item.type === 'ai-premium') {
+            setCustomCardBacks(prev => [...prev, item]);
+        } else { // standard card back
             setInventory(prev => [...prev, item.id]);
         }
 
@@ -209,7 +245,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         
         toast({ title: 'Purchase Successful!', description: `You bought ${item.name}.` });
         return true;
-    }, [coins, toast, inventory, dailyMissionIds]);
+    }, [coins, toast, inventory, soundThemeInventory, dailyMissionIds]);
 
     const usePowerup = useCallback((id: PowerUp['id']) => {
         if (powerups[id] > 0) {
@@ -237,7 +273,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         return false;
     }, [powerups, dailyMissionIds]);
 
-    const value = { coins, powerups, inventory, missions, purchaseItem, usePowerup, logGameWin, claimMissionReward };
+    const value = { coins, powerups, inventory, customCardBacks, soundThemeInventory, stats, missions, purchaseItem, usePowerup, logGameWin, claimMissionReward };
 
     return <UserDataContext.Provider value={value}>{children}</UserDataContext.Provider>;
 };

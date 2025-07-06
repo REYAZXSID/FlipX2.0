@@ -14,9 +14,10 @@ type CardProps = {
   isImageType: boolean;
   hint?: string;
   cardBackClass: string;
+  customCardBackContent?: string;
 };
 
-export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint, cardBackClass }: CardProps) {
+export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint, cardBackClass, customCardBackContent }: CardProps) {
   const handleCardClick = () => {
     if (isFlipped || isMatched) {
       return;
@@ -27,7 +28,8 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
   const cardClasses = cn(
     'card rounded-lg',
     { 'is-flipped': isFlipped || isMatched },
-    isMatched ? 'cursor-not-allowed' : 'cursor-pointer'
+    isMatched ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
+    isMatched && 'animate-pop'
   );
 
   return (
@@ -35,7 +37,17 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
       <div className={cardClasses}>
         <div className={cn("card-face card-face-front transition-colors p-2", cardBackClass)}>
           <div className="w-full h-full rounded-md flex items-center justify-center">
-            <Brain className="w-1/2 h-1/2 text-primary-foreground/30" />
+            {customCardBackContent ? (
+              <Image 
+                src={customCardBackContent} 
+                alt="Custom card back" 
+                fill 
+                className="object-cover rounded-md" 
+                sizes="(max-width: 768px) 20vw, 10vw" 
+              />
+            ) : (
+              <Brain className="w-1/2 h-1/2 text-primary-foreground/30" />
+            )}
           </div>
         </div>
         <div className={cn(

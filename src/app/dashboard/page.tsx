@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Trophy, ShoppingCart, Code, CircleDollarSign, ListChecks, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Trophy, ShoppingCart, Code, CircleDollarSign, ListChecks, ArrowRight, User } from 'lucide-react';
 import { HighScores } from '@/components/game/HighScores';
 import { useUserData } from '@/hooks/use-user-data';
 import { ACHIEVEMENTS } from '@/lib/achievements';
@@ -123,6 +123,23 @@ export default function DashboardPage() {
                   </p>
                   <Link href="/shop" passHref>
                     <Button className="w-full">Go to Shop</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+
+              <Card className="group shadow-lg border-border/80 hover:border-primary/50 transition-all transform hover:-translate-y-1 overflow-hidden">
+                <CardHeader className="bg-muted/50 p-6">
+                  <CardTitle className="flex items-center gap-4 text-2xl font-headline tracking-wide">
+                    <User className="w-10 h-10 text-indigo-500 transition-transform group-hover:scale-125 group-hover:rotate-[-5deg]" />
+                    <span>Player Profile</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <p className="text-muted-foreground mb-4 text-sm">
+                    View your detailed game statistics, win rates, and play history.
+                  </p>
+                  <Link href="/profile" passHref>
+                    <Button className="w-full" variant="outline">View Profile <ArrowRight className="ml-2 h-4 w-4"/></Button>
                   </Link>
                 </CardContent>
               </Card>

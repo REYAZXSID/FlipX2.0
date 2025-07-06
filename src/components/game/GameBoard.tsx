@@ -2,7 +2,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import type { Card as CardType } from "@/lib/game-constants"
+import { Card as CardType, CustomCardBack } from "@/lib/game-constants"
 import { Card } from "./Card"
 
 type GameBoardProps = {
@@ -13,6 +13,7 @@ type GameBoardProps = {
   gridSize: number
   isHintActive: boolean
   cardBackClass: string
+  customCardBacks: CustomCardBack[]
 }
 
 export function GameBoard({
@@ -23,7 +24,10 @@ export function GameBoard({
   gridSize,
   isHintActive,
   cardBackClass,
+  customCardBacks
 }: GameBoardProps) {
+  const customCardBackContent = customCardBacks.find(c => c.className === cardBackClass)?.content;
+  
   return (
     <div
       className={cn(
@@ -32,16 +36,18 @@ export function GameBoard({
       )}
     >
       {cards.map((card, index) => (
-        <Card
-          key={index}
-          content={card.content}
-          isFlipped={isHintActive || flippedIndices.includes(index) || matchedPairs.includes(card.type)}
-          isMatched={matchedPairs.includes(card.type)}
-          onClick={() => onCardClick(index)}
-          isImageType={card.image}
-          hint={card.hint}
-          cardBackClass={cardBackClass}
-        />
+        <div key={index} className="animate-deal-in" style={{ animationDelay: `${index * 30}ms`, opacity: 0, animationFillMode: 'forwards' }}>
+            <Card
+              content={card.content}
+              isFlipped={isHintActive || flippedIndices.includes(index) || matchedPairs.includes(card.type)}
+              isMatched={matchedPairs.includes(card.type)}
+              onClick={() => onCardClick(index)}
+              isImageType={card.image}
+              hint={card.hint}
+              cardBackClass={cardBackClass}
+              customCardBackContent={customCardBackContent}
+            />
+        </div>
       ))}
     </div>
   )

@@ -243,5 +243,6 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     canUseHint,
     useAutoMatch,
     setSecondChanceActive,
+    setSettings,
   };
 };

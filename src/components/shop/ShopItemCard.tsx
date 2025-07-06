@@ -4,20 +4,35 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { PowerUp, CardBack } from "@/lib/game-constants";
+import type { SoundTheme } from "@/lib/sound-themes";
 import { cn } from "@/lib/utils";
-import { CircleDollarSign, Check } from "lucide-react";
+import { CircleDollarSign, Check, Music } from "lucide-react";
+import Image from "next/image";
 
 type ShopItemCardProps = {
-    item: PowerUp | CardBack;
+    item: PowerUp | CardBack | SoundTheme;
     onPurchase: () => void;
     isOwned?: boolean;
 };
 
 export function ShopItemCard({ item, onPurchase, isOwned = false }: ShopItemCardProps) {
     const { name, cost } = item;
-    const description = 'description' in item ? item.description : `Unlock the "${item.name}" card style.`;
-    const Icon = 'Icon' in item ? item.Icon : null;
-    const cardBackClass = !Icon ? item.className : '';
+    let description: string;
+    let Icon: React.ElementType | null = null;
+    let cardBackClass = '';
+    let customImage: string | undefined;
+
+    if ('description' in item) { // PowerUp
+        description = item.description;
+        Icon = item.Icon;
+    } else if ('className' in item) { // CardBack
+        description = `Unlock the "${item.name}" card style.`;
+        cardBackClass = item.className;
+        if('content' in item) customImage = item.content;
+    } else { // SoundTheme
+        description = item.description;
+        Icon = Music;
+    }
     
     return (
         <Card className={cn(
@@ -37,7 +52,9 @@ export function ShopItemCard({ item, onPurchase, isOwned = false }: ShopItemCard
                     </div>
                 ) : (
                     <div className="flex items-center justify-center w-28 h-40 rounded-lg mb-4 p-2 card-face-front transition-transform group-hover:scale-105 border-2 border-border bg-card shadow-inner">
-                        <div className={cn("w-full h-full rounded-md", cardBackClass)}></div>
+                        <div className={cn("w-full h-full rounded-md relative", cardBackClass)}>
+                            {customImage && <Image src={customImage} alt={name} fill className="object-cover rounded-md" />}
+                        </div>
                     </div>
                 )}
                 <CardTitle className="text-2xl font-headline">{name}</CardTitle>
