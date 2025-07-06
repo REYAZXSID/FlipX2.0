@@ -27,7 +27,7 @@ export default function Home() {
         <main className="w-full flex flex-col items-center mt-8">
           <StepHeader title="Choose a Game Mode" step={1} totalSteps={3} />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 w-full max-w-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 w-full max-w-2xl">
             <SelectionCard
               Icon={Timer}
               title="Classic"

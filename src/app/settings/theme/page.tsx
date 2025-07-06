@@ -9,7 +9,7 @@ import * as z from "zod";
 import { Header } from '@/components/layout/Header';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { THEMES, CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS } from "@/lib/game-constants";
@@ -119,79 +119,77 @@ function ThemeSelectionPage() {
                     <StepHeader title="Customize Your Game" step={3} totalSteps={3} />
 
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleStartGame)} className="space-y-8 w-full max-w-lg p-1 mt-12 animate-fly-in">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <FormField
-                                    control={form.control}
-                                    name="theme"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                        <FormLabel>Theme</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a theme" />
-                                            </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                            {Object.values(THEMES).map((theme) => {
-                                                let Icon;
-                                                switch(theme.name) {
-                                                    case 'emojis': Icon = Smile; break;
-                                                    case 'flags': Icon = Globe; break;
-                                                    case 'letters': Icon = CaseSensitive; break;
-                                                    case 'ai-magic': Icon = Sparkles; break;
-                                                    default: Icon = Smile;
-                                                }
-                                                return (
-                                                    <SelectItem key={theme.name} value={theme.name}>
-                                                        <div className="flex items-center gap-2">
-                                                            <Icon className="w-4 h-4" />
-                                                            <span>{theme.label}</span>
-                                                        </div>
-                                                    </SelectItem>
-                                                )
-                                            })}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="cardBack"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                        <FormLabel>Card Back</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a card back" />
-                                            </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                            {CARD_BACKS.map((back) => {
-                                                const isOwned = inventory.includes(back.id);
-                                                return (
-                                                    <SelectItem key={back.id} value={back.id} disabled={!isOwned}>
-                                                        <div className="flex items-center justify-between w-full">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className={cn("w-10 h-7 rounded-sm flex-shrink-0 border", back.className)}></div>
-                                                            <span>{back.name}</span>
-                                                        </div>
-                                                        {!isOwned && <Lock className="w-4 h-4 text-muted-foreground ml-2" />}
+                        <form onSubmit={form.handleSubmit(handleStartGame)} className="space-y-6 w-full max-w-md p-1 mt-12 animate-fly-in">
+                            <FormField
+                                control={form.control}
+                                name="theme"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Theme</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a theme" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        {Object.values(THEMES).map((theme) => {
+                                            let Icon;
+                                            switch(theme.name) {
+                                                case 'emojis': Icon = Smile; break;
+                                                case 'flags': Icon = Globe; break;
+                                                case 'letters': Icon = CaseSensitive; break;
+                                                case 'ai-magic': Icon = Sparkles; break;
+                                                default: Icon = Smile;
+                                            }
+                                            return (
+                                                <SelectItem key={theme.name} value={theme.name}>
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className="w-4 h-4" />
+                                                        <span>{theme.label}</span>
                                                     </div>
-                                                    </SelectItem>
-                                                )
-                                            })}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                                                </SelectItem>
+                                            )
+                                        })}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="cardBack"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Card Back</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a card back" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                        {CARD_BACKS.map((back) => {
+                                            const isOwned = inventory.includes(back.id);
+                                            return (
+                                                <SelectItem key={back.id} value={back.id} disabled={!isOwned}>
+                                                    <div className="flex items-center justify-between w-full">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={cn("w-10 h-7 rounded-sm flex-shrink-0 border", back.className)}></div>
+                                                        <span>{back.name}</span>
+                                                    </div>
+                                                    {!isOwned && <Lock className="w-4 h-4 text-muted-foreground ml-2" />}
+                                                </div>
+                                                </SelectItem>
+                                            )
+                                        })}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             
                             {selectedTheme === 'ai-magic' && (
                                 <FormField
