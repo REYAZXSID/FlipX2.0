@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Code, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight, Music, Wand2, ShoppingCart } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
+import { Footer } from '@/components/layout/Footer';
 
 export default function ShopPage() {
     const { coins } = useUserData();
@@ -105,11 +106,7 @@ export default function ShopPage() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

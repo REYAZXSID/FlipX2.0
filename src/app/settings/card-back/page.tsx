@@ -9,10 +9,11 @@ import { Header } from '@/components/layout/Header';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { Button } from "@/components/ui/button";
 import { CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS, type CustomCardBack } from "@/lib/game-constants";
-import { Code, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
 import { cn } from "@/lib/utils";
 import { SettingSelectionCard } from '@/components/game/SettingSelectionCard';
+import { Footer } from '@/components/layout/Footer';
 
 function CardBackSelectionPage() {
     const router = useRouter();
@@ -89,11 +90,7 @@ function CardBackSelectionPage() {
                     </Button>
                 </main>
             </div>
-            <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-                <p className="inline-flex items-center gap-2">
-                    Build by Sid <Code className="w-4 h-4 text-accent" />
-                </p>
-            </footer>
+            <Footer />
         </div>
     );
 }

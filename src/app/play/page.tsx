@@ -13,11 +13,12 @@ import { GameLostDialog } from '@/components/game/GameLostDialog';
 import { PowerupToolbar } from '@/components/game/PowerupToolbar';
 import { Button } from '@/components/ui/button';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Loader2, Bomb, Shuffle } from 'lucide-react';
+import { Loader2, Bomb, Shuffle } from 'lucide-react';
 import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, CARD_BACKS, type Card as CardType } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
 import { getAICards } from '@/lib/ai-card-cache';
 import { cn } from '@/lib/utils';
+import { Footer } from '@/components/layout/Footer';
 
 function PlayPage() {
   const router = useRouter();
@@ -233,11 +234,7 @@ function PlayPage() {
         onNewGame={() => { playButtonSound(); router.push('/'); }}
         reason={lostReason}
       />
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }
@@ -266,5 +263,3 @@ export default function PlayPageWrapper() {
     </Suspense>
   )
 }
-
-    

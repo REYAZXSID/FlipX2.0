@@ -4,13 +4,14 @@
 import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent } from '@/components/ui/card';
-import { Code, ArrowLeft, Trophy } from 'lucide-react';
+import { ArrowLeft, Trophy } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from '@/lib/game-constants';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 import { AchievementCard } from '@/components/game/AchievementCard';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Footer } from '@/components/layout/Footer';
 
 export default function AchievementsPage() {
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
@@ -76,11 +77,7 @@ export default function AchievementsPage() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

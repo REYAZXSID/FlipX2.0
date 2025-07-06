@@ -9,13 +9,14 @@ import { StepHeader } from '@/components/layout/StepHeader';
 import { Button } from "@/components/ui/button";
 import { DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS } from "@/lib/game-constants";
 import { SOUND_THEMES } from '@/lib/sound-themes';
-import { Code, Loader2, Music } from "lucide-react";
+import { Loader2, Music } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
 import { cn } from "@/lib/utils";
 import { SettingSelectionCard } from '@/components/game/SettingSelectionCard';
 import { generateCards } from '@/ai/flows/generate-cards-flow';
 import { useToast } from '@/hooks/use-toast';
 import { setAICards } from '@/lib/ai-card-cache';
+import { Footer } from '@/components/layout/Footer';
 
 function SoundThemeSelectionPage() {
     const router = useRouter();
@@ -126,11 +127,7 @@ function SoundThemeSelectionPage() {
                     </Button>
                 </main>
             </div>
-            <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-                <p className="inline-flex items-center gap-2">
-                    Build by Sid <Code className="w-4 h-4 text-accent" />
-                </p>
-            </footer>
+            <Footer />
         </div>
     );
 }

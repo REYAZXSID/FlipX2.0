@@ -11,6 +11,7 @@ import { THEMES, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS } from "@/lib/game-constan
 import { Code, Smile, Globe, CaseSensitive, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SettingSelectionCard } from '@/components/game/SettingSelectionCard';
+import { Footer } from '@/components/layout/Footer';
 
 function ThemeSelectionPage() {
     const router = useRouter();
@@ -115,11 +116,7 @@ function ThemeSelectionPage() {
                     </Button>
                 </main>
             </div>
-            <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-                <p className="inline-flex items-center gap-2">
-                    Build by Sid <Code className="w-4 h-4 text-accent" />
-                </p>
-            </footer>
+            <Footer />
         </div>
     );
 }

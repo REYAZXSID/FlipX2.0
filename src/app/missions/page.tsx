@@ -3,11 +3,12 @@
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Code, ArrowLeft, CircleDollarSign, ListChecks } from 'lucide-react';
+import { ArrowLeft, CircleDollarSign, ListChecks } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUserData } from '@/hooks/use-user-data';
 import { MissionCard } from '@/components/missions/MissionCard';
+import { Footer } from '@/components/layout/Footer';
 
 export default function MissionsPage() {
     const { missions, claimMissionReward, coins } = useUserData();
@@ -49,11 +50,7 @@ export default function MissionsPage() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

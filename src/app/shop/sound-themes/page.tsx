@@ -3,12 +3,13 @@
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Code, ArrowLeft, CircleDollarSign } from 'lucide-react';
+import { ArrowLeft, CircleDollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUserData } from '@/hooks/use-user-data';
 import { ShopItemCard } from '@/components/shop/ShopItemCard';
 import { SOUND_THEMES } from '@/lib/sound-themes';
+import { Footer } from '@/components/layout/Footer';
 
 export default function SoundThemesShopPage() {
     const { coins, purchaseItem, soundThemeInventory } = useUserData();
@@ -49,11 +50,7 @@ export default function SoundThemesShopPage() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

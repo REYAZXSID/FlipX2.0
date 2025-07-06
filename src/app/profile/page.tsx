@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Code, ArrowLeft, Gamepad2, Trophy, Coins, Repeat, BarChart2, Edit, Check, X as XIcon, BadgeCheck, User } from 'lucide-react';
+import { ArrowLeft, Gamepad2, Trophy, Coins, Repeat, BarChart2, Edit, Check, X as XIcon, BadgeCheck, User } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import {
   ChartConfig,
@@ -19,6 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Footer } from '@/components/layout/Footer';
 
 const chartConfig = {
   plays: {
@@ -196,11 +197,7 @@ export default function ProfilePage() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { Code, ArrowLeft, CircleDollarSign, Loader2, Wand2, Download } from 'lucide-react';
+import { ArrowLeft, CircleDollarSign, Loader2, Wand2, Download } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUserData } from '@/hooks/use-user-data';
@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateCardBack } from '@/ai/flows/generate-card-back-flow';
 import Image from 'next/image';
 import type { CustomCardBack } from '@/lib/game-constants';
+import { Footer } from '@/components/layout/Footer';
 
 const AI_CARD_BACK_COST = 250;
 
@@ -132,11 +133,7 @@ export default function AICardBacksShopPage() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

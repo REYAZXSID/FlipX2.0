@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Timer, Bomb, ShieldAlert, Skull, Glasses, Shuffle } from 'lucide-react';
+import { Timer, Bomb, ShieldAlert, Skull, Glasses, Shuffle } from 'lucide-react';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { SelectionCard } from '@/components/game/SelectionCard';
+import { Footer } from '@/components/layout/Footer';
 
 export default function Home() {
   const router = useRouter();
@@ -68,11 +69,7 @@ export default function Home() {
         </main>
       </div>
 
-      <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <p className="inline-flex items-center gap-2">
-            Build by Sid <Code className="w-4 h-4 text-accent" />
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }

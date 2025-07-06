@@ -6,8 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { SelectionCard } from '@/components/game/SelectionCard';
-import { Code, Square, LayoutGrid, Table2 } from 'lucide-react';
+import { Square, LayoutGrid, Table2 } from 'lucide-react';
 import { useSound } from '@/hooks/use-sound';
+import { Footer } from '@/components/layout/Footer';
 
 function GridSelectionPage() {
     const router = useRouter();
@@ -56,11 +57,7 @@ function GridSelectionPage() {
                     </div>
                 </main>
             </div>
-            <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-                <p className="inline-flex items-center gap-2">
-                    Build by Sid <Code className="w-4 h-4 text-accent" />
-                </p>
-            </footer>
+            <Footer />
         </div>
     );
 }
