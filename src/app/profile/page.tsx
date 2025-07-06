@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Code, ArrowLeft, Gamepad2, Trophy, Coins, Repeat, BarChart2, Edit, Check, X as XIcon } from 'lucide-react';
+import { Code, ArrowLeft, Gamepad2, Trophy, Coins, Repeat, BarChart2, Edit, Check, X as XIcon, BadgeCheck } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 import {
   ChartConfig,
@@ -86,6 +86,7 @@ export default function ProfilePage() {
                             {!isEditing ? (
                                 <div className="flex items-center gap-2">
                                     <CardTitle className="text-3xl font-headline">{username}</CardTitle>
+                                    <BadgeCheck className="h-7 w-7 text-blue-500" />
                                     <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
                                         <Edit className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
                                     </Button>
