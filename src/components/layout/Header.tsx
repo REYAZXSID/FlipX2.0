@@ -46,10 +46,10 @@ export function Header() {
                         <p>Instagram</p>
                     </TooltipContent>
                 </Tooltip>
-            </TooltipProvider>
 
-            <ThemeToggle />
-            <ProfileButton />
+                <ThemeToggle />
+                <ProfileButton />
+            </TooltipProvider>
         </div>
     </header>
   );
