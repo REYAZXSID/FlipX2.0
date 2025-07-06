@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Gem, LayoutDashboard, Instagram } from 'lucide-react';
+import { Gamepad2, LayoutDashboard, Instagram } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -12,7 +12,7 @@ export function Header() {
   return (
     <header className="flex w-full items-center justify-between py-4 sm:py-6">
         <Link href="/" className="flex items-center gap-3 text-primary transition-transform hover:scale-105">
-            <Gem className="w-8 h-8 sm:w-10 sm:h-10 animate-pulse-subtle flex-shrink-0" />
+            <Gamepad2 className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce-slow flex-shrink-0" />
             <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wider drop-shadow-lg">
             FlipFun
             </h1>
