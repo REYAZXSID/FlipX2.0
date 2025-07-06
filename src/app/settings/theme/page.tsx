@@ -10,7 +10,7 @@ import { Header } from '@/components/layout/Header';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLabel } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { THEMES, CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS, type CustomCardBack } from "@/lib/game-constants";
@@ -306,3 +306,5 @@ export default function ThemeSelectionPageWrapper() {
         </Suspense>
     )
 }
+
+    
