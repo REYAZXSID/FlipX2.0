@@ -34,7 +34,7 @@ function GridSelectionPage() {
                 <main className="w-full flex flex-col items-center mt-8">
                     <StepHeader title="Select Grid Size" step={2} totalSteps={3} />
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full max-w-4xl">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 w-full max-w-3xl">
                         <SelectionCard
                             Icon={Square}
                             title="2x2"

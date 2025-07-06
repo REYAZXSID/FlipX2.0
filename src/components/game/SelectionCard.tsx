@@ -28,11 +28,11 @@ export function SelectionCard({
       )}
     >
       <div className="flex justify-center mb-4">
-        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
-          <Icon className="w-10 h-10" />
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
+          <Icon className="w-8 h-8" />
         </div>
       </div>
-      <h3 className="text-2xl font-bold font-headline">{title}</h3>
+      <h3 className="text-xl font-bold font-headline">{title}</h3>
       <p className="mt-2 text-muted-foreground">{description}</p>
     </div>
   );
