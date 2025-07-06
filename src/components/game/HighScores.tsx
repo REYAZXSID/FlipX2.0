@@ -37,10 +37,10 @@ export function HighScores() {
   }, []);
 
   return (
-    <Card className="shadow-lg border-border/80">
+    <Card className="group shadow-lg border-border/80 hover:border-primary/50 transition-all transform hover:-translate-y-1 overflow-hidden">
       <CardHeader>
         <CardTitle className="flex items-center gap-3 text-2xl font-headline tracking-wide">
-            <Trophy className="w-8 h-8 text-yellow-500" />
+            <Trophy className="w-8 h-8 text-yellow-500 transition-transform group-hover:scale-110 group-hover:rotate-[-5deg]" />
             High Scores
         </CardTitle>
       </CardHeader>

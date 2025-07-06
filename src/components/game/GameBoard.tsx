@@ -9,6 +9,7 @@ type GameBoardProps = {
   cards: CardType[]
   flippedIndices: number[]
   matchedPairs: string[]
+  mismatchedIndices: number[]
   onCardClick: (index: number) => void
   gridSize: number
   isHintActive: boolean
@@ -22,6 +23,7 @@ export function GameBoard({
   cards,
   flippedIndices,
   matchedPairs,
+  mismatchedIndices,
   onCardClick,
   gridSize,
   isHintActive,
@@ -44,6 +46,7 @@ export function GameBoard({
               content={card.content}
               isFlipped={isHintActive || isPeeking || flippedIndices.includes(index) || matchedPairs.includes(card.type)}
               isMatched={matchedPairs.includes(card.type)}
+              isMismatched={mismatchedIndices.includes(index)}
               onClick={() => onCardClick(index)}
               isImageType={card.image}
               hint={card.hint}

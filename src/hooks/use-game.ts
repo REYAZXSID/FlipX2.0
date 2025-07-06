@@ -44,6 +44,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [status, setStatus] = useState(GAME_STATUS.PLAYING);
   const [cards, setCards] = useState<CardType[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
+  const [mismatchedIndices, setMismatchedIndices] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
   const [moves, setMoves] = useState(0);
   const [time, setTime] = useState(0);
@@ -69,6 +70,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       setCards(createCardSet(newSettings.gridSize, newSettings.theme, newSettings.gameMode));
     }
     setFlippedIndices([]);
+    setMismatchedIndices([]);
     setMatchedPairs([]);
     setMoves(0);
     setTime(newSettings.gameMode === 'time-attack' ? calculateTimeLimit(newSettings.gridSize) : 0);
@@ -206,13 +208,18 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         setFlippedIndices([]);
         if (isSecondChanceActive) setSecondChanceActive(false);
       } else {
+        setMismatchedIndices(flippedIndices);
         if (settings?.gameMode === 'sudden-death') {
           setTimeout(() => setStatus(GAME_STATUS.LOST), 1000);
         } else if (isSecondChanceActive) {
             setFlippedIndices([]);
+            setMismatchedIndices([]);
             setSecondChanceActive(false);
         } else {
-            setTimeout(() => setFlippedIndices([]), 1000);
+            setTimeout(() => {
+              setFlippedIndices([]);
+              setMismatchedIndices([]);
+            }, 1000);
         }
       }
 
@@ -308,6 +315,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     cards,
     flippedIndices,
     matchedPairs,
+    mismatchedIndices,
     moves,
     time,
     isHintActive,

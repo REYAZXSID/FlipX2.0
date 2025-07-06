@@ -49,6 +49,7 @@ function PlayPage() {
       cards,
       flippedIndices,
       matchedPairs,
+      mismatchedIndices,
       moves,
       time,
       isHintActive,
@@ -151,6 +152,7 @@ function PlayPage() {
                 cards={cards}
                 flippedIndices={flippedIndices}
                 matchedPairs={matchedPairs}
+                mismatchedIndices={mismatchedIndices}
                 onCardClick={(i) => handleCardClick(i)}
                 gridSize={settings.gridSize}
                 isHintActive={isHintActive}

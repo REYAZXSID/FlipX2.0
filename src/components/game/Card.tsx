@@ -10,6 +10,7 @@ type CardProps = {
   content: string;
   isFlipped: boolean;
   isMatched: boolean;
+  isMismatched: boolean;
   onClick: () => void;
   isImageType: boolean;
   hint?: string;
@@ -18,7 +19,7 @@ type CardProps = {
   isBomb?: boolean;
 };
 
-export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint, cardBackClass, customCardBackContent, isBomb }: CardProps) {
+export function Card({ content, isFlipped, isMatched, isMismatched, onClick, isImageType, hint, cardBackClass, customCardBackContent, isBomb }: CardProps) {
   const handleCardClick = () => {
     if (isFlipped || isMatched) {
       return;
@@ -34,7 +35,7 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
   );
 
   return (
-    <div className="card-container aspect-square" onClick={handleCardClick}>
+    <div className={cn("card-container aspect-square", isMismatched && 'animate-shake')} onClick={handleCardClick}>
       <div className={cardClasses}>
         <div className={cn("card-face card-face-front transition-colors p-2", cardBackClass)}>
           <div className="w-full h-full rounded-md flex items-center justify-center">
