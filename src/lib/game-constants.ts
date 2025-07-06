@@ -119,6 +119,8 @@ export const LOCAL_STORAGE_KEYS = {
   POWERUPS: 'flipfun-powerups',
   INVENTORY: 'flipfun-inventory',
   MISSIONS: 'flipfun-missions',
+  DAILY_MISSION_IDS: 'flipfun-daily-mission-ids',
+  MISSIONS_RESET_DATE: 'flipfun-missions-reset-date',
 };
 
 

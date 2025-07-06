@@ -5,7 +5,7 @@ import React, { createContext, useState, useEffect, useCallback, useMemo, type R
 import { LOCAL_STORAGE_KEYS, type PowerUp, type CardBack } from '@/lib/game-constants';
 import { checkShopAchievement, type Achievement } from '@/lib/achievements';
 import { useToast } from '@/hooks/use-toast';
-import { DAILY_MISSIONS, type Mission, type MissionState } from '@/lib/missions';
+import { MISSION_POOL, type Mission, type MissionState, type MissionDefinition } from '@/lib/missions';
 
 
 export interface UserDataContextType {
@@ -15,7 +15,7 @@ export interface UserDataContextType {
     missions: Mission[];
     purchaseItem: (item: PowerUp | CardBack) => boolean;
     usePowerup: (id: PowerUp['id']) => boolean;
-    logGameWin: (args: { coinsEarned: number }) => void;
+    logGameWin: (args: { coinsEarned: number; gridSize: number; moves: number; gameMode: string; }) => void;
     claimMissionReward: (missionId: string) => void;
 }
 
@@ -45,9 +45,29 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     const [powerups, setPowerups] = useState<Record<string, number>>(defaultPowerups);
     const [inventory, setInventory] = useState<string[]>(defaultInventory);
     const [missionState, setMissionState] = useState<MissionState>(defaultMissions);
+    const [dailyMissionIds, setDailyMissionIds] = useState<string[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
+        const today = new Date();
+        const lastResetStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.MISSIONS_RESET_DATE);
+        const lastResetDate = lastResetStorage ? new Date(lastResetStorage) : null;
+
+        let missionIds: string[];
+
+        if (!lastResetDate || lastResetDate.getDate() !== today.getDate()) {
+            localStorage.setItem(LOCAL_STORAGE_KEYS.MISSIONS, JSON.stringify({}));
+            localStorage.setItem(LOCAL_STORAGE_KEYS.MISSIONS_RESET_DATE, today.toISOString());
+            setMissionState({});
+
+            const shuffled = [...MISSION_POOL].sort(() => 0.5 - Math.random());
+            missionIds = shuffled.slice(0, 3).map(m => m.id);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.DAILY_MISSION_IDS, JSON.stringify(missionIds));
+        } else {
+            missionIds = getInitialData(LOCAL_STORAGE_KEYS.DAILY_MISSION_IDS, []);
+        }
+        
+        setDailyMissionIds(missionIds);
         setCoins(getInitialData(LOCAL_STORAGE_KEYS.COINS, defaultCoins));
         setPowerups(getInitialData(LOCAL_STORAGE_KEYS.POWERUPS, defaultPowerups));
         setInventory(getInitialData(LOCAL_STORAGE_KEYS.INVENTORY, defaultInventory));
@@ -73,41 +93,44 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const missions: Mission[] = useMemo(() => {
-        return DAILY_MISSIONS.map(def => {
-            const state = missionState[def.id] || { progress: 0, isClaimed: false };
-            return {
-                ...def,
-                progress: state.progress,
-                isClaimed: state.isClaimed,
-            }
-        })
-    }, [missionState]);
+        if (!dailyMissionIds.length) return [];
+        return dailyMissionIds
+            .map(id => MISSION_POOL.find(def => def.id === id))
+            .filter((def): def is MissionDefinition => !!def)
+            .map(def => {
+                const state = missionState[def.id] || { progress: 0, isClaimed: false };
+                return { ...def, ...state };
+            });
+    }, [missionState, dailyMissionIds]);
     
-    const logGameWin = useCallback(({ coinsEarned }: { coinsEarned: number }) => {
+    const logGameWin = useCallback((args: { coinsEarned: number, gridSize: number, moves: number, gameMode: string }) => {
+        const { coinsEarned, gridSize, moves, gameMode } = args;
         setMissionState(prev => {
             const newState: MissionState = JSON.parse(JSON.stringify(prev)); // Deep copy
 
-            // Helper to update progress
             const updateProgress = (id: string, amount: number) => {
-                const missionDef = DAILY_MISSIONS.find(m => m.id === id);
-                if (!missionDef) return;
+                const missionDef = MISSION_POOL.find(m => m.id === id);
+                if (!missionDef || !dailyMissionIds.includes(id)) return;
                 
                 const mission = newState[id] || { progress: 0, isClaimed: false };
                 if (!mission.isClaimed) {
-                    mission.progress = Math.min(mission.progress + amount, missionDef.goal);
+                    mission.progress = Math.min((mission.progress || 0) + amount, missionDef.goal);
                     newState[id] = mission;
                 }
             };
 
             updateProgress('win_3_games', 1);
             updateProgress('earn_100_coins', coinsEarned);
+            if (gridSize === 6) updateProgress('win_6x6_game', 1);
+            if (gameMode === 'time-attack') updateProgress('win_time_attack', 1);
+            if (gridSize === 4 && moves === 8) updateProgress('perfect_4x4', 1);
             
             return newState;
         });
-    }, []);
+    }, [dailyMissionIds]);
 
     const claimMissionReward = useCallback((missionId: string) => {
-        const missionDef = DAILY_MISSIONS.find(m => m.id === missionId);
+        const missionDef = MISSION_POOL.find(m => m.id === missionId);
         if (!missionDef) return;
         
         const currentMissionState = missionState[missionId];
@@ -162,11 +185,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
             setMissionState(prev => {
                 const newState: MissionState = JSON.parse(JSON.stringify(prev));
-                 const missionDef = DAILY_MISSIONS.find(m => m.id === 'use_3_powerups');
-                 if (!missionDef) return newState;
+                 const missionDef = MISSION_POOL.find(m => m.id === 'use_3_powerups');
+                 if (!missionDef || !dailyMissionIds.includes('use_3_powerups')) return newState;
                 const mission = newState['use_3_powerups'] || { progress: 0, isClaimed: false };
                  if (!mission.isClaimed) {
-                    mission.progress = Math.min(mission.progress + 1, missionDef.goal);
+                    mission.progress = Math.min((mission.progress || 0) + 1, missionDef.goal);
                     newState['use_3_powerups'] = mission;
                 }
                 return newState;
@@ -174,7 +197,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             return true;
         }
         return false;
-    }, [powerups]);
+    }, [powerups, dailyMissionIds]);
 
     const value = { coins, powerups, inventory, missions, purchaseItem, usePowerup, logGameWin, claimMissionReward };
 

@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Coins, Trophy, Zap } from "lucide-react";
+import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown } from "lucide-react";
 
 export type MissionDifficulty = 'Easy' | 'Medium' | 'Hard';
 
@@ -20,9 +20,8 @@ export type Mission = MissionDefinition & {
 };
 
 
-// For this prototype, we'll use a static list.
-// In a real app, this would be generated daily.
-export const DAILY_MISSIONS: MissionDefinition[] = [
+// Expanded pool of all possible missions
+export const MISSION_POOL: MissionDefinition[] = [
     {
         id: 'win_3_games',
         title: 'Daily Warm-up',
@@ -50,6 +49,33 @@ export const DAILY_MISSIONS: MissionDefinition[] = [
         goal: 100,
         Icon: Coins,
     },
+    {
+        id: 'win_6x6_game',
+        title: 'Mind Master',
+        description: 'Win one 6x6 game.',
+        difficulty: 'Medium',
+        reward: 40,
+        goal: 1,
+        Icon: BrainCircuit,
+    },
+    {
+        id: 'win_time_attack',
+        title: 'Beat the Clock',
+        description: 'Win a game in Time Attack mode.',
+        difficulty: 'Medium',
+        reward: 40,
+        goal: 1,
+        Icon: Bomb,
+    },
+    {
+        id: 'perfect_4x4',
+        title: 'Flawless Victory',
+        description: 'Win a 4x4 game with only 8 moves.',
+        difficulty: 'Hard',
+        reward: 100,
+        goal: 1,
+        Icon: Crown,
+    }
 ];
 
 export type MissionState = {

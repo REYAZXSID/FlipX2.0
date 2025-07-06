@@ -12,6 +12,7 @@ import { useUserData } from '@/hooks/use-user-data';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 import { LOCAL_STORAGE_KEYS } from '@/lib/game-constants';
 import { Progress } from '@/components/ui/progress';
+import { MissionCountdown } from '@/components/missions/MissionCountdown';
 
 export default function DashboardPage() {
   const { coins } = useUserData();
@@ -71,11 +72,12 @@ export default function DashboardPage() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                    <p className="text-muted-foreground mb-4 text-sm">
-                        Complete daily challenges to earn extra coins and test your skills.
+                    <p className="text-muted-foreground text-sm">
+                        Complete daily challenges to earn extra coins and test your skills. New missions arrive every day!
                     </p>
+                    <MissionCountdown />
                     <Link href="/missions" passHref>
-                        <Button className="w-full">View Missions</Button>
+                        <Button className="w-full mt-4">View Missions</Button>
                     </Link>
                 </CardContent>
               </Card>
