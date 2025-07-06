@@ -37,7 +37,27 @@ const generateCardBackFlow = ai.defineFlow(
     const response = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: `A vibrant, detailed, centered, sticker-style icon of ${prompt}, on a clean seamless background pattern, for a memory card game back. The main icon should be prominent. Square aspect ratio.`,
-        config: { responseModalities: ['TEXT', 'IMAGE'] },
+        config: {
+            responseModalities: ['TEXT', 'IMAGE'],
+            safetySettings: [
+              {
+                category: 'HARM_CATEGORY_HATE_SPEECH',
+                threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+              },
+              {
+                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+              },
+              {
+                category: 'HARM_CATEGORY_HARASSMENT',
+                threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+              },
+              {
+                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+              },
+            ],
+        },
       });
 
     const { media } = response;
