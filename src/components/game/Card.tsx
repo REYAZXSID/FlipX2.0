@@ -28,7 +28,7 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
   const cardClasses = cn(
     'card rounded-lg',
     { 'is-flipped': isFlipped || isMatched },
-    isMatched ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
+    isMatched ? 'cursor-not-allowed' : 'cursor-pointer',
     isMatched && 'animate-pop'
   );
 
@@ -46,13 +46,15 @@ export function Card({ content, isFlipped, isMatched, onClick, isImageType, hint
                 sizes="(max-width: 768px) 20vw, 10vw" 
               />
             ) : (
-              <Brain className="w-1/2 h-1/2 text-primary-foreground/30" />
+              <Brain className="w-1/2 h-1/2 text-primary-foreground/50" />
             )}
           </div>
         </div>
         <div className={cn(
             "card-face card-face-back border-2 shadow-lg transition-all",
-            isMatched ? "border-accent ring-2 ring-offset-2 ring-offset-background ring-accent" : "border-primary"
+            isMatched 
+                ? "border-accent ring-2 ring-offset-2 ring-offset-background ring-accent shadow-xl shadow-accent/20" 
+                : "border-primary"
         )}>
           {isImageType ? (
             <Image
