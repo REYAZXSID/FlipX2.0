@@ -30,6 +30,15 @@ const calculateTimeLimit = (gridSize: number) => {
 
 const BOMB_TIMER_SECONDS = 5;
 
+function shuffleArray<T>(array: T[]): T[] {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
 export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGameProps) => {
   const [settings, setSettings] = useState<GameSettings | null>(null);
   const [status, setStatus] = useState(GAME_STATUS.PLAYING);
@@ -45,6 +54,10 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   const [coinsEarned, setCoinsEarned] = useState(0);
   const [isSecondChanceActive, setSecondChanceActive] = useState(false);
   const [bombTimer, setBombTimer] = useState<number | null>(null);
+  const [isPeeking, setIsPeeking] = useState(false);
+  const [isScrambling, setIsScrambling] = useState(false);
+  const [scrambleTriggerMove, setScrambleTriggerMove] = useState(0);
+
   const { logGameWin } = useUserData();
   
   const startGame = useCallback((newSettings: GameSettings, customCards?: CardType[]) => {
@@ -65,6 +78,19 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setCoinsEarned(0);
     setSecondChanceActive(false);
     setBombTimer(null);
+    setIsPeeking(false);
+    setIsScrambling(false);
+
+    if (newSettings.gameMode === 'peekaboo') {
+      setIsPeeking(true);
+      const peekDuration = newSettings.gridSize === 2 ? 2000 : newSettings.gridSize === 4 ? 3500 : 5000;
+      setTimeout(() => setIsPeeking(false), peekDuration);
+    }
+    if (newSettings.gameMode === 'scramble') {
+      setScrambleTriggerMove(Math.floor(Math.random() * 5) + 8); // 8-12
+    } else {
+      setScrambleTriggerMove(0);
+    }
   }, []);
 
   const restartGame = useCallback(() => {
@@ -114,7 +140,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   }, [status, settings]);
 
   const handleCardClick = useCallback((index: number, isXray: boolean = false) => {
-    if (status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive) {
+    if (status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive || isPeeking || isScrambling) {
       return;
     }
     if (cards.length > 0 && matchedPairs.includes(cards[index].type)) {
@@ -135,16 +161,43 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     }
     
     setFlippedIndices(prev => [...prev, index]);
-  }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs, bombTimer]);
+  }, [status, flippedIndices, isHintActive, settings, playFlipSound, cards, matchedPairs, bombTimer, isPeeking, isScrambling]);
+
+  const scrambleCards = useCallback(() => {
+    setIsScrambling(true);
+
+    setTimeout(() => {
+        const unmatchedCardData = cards
+            .map((card, index) => ({ card, index }))
+            .filter(({ card }) => !matchedPairs.includes(card.type));
+        
+        const cardObjectsToShuffle = unmatchedCardData.map(item => item.card);
+        const shuffledObjects = shuffleArray(cardObjectsToShuffle);
+
+        const newCards = [...cards];
+        unmatchedCardData.forEach((item, i) => {
+            newCards[item.index] = shuffledObjects[i];
+        });
+
+        setCards(newCards);
+        setScrambleTriggerMove(moves + Math.floor(Math.random() * 5) + 8); // Set next scramble
+        setIsScrambling(false);
+    }, 1000); // Animation duration
+  }, [cards, matchedPairs, moves]);
+
 
   useEffect(() => {
     if (flippedIndices.length === 2) {
-      setMoves(prev => prev + 1);
+      const nextMoves = moves + 1;
+      setMoves(nextMoves);
+      
       const [firstIndex, secondIndex] = flippedIndices;
       const firstCard = cards[firstIndex];
       const secondCard = cards[secondIndex];
 
-      if (firstCard.type === secondCard.type) {
+      const isMatch = firstCard.type === secondCard.type;
+
+      if (isMatch) {
         if(settings?.sound) setTimeout(() => playMatchSound(), 300);
         if (firstCard.isBomb) {
           setBombTimer(null); // Defused!
@@ -154,10 +207,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
         if (isSecondChanceActive) setSecondChanceActive(false);
       } else {
         if (settings?.gameMode === 'sudden-death') {
-          setTimeout(() => {
-              setStatus(GAME_STATUS.LOST);
-              setFlippedIndices([]);
-          }, 1000);
+          setTimeout(() => setStatus(GAME_STATUS.LOST), 1000);
         } else if (isSecondChanceActive) {
             setFlippedIndices([]);
             setSecondChanceActive(false);
@@ -165,8 +215,13 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
             setTimeout(() => setFlippedIndices([]), 1000);
         }
       }
+
+      const isLastPair = matchedPairs.length === (cards.length / 2) - 1 && isMatch;
+      if (settings?.gameMode === 'scramble' && nextMoves === scrambleTriggerMove && !isLastPair) {
+        setTimeout(scrambleCards, 1200);
+      }
     }
-  }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive]);
+  }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive, moves, scrambleTriggerMove, matchedPairs.length, scrambleCards]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -193,12 +248,8 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
 
     if (secondCard) {
         setFlippedIndices([firstCard.index, secondCard.index]);
-        setMoves(prev => prev + 1);
-        if(settings?.sound) setTimeout(() => playMatchSound(), 300);
-        setMatchedPairs(prev => [...prev, firstCard.type]);
-        setTimeout(() => setFlippedIndices([]), 500);
     }
-  }, [cards, matchedPairs, status, settings, playMatchSound]);
+  }, [cards, matchedPairs, status]);
 
   useEffect(() => {
     if (settings && cards.length > 0 && matchedPairs.length === cards.length / 2) {
@@ -265,6 +316,8 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     unlockedAchievements,
     coinsEarned,
     bombTimer,
+    isPeeking,
+    isScrambling,
     startGame,
     restartGame,
     togglePause,

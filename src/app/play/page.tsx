@@ -13,7 +13,7 @@ import { GameLostDialog } from '@/components/game/GameLostDialog';
 import { PowerupToolbar } from '@/components/game/PowerupToolbar';
 import { Button } from '@/components/ui/button';
 import { useSound } from '@/hooks/use-sound';
-import { Code, Loader2, Bomb } from 'lucide-react';
+import { Code, Loader2, Bomb, Shuffle } from 'lucide-react';
 import { DEFAULT_SETTINGS, THEMES, GRID_SIZES, LOCAL_STORAGE_KEYS, CARD_BACKS } from '@/lib/game-constants';
 import { Header } from '@/components/layout/Header';
 import { getAICards } from '@/lib/ai-card-cache';
@@ -133,6 +133,8 @@ function PlayPage() {
                 onCardClick={(i) => game.handleCardClick(i)}
                 gridSize={game.settings.gridSize}
                 isHintActive={game.isHintActive}
+                isPeeking={game.isPeeking}
+                isScrambling={game.isScrambling}
                 cardBackClass={cardBackClass}
                 customCardBackContent={customCardBackContent}
               />
@@ -148,6 +150,12 @@ function PlayPage() {
                 <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center rounded-lg z-20 backdrop-blur-sm">
                     <h2 className="text-5xl font-bold font-headline mb-6 text-primary">Paused</h2>
                     <Button size="lg" onClick={() => { playButtonSound(); game.togglePause(); }}>Resume Game</Button>
+                </div>
+              )}
+               {game.isScrambling && (
+                <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center rounded-lg z-20 backdrop-blur-sm">
+                    <h2 className="text-5xl font-bold font-headline mb-6 text-primary animate-pulse">Scrambling!</h2>
+                    <Shuffle className="w-12 h-12 text-primary animate-spin" />
                 </div>
               )}
             </div>

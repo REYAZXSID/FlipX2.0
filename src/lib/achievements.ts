@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, ShieldAlert, Skull } from 'lucide-react';
+import { Award, Zap, BrainCircuit, Bot, Crown, Rocket, ShoppingCart, Bomb, ShieldAlert, Skull, Glasses, Shuffle } from 'lucide-react';
 import { LOCAL_STORAGE_KEYS } from "./game-constants";
 
 export type Achievement = {
@@ -82,6 +82,20 @@ export const ACHIEVEMENTS: Achievement[] = [
     Icon: Skull,
     reward: 60,
   },
+  {
+    id: 'peekaboo_pro',
+    name: 'Peekaboo Pro',
+    description: 'Win a game in Peekaboo mode.',
+    Icon: Glasses,
+    reward: 60,
+  },
+  {
+    id: 'scramble_survivor',
+    name: 'Scramble Survivor',
+    description: 'Win a game in Scramble mode.',
+    Icon: Shuffle,
+    reward: 70,
+  },
 ];
 
 type CheckAchievementsArgs = {
@@ -130,6 +144,14 @@ export const checkAchievements = ({ moves, time, gridSize, theme, gameMode, isFi
 
     if (gameMode === 'sudden-death') {
       unlocked.push(ACHIEVEMENTS.find(a => a.id === 'sudden_death_survivor')!);
+    }
+
+    if (gameMode === 'peekaboo') {
+      unlocked.push(ACHIEVEMENTS.find(a => a.id === 'peekaboo_pro')!);
+    }
+    
+    if (gameMode === 'scramble') {
+      unlocked.push(ACHIEVEMENTS.find(a => a.id === 'scramble_survivor')!);
     }
 
     return unlocked;

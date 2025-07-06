@@ -14,6 +14,8 @@ type GameBoardProps = {
   isHintActive: boolean
   cardBackClass: string
   customCardBackContent?: string
+  isPeeking?: boolean
+  isScrambling?: boolean
 }
 
 export function GameBoard({
@@ -24,20 +26,23 @@ export function GameBoard({
   gridSize,
   isHintActive,
   cardBackClass,
-  customCardBackContent
+  customCardBackContent,
+  isPeeking,
+  isScrambling
 }: GameBoardProps) {
   return (
     <div
       className={cn(
         "grid gap-2 sm:gap-3 p-2 sm:p-4 bg-muted/50 rounded-lg shadow-inner",
-        `grid-cols-${gridSize}`
+        `grid-cols-${gridSize}`,
+        isScrambling && "animate-shake"
       )}
     >
       {cards.map((card, index) => (
         <div key={index} className="animate-deal-in" style={{ animationDelay: `${index * 30}ms`, opacity: 0, animationFillMode: 'forwards' }}>
             <Card
               content={card.content}
-              isFlipped={isHintActive || flippedIndices.includes(index) || matchedPairs.includes(card.type)}
+              isFlipped={isHintActive || isPeeking || flippedIndices.includes(index) || matchedPairs.includes(card.type)}
               isMatched={matchedPairs.includes(card.type)}
               onClick={() => onCardClick(index)}
               isImageType={card.image}

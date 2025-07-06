@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from "lucide-react";
-import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown, Rocket, ShoppingCart, Sparkles, Music, Skull } from "lucide-react";
+import { Coins, Trophy, Zap, BrainCircuit, Bomb, Crown, Rocket, ShoppingCart, Sparkles, Music, Skull, Glasses, Shuffle } from "lucide-react";
 
 export type MissionDifficulty = 'Easy' | 'Medium' | 'Hard';
 
@@ -192,6 +192,24 @@ export const MISSION_POOL: MissionDefinition[] = [
         reward: 60,
         goal: 1,
         Icon: Skull,
+    },
+    {
+        id: 'win_peekaboo',
+        title: 'I Spy',
+        description: 'Win a game in Peekaboo mode.',
+        difficulty: 'Hard',
+        reward: 60,
+        goal: 1,
+        Icon: Glasses,
+    },
+    {
+        id: 'win_scramble',
+        title: 'Chaos Coordinator',
+        description: 'Win a game in Scramble mode.',
+        difficulty: 'Hard',
+        reward: 70,
+        goal: 1,
+        Icon: Shuffle,
     }
 ];
 
