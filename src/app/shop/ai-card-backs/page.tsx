@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { generateCardBack } from '@/ai/flows/generate-card-back-flow';
 import Image from 'next/image';
+import type { CustomCardBack } from '@/lib/game-constants';
 
 const AI_CARD_BACK_COST = 250;
 
@@ -43,13 +44,17 @@ export default function AICardBacksShopPage() {
     const handlePurchase = () => {
         if (!generatedImage) return;
 
-        const success = purchaseItem({
-            id: `ai_${Date.now()}`,
+        const newId = `ai_${Date.now()}`;
+        const newCardBack: CustomCardBack = {
+            id: newId,
             name: prompt,
             cost: AI_CARD_BACK_COST,
             content: generatedImage,
             type: 'ai-premium',
-        });
+            className: newId, // Assign a unique className, can be same as id
+        };
+
+        const success = purchaseItem(newCardBack);
 
         if (success) {
             setGeneratedImage(null);

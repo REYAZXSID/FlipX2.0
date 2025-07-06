@@ -2,7 +2,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Card as CardType, CustomCardBack } from "@/lib/game-constants"
+import { Card as CardType } from "@/lib/game-constants"
 import { Card } from "./Card"
 
 type GameBoardProps = {
@@ -13,7 +13,7 @@ type GameBoardProps = {
   gridSize: number
   isHintActive: boolean
   cardBackClass: string
-  customCardBacks: CustomCardBack[]
+  customCardBackContent?: string
 }
 
 export function GameBoard({
@@ -24,10 +24,8 @@ export function GameBoard({
   gridSize,
   isHintActive,
   cardBackClass,
-  customCardBacks
+  customCardBackContent
 }: GameBoardProps) {
-  const customCardBackContent = customCardBacks.find(c => c.className === cardBackClass)?.content;
-  
   return (
     <div
       className={cn(

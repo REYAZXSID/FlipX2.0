@@ -3,14 +3,14 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { PowerUp, CardBack } from "@/lib/game-constants";
+import type { PowerUp, CardBack, CustomCardBack } from "@/lib/game-constants";
 import type { SoundTheme } from "@/lib/sound-themes";
 import { cn } from "@/lib/utils";
 import { CircleDollarSign, Check, Music } from "lucide-react";
 import Image from "next/image";
 
 type ShopItemCardProps = {
-    item: PowerUp | CardBack | SoundTheme;
+    item: PowerUp | CardBack | SoundTheme | CustomCardBack;
     onPurchase: () => void;
     isOwned?: boolean;
 };
@@ -22,16 +22,15 @@ export function ShopItemCard({ item, onPurchase, isOwned = false }: ShopItemCard
     let cardBackClass = '';
     let customImage: string | undefined;
 
-    if ('description' in item) { // PowerUp
+    if ('description' in item) { // PowerUp or SoundTheme
         description = item.description;
-        Icon = item.Icon;
-    } else if ('className' in item) { // CardBack
+        Icon = 'Icon' in item ? item.Icon : Music;
+    } else if ('className' in item) { // CardBack or CustomCardBack
         description = `Unlock the "${item.name}" card style.`;
         cardBackClass = item.className;
         if('content' in item) customImage = item.content;
-    } else { // SoundTheme
-        description = item.description;
-        Icon = Music;
+    } else { // Fallback
+        description = "A cool new item for your collection.";
     }
     
     return (
@@ -57,7 +56,7 @@ export function ShopItemCard({ item, onPurchase, isOwned = false }: ShopItemCard
                         </div>
                     </div>
                 )}
-                <CardTitle className="text-2xl font-headline">{name}</CardTitle>
+                <CardTitle className="text-2xl font-headline truncate w-full px-2">{name}</CardTitle>
             </CardHeader>
             <CardContent className="p-6 pt-4 flex-grow">
                  <CardDescription className="text-sm text-muted-foreground min-h-[40px]">

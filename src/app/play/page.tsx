@@ -29,7 +29,7 @@ function PlayPage() {
   const gridSize = Number(searchParams.get('gridSize'));
   const themeName = searchParams.get('theme');
   const gameMode = searchParams.get('gameMode');
-  const cardBack = searchParams.get('cardBack');
+  const cardBackId = searchParams.get('cardBack');
   const soundTheme = searchParams.get('soundTheme');
 
   const { playFlipSound, playMatchSound, playWinSound, playButtonSound } = useSound(soundTheme || 'default');
@@ -37,10 +37,11 @@ function PlayPage() {
 
   const cardBackData = useMemo(() => {
     const allBacks = [...CARD_BACKS, ...userData.customCardBacks];
-    return allBacks.find(cb => cb.id === cardBack);
-  }, [cardBack, userData.customCardBacks]);
+    return allBacks.find(cb => cb.id === cardBackId);
+  }, [cardBackId, userData.customCardBacks]);
 
   const cardBackClass = cardBackData?.className ?? 'card-back-default';
+  const customCardBackContent = (cardBackData && 'content' in cardBackData) ? cardBackData.content : undefined;
   const themeBackgroundClass = cardBackData?.themeBackgroundClass ?? 'theme-bg-default';
 
 
@@ -61,7 +62,7 @@ function PlayPage() {
     const isValidGrid = GRID_SIZES.some(s => s.value === gridSize);
     const isValidTheme = themeName ? Object.keys(THEMES).includes(themeName) : false;
 
-    if (isValidGrid && isValidTheme && gameMode && cardBack && soundTheme) {
+    if (isValidGrid && isValidTheme && gameMode && cardBackId && soundTheme) {
        if (themeName === 'ai-magic' && !aiCards) {
         router.replace('/');
         return;
@@ -71,7 +72,7 @@ function PlayPage() {
         gridSize,
         theme: themeName!,
         gameMode,
-        cardBack,
+        cardBack: cardBackId,
         soundTheme,
         sound: savedSettings.sound
       }, aiCards || undefined);
@@ -133,7 +134,7 @@ function PlayPage() {
                 gridSize={game.settings.gridSize}
                 isHintActive={game.isHintActive}
                 cardBackClass={cardBackClass}
-                customCardBacks={userData.customCardBacks}
+                customCardBackContent={customCardBackContent}
               />
               {game.status === 'paused' && (
                 <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center rounded-lg z-20 backdrop-blur-sm">

@@ -3,15 +3,16 @@
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Code, ArrowLeft, CircleDollarSign } from 'lucide-react';
+import { Code, ArrowLeft, CircleDollarSign, Wand2 } from 'lucide-react';
 import { CARD_BACKS } from '@/lib/game-constants';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useUserData } from '@/hooks/use-user-data';
 import { ShopItemCard } from '@/components/shop/ShopItemCard';
+import { Separator } from '@/components/ui/separator';
 
 export default function CardBacksShopPage() {
-    const { coins, purchaseItem, inventory } = useUserData();
+    const { coins, purchaseItem, inventory, customCardBacks } = useUserData();
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
@@ -36,6 +37,7 @@ export default function CardBacksShopPage() {
                 <p className="text-muted-foreground mt-2">Give your game a fresh new look.</p>
             </div>
 
+            <h2 className="text-2xl font-headline mb-4">Standard Designs</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {CARD_BACKS.map((cardBack) => (
                     <ShopItemCard 
@@ -46,6 +48,29 @@ export default function CardBacksShopPage() {
                     />
                 ))}
             </div>
+
+            {customCardBacks.length > 0 && (
+                <>
+                    <Separator className="my-12" />
+                    <div className="text-center mb-10">
+                        <h2 className="text-3xl font-headline flex items-center justify-center gap-3">
+                            <Wand2 className="w-8 h-8 text-primary"/>
+                            Your AI Creations
+                        </h2>
+                        <p className="text-muted-foreground mt-2">Your collection of custom-generated card backs.</p>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {customCardBacks.map((cardBack) => (
+                            <ShopItemCard 
+                                key={cardBack.id}
+                                item={cardBack}
+                                onPurchase={() => {}}
+                                isOwned={true}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
         </main>
       </div>
 
