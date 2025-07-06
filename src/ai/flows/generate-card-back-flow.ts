@@ -34,14 +34,17 @@ const generateCardBackFlow = ai.defineFlow(
   async ({ prompt }) => {
     console.log(`Generating card back for prompt: ${prompt}`);
     
-    const { media } = await ai.generate({
+    const response = await ai.generate({
         model: 'googleai/gemini-2.0-flash-preview-image-generation',
         prompt: `A vibrant, detailed, centered, sticker-style icon of ${prompt}, on a clean seamless background pattern, for a memory card game back. The main icon should be prominent. Square aspect ratio.`,
         config: { responseModalities: ['TEXT', 'IMAGE'] },
       });
 
+    const { media } = response;
+
     if (!media?.url) {
-        throw new Error('Could not generate card back image.');
+        console.error('Image generation failed. Full response:', JSON.stringify(response, null, 2));
+        throw new Error(`Could not generate card back image. Reason: ${response.finishReason ?? 'Unknown'}. ${response.finishReasonMessage ?? ''}`);
     }
 
     console.log('Successfully generated card back image.');

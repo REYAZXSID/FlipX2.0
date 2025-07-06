@@ -36,7 +36,12 @@ export default function AICardBacksShopPage() {
             setGeneratedImage(result.content);
         } catch (error) {
             console.error(error);
-            toast({ variant: 'destructive', title: 'Generation Failed', description: 'The AI could not create an image for that prompt. Please try again.' });
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+            toast({ 
+                variant: 'destructive', 
+                title: 'Generation Failed', 
+                description: `The AI could not create an image. Please try a different prompt. (Reason: ${errorMessage})` 
+            });
         } finally {
             setIsLoading(false);
         }
