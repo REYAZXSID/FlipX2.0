@@ -88,6 +88,7 @@ export default function ProfilePage() {
                             {!isEditing ? (
                                 <div className="flex items-center gap-2">
                                     <CardTitle className="text-3xl font-headline">{username}</CardTitle>
+                                    <BadgeCheck className="h-7 w-7 text-blue-500" />
                                     <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
                                         <Edit className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
                                     </Button>

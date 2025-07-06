@@ -6,6 +6,7 @@ import { Gem, LayoutDashboard, Instagram } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ProfileButton } from './ProfileButton';
 
 export function Header() {
   return (
@@ -48,6 +49,7 @@ export function Header() {
             </TooltipProvider>
 
             <ThemeToggle />
+            <ProfileButton />
         </div>
     </header>
   );
