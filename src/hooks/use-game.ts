@@ -88,6 +88,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
     setIsPeeking(false);
     setIsScrambling(false);
     setLostReason(null);
+    isProcessingFlip.current = false;
 
     if (newSettings.gameMode === 'peekaboo') {
       setIsPeeking(true);
@@ -149,7 +150,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   }, [status, settings]);
 
   const handleCardClick = useCallback((index: number, isXray: boolean = false) => {
-    if (status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive || isPeeking || isScrambling) {
+    if (isProcessingFlip.current || status !== 'playing' || !settings || flippedIndices.length >= 2 || flippedIndices.includes(index) || isHintActive || isPeeking || isScrambling) {
       return;
     }
     if (cards.length > 0 && matchedPairs.includes(cards[index].type)) {
@@ -195,53 +196,63 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
   }, [cards, matchedPairs]);
 
 
+  // Effect for handling card flips and matches
   useEffect(() => {
-    if (flippedIndices.length === 2 && !isProcessingFlip.current) {
-      isProcessingFlip.current = true;
-      const nextMoves = moves + 1;
-      setMoves(nextMoves);
-      
-      const [firstIndex, secondIndex] = flippedIndices;
-      const firstCard = cards[firstIndex];
-      const secondCard = cards[secondIndex];
+    if (flippedIndices.length < 2 || isProcessingFlip.current) {
+      return;
+    }
 
-      const isMatch = firstCard.type === secondCard.type;
+    isProcessingFlip.current = true;
+    setMoves(prevMoves => prevMoves + 1);
+    
+    const [firstIndex, secondIndex] = flippedIndices;
+    const firstCard = cards[firstIndex];
+    const secondCard = cards[secondIndex];
+    const isMatch = firstCard.type === secondCard.type;
 
-      if (isMatch) {
-        if(settings?.sound) setTimeout(() => playMatchSound(), 300);
-        if (firstCard.isBomb) {
-          setBombTimer(null); // Defused!
-        }
-        setMatchedPairs(prev => [...prev, firstCard.type]);
-        setFlippedIndices([]);
-        if (isSecondChanceActive) setSecondChanceActive(false);
-        isProcessingFlip.current = false;
-      } else {
-        setMismatchedIndices(flippedIndices);
-        if (isSecondChanceActive) {
-            setFlippedIndices([]);
-            setMismatchedIndices([]);
-            setSecondChanceActive(false);
-            isProcessingFlip.current = false;
-        } else if (settings?.gameMode === 'sudden-death') {
-            setLostReason('mismatch');
-            setTimeout(() => setStatus(GAME_STATUS.LOST), 1000);
-            isProcessingFlip.current = false;
-        } else {
-            setTimeout(() => {
-              setFlippedIndices([]);
-              setMismatchedIndices([]);
-              isProcessingFlip.current = false;
-            }, 1000);
-        }
+    if (isMatch) {
+      if(settings?.sound) setTimeout(() => playMatchSound(), 300);
+      if (firstCard.isBomb) {
+        setBombTimer(null); // Defused!
       }
-
-      const isLastPair = matchedPairs.length === (cards.length / 2) - 1 && isMatch;
-      if (settings?.gameMode === 'scramble' && nextMoves === scrambleTriggerMove && !isLastPair) {
-        setTimeout(() => scrambleCards(nextMoves), 1200);
+      setMatchedPairs(prev => [...prev, firstCard.type]);
+      setFlippedIndices([]);
+      if (isSecondChanceActive) setSecondChanceActive(false);
+      isProcessingFlip.current = false;
+    } else { // Mismatch logic
+      setMismatchedIndices(flippedIndices);
+      if (isSecondChanceActive) {
+        setFlippedIndices([]);
+        setMismatchedIndices([]);
+        setSecondChanceActive(false);
+        isProcessingFlip.current = false;
+      } else if (settings?.gameMode === 'sudden-death') {
+        setLostReason('mismatch');
+        setTimeout(() => {
+          setStatus(GAME_STATUS.LOST);
+          isProcessingFlip.current = false;
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          setFlippedIndices([]);
+          setMismatchedIndices([]);
+          isProcessingFlip.current = false;
+        }, 1000);
       }
     }
-  }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive, moves, scrambleTriggerMove, matchedPairs.length, scrambleCards]);
+  }, [flippedIndices, cards, settings, playMatchSound, isSecondChanceActive]);
+
+  // Effect for Scramble mode, depends on moves
+  useEffect(() => {
+      if (settings?.gameMode !== 'scramble' || !scrambleTriggerMove || status !== 'playing') {
+          return;
+      }
+      const isGameFinished = matchedPairs.length === cards.length / 2;
+      if (moves > 0 && moves === scrambleTriggerMove && !isGameFinished) {
+          scrambleCards(moves);
+      }
+  }, [moves, settings, scrambleTriggerMove, status, matchedPairs.length, cards.length, scrambleCards]);
+
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
