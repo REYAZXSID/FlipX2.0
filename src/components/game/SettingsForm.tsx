@@ -26,7 +26,6 @@ import { Input } from "@/components/ui/input";
 import { THEMES, GRID_SIZES, GAME_MODES, CARD_BACKS, type GameSettings } from "@/lib/game-constants";
 import { Loader2, Lock, ArrowLeft, ArrowRight, Timer, Bomb, Square, LayoutGrid, Table2 } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
@@ -130,17 +129,16 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
                                         <RadioGroupItem value={mode.id} id={`radio-${field.name}-${mode.id}`} className="sr-only" />
                                     </FormControl>
                                     <label htmlFor={`radio-${field.name}-${mode.id}`}>
-                                        <Card className={cn(
-                                            "cursor-pointer hover:border-primary transition-all p-6 text-center h-full",
-                                            field.value === mode.id && "border-primary ring-2 ring-primary shadow-lg"
+                                        <div className={cn(
+                                            "cursor-pointer transition-all p-6 text-center h-full rounded-lg bg-muted/50 border-2 border-transparent",
+                                            "hover:bg-muted",
+                                            field.value === mode.id && "bg-primary/10 border-primary"
                                         )}>
-                                            <CardHeader className="p-0">
-                                              <CardTitle className="flex flex-col items-center justify-center gap-4">
-                                                  {mode.id === 'classic' ? <Timer className="w-10 h-10 text-primary" /> : <Bomb className="w-10 h-10 text-destructive" />}
-                                                  <span className="text-lg font-semibold">{mode.label}</span>
-                                              </CardTitle>
-                                            </CardHeader>
-                                        </Card>
+                                            <div className="flex flex-col items-center justify-center gap-4">
+                                                {mode.id === 'classic' ? <Timer className="w-10 h-10 text-primary" /> : <Bomb className="w-10 h-10 text-destructive" />}
+                                                <span className="text-lg font-semibold">{mode.label}</span>
+                                            </div>
+                                        </div>
                                     </label>
                                 </FormItem>
                             ))}
@@ -168,18 +166,17 @@ export function SettingsForm({ onStartGame, defaultValues, isGenerating }: Setti
                                         <RadioGroupItem value={String(item.size)} id={`radio-${field.name}-${item.size}`} className="sr-only" />
                                     </FormControl>
                                     <label htmlFor={`radio-${field.name}-${item.size}`}>
-                                        <Card className={cn(
-                                            "cursor-pointer hover:border-primary transition-all p-6 text-center h-full",
-                                            field.value === item.size && "border-primary ring-2 ring-primary shadow-lg"
+                                        <div className={cn(
+                                            "cursor-pointer transition-all p-6 text-center h-full rounded-lg bg-muted/50 border-2 border-transparent",
+                                            "hover:bg-muted",
+                                            field.value === item.size && "bg-primary/10 border-primary"
                                         )}>
-                                            <CardHeader className="p-0">
-                                              <CardTitle className="flex flex-col items-center justify-center gap-4">
-                                                  <div className="text-primary">{item.icon}</div>
-                                                  <span className="text-lg font-semibold">{item.label}</span>
-                                                  <span className="text-sm text-muted-foreground">{GRID_SIZES.find(s=>s.value===item.size)?.label.match(/\((.*)\)/)?.[1]}</span>
-                                              </CardTitle>
-                                            </CardHeader>
-                                        </Card>
+                                            <div className="flex flex-col items-center justify-center gap-4">
+                                                <div className="text-primary">{item.icon}</div>
+                                                <span className="text-lg font-semibold">{item.label}</span>
+                                                <span className="text-sm text-muted-foreground">{GRID_SIZES.find(s=>s.value===item.size)?.label.match(/\((.*)\)/)?.[1]}</span>
+                                            </div>
+                                        </div>
                                     </label>
                                 </FormItem>
                             ))}

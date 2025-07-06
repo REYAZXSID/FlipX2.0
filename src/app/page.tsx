@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { SettingsForm } from '@/components/game/SettingsForm';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSound } from '@/hooks/use-sound';
 import { Sparkles } from 'lucide-react';
 import type { GameSettings } from '@/lib/game-constants';
@@ -85,18 +84,14 @@ export default function Home() {
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-4">
         <Header />
         <main className="w-full flex justify-center mt-8">
-            <Card className="shadow-xl border-2 border-primary/20 w-full max-w-lg">
-              <CardHeader>
-                <CardTitle className="text-center text-3xl font-headline tracking-wide">Game Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SettingsForm
-                  onStartGame={handleStartGame}
-                  defaultValues={settings}
-                  isGenerating={isGenerating}
-                />
-              </CardContent>
-            </Card>
+            <div className="w-full max-w-lg">
+              <h1 className="text-center text-3xl font-headline tracking-wide mb-6">Game Settings</h1>
+              <SettingsForm
+                onStartGame={handleStartGame}
+                defaultValues={settings}
+                isGenerating={isGenerating}
+              />
+            </div>
         </main>
       </div>
 
