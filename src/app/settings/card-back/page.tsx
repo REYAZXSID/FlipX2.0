@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { Header } from '@/components/layout/Header';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { Button } from "@/components/ui/button";
-import { CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS, type CustomCardBack } from "@/lib/game-constants";
+import { CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS } from "@/lib/game-constants";
 import { ArrowRight } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
 import { cn } from "@/lib/utils";
@@ -57,8 +57,8 @@ function CardBackSelectionPage() {
         return <div className="flex items-center justify-center min-h-screen">Redirecting...</div>
     }
 
-    const allCardBacks = [...CARD_BACKS, ...customCardBacks];
-    const availableCardBacks = allCardBacks.filter(back => 'content' in back || inventory.includes(back.id));
+    const purchasedStandardBacks = CARD_BACKS.filter(back => inventory.includes(back.id));
+    const availableCardBacks = [...purchasedStandardBacks, ...customCardBacks].sort((a,b) => (a.cost > b.cost ? 1 : -1));
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-background p-2 sm:p-4">
@@ -78,7 +78,7 @@ function CardBackSelectionPage() {
                                     isOwned={true}
                                 >
                                     <div className={cn("w-3/4 h-full rounded-md relative shadow-lg", back.className)}>
-                                      {'content' in back && <Image src={back.content} alt={back.name} fill className="object-cover rounded-md" />}
+                                      {'content' in back && back.content && <Image src={back.content} alt={back.name} fill className="object-cover rounded-md" />}
                                     </div>
                                </SettingSelectionCard>
                             )
