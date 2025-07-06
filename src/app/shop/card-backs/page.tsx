@@ -56,9 +56,9 @@ export default function CardBacksShopPage() {
                     <div className="text-center mb-10">
                         <h2 className="text-3xl font-headline flex items-center justify-center gap-3">
                             <Wand2 className="w-8 h-8 text-primary"/>
-                            Your AI Creations
+                            Your Custom Designs
                         </h2>
-                        <p className="text-muted-foreground mt-2">Your collection of custom-generated card backs.</p>
+                        <p className="text-muted-foreground mt-2">Your collection of custom-generated and uploaded card backs.</p>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {customCardBacks.map((cardBack) => (
