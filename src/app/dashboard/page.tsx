@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Trophy, ShoppingCart, Sparkles, CircleDollarSign } from 'lucide-react';
+import { ArrowLeft, Trophy, ShoppingCart, Code, CircleDollarSign } from 'lucide-react';
 import { HighScores } from '@/components/game/HighScores';
 import { useUserData } from '@/hooks/use-user-data';
 import { ACHIEVEMENTS } from '@/lib/achievements';
@@ -113,9 +113,9 @@ export default function DashboardPage() {
         </main>
       </div>
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <a href="https://firebase.google.com/docs/studio" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-            Powered by Firebase Studio <Sparkles className="w-4 h-4 text-accent" />
-        </a>
+        <p className="inline-flex items-center gap-2">
+            Build by Sid <Code className="w-4 h-4 text-accent" />
+        </p>
       </footer>
     </div>
   );

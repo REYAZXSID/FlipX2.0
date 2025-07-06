@@ -13,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { THEMES, CARD_BACKS, DEFAULT_SETTINGS, LOCAL_STORAGE_KEYS } from "@/lib/game-constants";
-import { Loader2, Lock, Sparkles, Smile, Globe, CaseSensitive } from "lucide-react";
+import { Loader2, Lock, Code, Smile, Globe, CaseSensitive } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
 import { cn } from "@/lib/utils";
 import { generateCards } from '@/ai/flows/generate-cards-flow';
@@ -139,7 +139,7 @@ function ThemeSelectionPage() {
                                                 case 'emojis': Icon = Smile; break;
                                                 case 'flags': Icon = Globe; break;
                                                 case 'letters': Icon = CaseSensitive; break;
-                                                case 'ai-magic': Icon = Sparkles; break;
+                                                case 'ai-magic': Icon = Code; break;
                                                 default: Icon = Smile;
                                             }
                                             return (
@@ -220,9 +220,9 @@ function ThemeSelectionPage() {
                 </main>
             </div>
             <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-                <a href="https://firebase.google.com/docs/studio" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-                    Powered by Firebase Studio <Sparkles className="w-4 h-4 text-accent" />
-                </a>
+                <p className="inline-flex items-center gap-2">
+                    Build by Sid <Code className="w-4 h-4 text-accent" />
+                </p>
             </footer>
         </div>
     );

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight } from 'lucide-react';
+import { Code, ArrowLeft, CircleDollarSign, Zap, Layers, ArrowRight } from 'lucide-react';
 import { useUserData } from '@/hooks/use-user-data';
 
 export default function ShopPage() {
@@ -73,9 +73,9 @@ export default function ShopPage() {
       </div>
 
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <a href="https://firebase.google.com/docs/studio" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-            Powered by Firebase Studio <Sparkles className="w-4 h-4 text-accent" />
-        </a>
+        <p className="inline-flex items-center gap-2">
+            Build by Sid <Code className="w-4 h-4 text-accent" />
+        </p>
       </footer>
     </div>
   );

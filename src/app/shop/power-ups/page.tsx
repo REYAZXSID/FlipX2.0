@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
-import { Sparkles, ArrowLeft, CircleDollarSign } from 'lucide-react';
+import { Code, ArrowLeft, CircleDollarSign } from 'lucide-react';
 import { POWERUPS } from '@/lib/game-constants';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -49,9 +49,9 @@ export default function PowerUpsShopPage() {
       </div>
 
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <a href="https://firebase.google.com/docs/studio" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-            Powered by Firebase Studio <Sparkles className="w-4 h-4 text-accent" />
-        </a>
+        <p className="inline-flex items-center gap-2">
+            Build by Sid <Code className="w-4 h-4 text-accent" />
+        </p>
       </footer>
     </div>
   );

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { OnboardingDialog } from '@/components/game/OnboardingDialog';
 import { useSound } from '@/hooks/use-sound';
-import { Sparkles, Timer, Bomb } from 'lucide-react';
+import { Code, Timer, Bomb } from 'lucide-react';
 import { StepHeader } from '@/components/layout/StepHeader';
 import { SelectionCard } from '@/components/game/SelectionCard';
 
@@ -45,9 +45,9 @@ export default function Home() {
       </div>
 
       <footer className="text-center p-4 mt-8 text-muted-foreground text-sm">
-        <a href="https://firebase.google.com/docs/studio" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-            Powered by Firebase Studio <Sparkles className="w-4 h-4 text-accent" />
-        </a>
+        <p className="inline-flex items-center gap-2">
+            Build by Sid <Code className="w-4 h-4 text-accent" />
+        </p>
       </footer>
     </div>
   );
