@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRef, useCallback } from 'react';
@@ -5,70 +6,83 @@ import * as Tone from 'tone';
 
 export const useSound = () => {
     const isInitialized = useRef(false);
-    const flipPlayer = useRef<Tone.Player | null>(null);
-    const matchPlayer = useRef<Tone.Player | null>(null);
-    const winPlayer = useRef<Tone.Player | null>(null);
-    const buttonPlayer = useRef<Tone.Player | null>(null);
+    
+    const flipSynth = useRef<Tone.Synth | null>(null);
+    const matchSynth = useRef<Tone.Synth | null>(null);
+    const winSynth = useRef<Tone.Synth | null>(null);
+    const buttonSynth = useRef<Tone.Synth | null>(null);
 
     const initAudio = useCallback(async () => {
         if (isInitialized.current) return;
         
         await Tone.start();
 
-        // Using simple synths as placeholders for audio files which cannot be generated.
-        // A real app would use Tone.Player with audio file URLs.
-        flipPlayer.current = new Tone.Synth({
+        flipSynth.current = new Tone.Synth({
             oscillator: { type: 'sine' },
-            envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 },
+            envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 0.1 },
         }).toDestination();
+        flipSynth.current.volume.value = -12;
 
-        matchPlayer.current = new Tone.Synth({
-            oscillator: { type: 'triangle' },
-            envelope: { attack: 0.01, decay: 0.2, sustain: 0.2, release: 0.2 },
+        matchSynth.current = new Tone.Synth({
+            oscillator: { type: 'triangle8' },
+            envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 },
         }).toDestination();
-        
-        winPlayer.current = new Tone.Synth({
-            oscillator: { type: 'sine' },
-            envelope: { attack: 0.1, decay: 0.5, sustain: 0.5, release: 1 },
-        }).toDestination();
+        matchSynth.current.volume.value = -6;
 
-        buttonPlayer.current = new Tone.Synth({
+        winSynth.current = new Tone.Synth({
+            oscillator: { type: 'pulse', width: 0.4 },
+            envelope: { attack: 0.05, decay: 0.3, sustain: 0.4, release: 0.5 },
+            filter: new Tone.Filter(800, 'lowpass'),
+            filterEnvelope: {
+                attack: 0.1,
+                decay: 0.2,
+                sustain: 0.5,
+                release: 1,
+                baseFrequency: 300,
+                octaves: 3,
+            }
+        }).toDestination();
+        winSynth.current.volume.value = -3;
+
+        buttonSynth.current = new Tone.Synth({
             oscillator: { type: 'square' },
             envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.1 },
         }).toDestination();
+        buttonSynth.current.volume.value = -15;
         
         isInitialized.current = true;
     }, []);
 
-    const playSound = useCallback(async (player: React.MutableRefObject<Tone.Synth | null>, note: string, duration: Tone.Unit.Time) => {
+    const playSound = useCallback(async (player: React.MutableRefObject<Tone.Synth | null>, note: string, duration: Tone.Unit.Time, time?: Tone.Unit.Time) => {
         await initAudio();
         if (Tone.context.state !== 'running') {
             await Tone.start();
         }
-        player.current?.triggerAttackRelease(note, duration, Tone.now());
+        player.current?.triggerAttackRelease(note, duration, time || Tone.now());
     }, [initAudio]);
 
     const playFlipSound = useCallback(() => {
-        playSound(flipPlayer as any, 'C5', '8n');
+        playSound(flipSynth, 'G5', '32n');
     }, [playSound]);
 
     const playMatchSound = useCallback(() => {
-        playSound(matchPlayer as any, 'E5', '4n');
-        setTimeout(() => playSound(matchPlayer as any, 'G5', '4n'), 150);
+        const now = Tone.now();
+        playSound(matchSynth, 'C5', '16n', now);
+        playSound(matchSynth, 'G5', '8n', now + 0.1);
     }, [playSound]);
 
     const playWinSound = useCallback(() => {
         const now = Tone.now();
-        const winSynth = winPlayer.current;
-        if (!winSynth) return;
-        winSynth.triggerAttackRelease("C4", "8n", now);
-        winSynth.triggerAttackRelease("E4", "8n", now + 0.2);
-        winSynth.triggerAttackRelease("G4", "8n", now + 0.4);
-        winSynth.triggerAttackRelease("C5", "4n", now + 0.6);
-    }, []);
+        const synth = winSynth.current;
+        if (!synth) return;
+        synth.triggerAttackRelease("C4", "16n", now);
+        synth.triggerAttackRelease("E4", "16n", now + 0.1);
+        synth.triggerAttackRelease("G4", "16n", now + 0.2);
+        synth.triggerAttackRelease("C5", "8n", now + 0.3);
+    }, [winSynth]);
 
     const playButtonSound = useCallback(() => {
-       playSound(buttonPlayer as any, 'A4', '16n');
+       playSound(buttonSynth, 'C4', '32n');
     }, [playSound]);
 
     return { playFlipSound, playMatchSound, playWinSound, playButtonSound };
