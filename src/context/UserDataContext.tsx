@@ -15,7 +15,7 @@ export interface UserDataContextType {
     missions: Mission[];
     purchaseItem: (item: PowerUp | CardBack) => boolean;
     usePowerup: (id: PowerUp['id']) => boolean;
-    logGameWin: (args: { coinsEarned: number; gridSize: number; moves: number; gameMode: string; }) => void;
+    logGameWin: (args: { coinsEarned: number; gridSize: number; moves: number; gameMode: string; theme: string; }) => void;
     claimMissionReward: (missionId: string) => void;
 }
 
@@ -103,10 +103,10 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             });
     }, [missionState, dailyMissionIds]);
     
-    const logGameWin = useCallback((args: { coinsEarned: number, gridSize: number, moves: number, gameMode: string }) => {
-        const { coinsEarned, gridSize, moves, gameMode } = args;
+    const logGameWin = useCallback((args: { coinsEarned: number, gridSize: number, moves: number, gameMode: string, theme: string }) => {
+        const { coinsEarned, gridSize, moves, gameMode, theme } = args;
         setMissionState(prev => {
-            const newState: MissionState = JSON.parse(JSON.stringify(prev)); // Deep copy
+            const newState: MissionState = JSON.parse(JSON.stringify(prev));
 
             const updateProgress = (id: string, amount: number) => {
                 const missionDef = MISSION_POOL.find(m => m.id === id);
@@ -119,11 +119,24 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
                 }
             };
 
+            updateProgress('win_1_game', 1);
             updateProgress('win_3_games', 1);
+            updateProgress('win_5_games', 1);
+            
+            updateProgress('earn_50_coins', coinsEarned);
             updateProgress('earn_100_coins', coinsEarned);
-            if (gridSize === 6) updateProgress('win_6x6_game', 1);
-            if (gameMode === 'time-attack') updateProgress('win_time_attack', 1);
+            updateProgress('earn_200_coins', coinsEarned);
+            
+            if (gridSize === 2 && moves === 2) updateProgress('perfect_2x2', 1);
             if (gridSize === 4 && moves === 8) updateProgress('perfect_4x4', 1);
+            if (gridSize === 6 && moves === 18) updateProgress('perfect_6x6', 1);
+            
+            if (gridSize === 4) updateProgress('win_4x4_game', 1);
+            if (gridSize === 6) updateProgress('win_6x6_game', 1);
+            
+            if (gameMode === 'time-attack') updateProgress('win_time_attack', 1);
+            if (gameMode === 'classic') updateProgress('win_classic_game', 1);
+            if (theme === 'ai-magic') updateProgress('play_ai_game', 1);
             
             return newState;
         });
@@ -158,6 +171,20 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
         if ('description' in item) {
             setPowerups(prev => ({ ...prev, [item.id]: (prev[item.id] || 0) + 1 }));
+             setMissionState(prev => {
+                const newState: MissionState = JSON.parse(JSON.stringify(prev));
+                const updateProgress = (id: string, amount: number) => {
+                    const missionDef = MISSION_POOL.find(m => m.id === id);
+                    if (!missionDef || !dailyMissionIds.includes(id)) return;
+                    const mission = newState[id] || { progress: 0, isClaimed: false };
+                    if (!mission.isClaimed) {
+                        mission.progress = Math.min((mission.progress || 0) + amount, missionDef.goal);
+                        newState[id] = mission;
+                    }
+                };
+                updateProgress('buy_1_powerup', 1);
+                return newState;
+            });
         } else {
             setInventory(prev => [...prev, item.id]);
         }
@@ -177,7 +204,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         
         toast({ title: 'Purchase Successful!', description: `You bought ${item.name}.` });
         return true;
-    }, [coins, toast, inventory]);
+    }, [coins, toast, inventory, dailyMissionIds]);
 
     const usePowerup = useCallback((id: PowerUp['id']) => {
         if (powerups[id] > 0) {
@@ -185,13 +212,19 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
             setMissionState(prev => {
                 const newState: MissionState = JSON.parse(JSON.stringify(prev));
-                 const missionDef = MISSION_POOL.find(m => m.id === 'use_3_powerups');
-                 if (!missionDef || !dailyMissionIds.includes('use_3_powerups')) return newState;
-                const mission = newState['use_3_powerups'] || { progress: 0, isClaimed: false };
-                 if (!mission.isClaimed) {
-                    mission.progress = Math.min((mission.progress || 0) + 1, missionDef.goal);
-                    newState['use_3_powerups'] = mission;
-                }
+                 const updateProgress = (id: string, amount: number) => {
+                    const missionDef = MISSION_POOL.find(m => m.id === id);
+                    if (!missionDef || !dailyMissionIds.includes(id)) return;
+                    const mission = newState[id] || { progress: 0, isClaimed: false };
+                    if (!mission.isClaimed) {
+                        mission.progress = Math.min((mission.progress || 0) + amount, missionDef.goal);
+                        newState[id] = mission;
+                    }
+                };
+                
+                updateProgress('use_3_powerups', 1);
+                updateProgress('use_5_powerups', 1);
+
                 return newState;
             });
             return true;

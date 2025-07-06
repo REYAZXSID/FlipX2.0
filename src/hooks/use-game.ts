@@ -189,7 +189,7 @@ export const useGame = ({ playFlipSound, playMatchSound, playWinSound }: UseGame
       } catch(e) { console.error("Failed to save coins", e)}
       
       // Log game win for missions
-      logGameWin({ coinsEarned: earned, gridSize: settings.gridSize, moves, gameMode: settings.gameMode });
+      logGameWin({ coinsEarned: earned, gridSize: settings.gridSize, moves, gameMode: settings.gameMode, theme: settings.theme });
       
       try {
         const highScores: Record<string, HighScore> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.HIGH_SCORES) || '{}');
