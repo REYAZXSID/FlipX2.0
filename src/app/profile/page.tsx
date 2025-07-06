@@ -74,7 +74,7 @@ export default function ProfilePage() {
             
              <div className="text-center mb-10">
                 <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">Player Profile</h1>
-                <p className="text-muted-foreground mt-2">Your journey and stats in FlipFun.</p>
+                <p className="text-muted-foreground mt-2">Your journey and stats in FlipX.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

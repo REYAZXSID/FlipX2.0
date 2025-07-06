@@ -33,7 +33,7 @@ export default function ShopPage() {
             </div>
             
              <div className="text-center mb-10">
-                <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">FlipFun Shop</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wide text-primary">FlipX Shop</h1>
                 <p className="text-muted-foreground mt-2">Use your FlipCoins to buy power-ups and cool card backs!</p>
             </div>
 

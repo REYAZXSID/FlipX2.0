@@ -44,7 +44,7 @@ export function OnboardingDialog() {
           <div className="bg-primary/10 p-3 rounded-full mb-2">
             <Gamepad2 className="w-8 h-8 text-primary" />
           </div>
-          <DialogTitle className="text-2xl font-headline tracking-wide">Welcome to FlipFun!</DialogTitle>
+          <DialogTitle className="text-2xl font-headline tracking-wide">Welcome to FlipX!</DialogTitle>
           <DialogDescription>
             A quick guide to get you started.
           </DialogDescription>

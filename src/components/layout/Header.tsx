@@ -14,7 +14,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3 text-primary transition-transform hover:scale-105">
             <AnimatedGameIcon />
             <h1 className="text-3xl sm:text-4xl font-bold font-headline tracking-wider drop-shadow-lg">
-            FlipFun
+            FlipX
             </h1>
         </Link>
         <div className="flex items-center gap-2 sm:gap-4">

@@ -135,19 +135,19 @@ export const DEFAULT_SETTINGS: GameSettings = {
 };
 
 export const LOCAL_STORAGE_KEYS = {
-  SETTINGS: 'flipfun-settings-v2',
-  HIGH_SCORES: 'flipfun-high-scores-v2',
-  ACHIEVEMENTS: 'flipfun-achievements-v2',
-  COINS: 'flipfun-coins-v2',
-  POWERUPS: 'flipfun-powerups-v2',
-  INVENTORY: 'flipfun-inventory-v2',
-  CUSTOM_CARD_BACKS: 'flipfun-custom-card-backs-v2',
-  SOUND_THEME_INVENTORY: 'flipfun-sound-theme-inventory-v2',
-  STATS: 'flipfun-stats-v2',
-  MISSIONS: 'flipfun-missions-v2',
-  DAILY_MISSION_IDS: 'flipfun-daily-mission-ids-v2',
-  MISSIONS_RESET_DATE: 'flipfun-missions-reset-date-v2',
-  PLAYER_NAME: 'flipfun-player-name-v2',
+  SETTINGS: 'flipx-settings-v2',
+  HIGH_SCORES: 'flipx-high-scores-v2',
+  ACHIEVEMENTS: 'flipx-achievements-v2',
+  COINS: 'flipx-coins-v2',
+  POWERUPS: 'flipx-powerups-v2',
+  INVENTORY: 'flipx-inventory-v2',
+  CUSTOM_CARD_BACKS: 'flipx-custom-card-backs-v2',
+  SOUND_THEME_INVENTORY: 'flipx-sound-theme-inventory-v2',
+  STATS: 'flipx-stats-v2',
+  MISSIONS: 'flipx-missions-v2',
+  DAILY_MISSION_IDS: 'flipx-daily-mission-ids-v2',
+  MISSIONS_RESET_DATE: 'flipx-missions-reset-date-v2',
+  PLAYER_NAME: 'flipx-player-name-v2',
 };
 
 

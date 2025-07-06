@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { UserDataProvider } from '@/context/UserDataContext';
 
 export const metadata: Metadata = {
-  title: 'FlipFun',
+  title: 'FlipX',
   description: 'A fun card matching game.',
 };
 
